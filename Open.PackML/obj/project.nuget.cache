@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "Ct8XKoyMZgG+03ZwQa3AumQvsn4ja0Ce8JhqRqhoJf8oI0rOTFD/2sWiEpwT2b4cx4lnQ8/bNTqaASeq3vPkHQ==",
+  "dgSpecHash": "qC02JTIOnS62HJe0xV4458gh5DCLX7LpXkdNJH9rxbDIPxSRu/ynpz4SExOF3w5sVdMm5SLPDS4URMFhUPWuHg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\iarbouw\\source\\repos\\Open.PackML\\Open.PackML\\Open.PackML.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\iarbouw\\source\\repos\\CrsSim\\CRS 2.0\\Open.PackML\\Open.PackML.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\iarbouw\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\iarbouw\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

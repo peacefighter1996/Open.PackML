@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\iarbouw\\source\\repos\\Open.PackML\\Open.PackML\\Open.PackML.csproj": {}
+    "C:\\Users\\iarbouw\\source\\repos\\CrsSim\\CRS 2.0\\Open.PackML\\Open.PackML.csproj": {}
   },
   "projects": {
-    "C:\\Users\\iarbouw\\source\\repos\\Open.PackML\\Open.PackML\\Open.PackML.csproj": {
+    "C:\\Users\\iarbouw\\source\\repos\\CrsSim\\CRS 2.0\\Open.PackML\\Open.PackML.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\iarbouw\\source\\repos\\Open.PackML\\Open.PackML\\Open.PackML.csproj",
+        "projectUniqueName": "C:\\Users\\iarbouw\\source\\repos\\CrsSim\\CRS 2.0\\Open.PackML\\Open.PackML.csproj",
         "projectName": "Open.PackML",
-        "projectPath": "C:\\Users\\iarbouw\\source\\repos\\Open.PackML\\Open.PackML\\Open.PackML.csproj",
+        "projectPath": "C:\\Users\\iarbouw\\source\\repos\\CrsSim\\CRS 2.0\\Open.PackML\\Open.PackML.csproj",
         "packagesPath": "C:\\Users\\iarbouw\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\iarbouw\\source\\repos\\Open.PackML\\Open.PackML\\obj\\",
+        "outputPath": "C:\\Users\\iarbouw\\source\\repos\\CrsSim\\CRS 2.0\\Open.PackML\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\DevExpress 20.2\\.NET Core Desktop Libraries\\Offline Packages",
@@ -27,7 +27,7 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net5.0"
+          "netstandard2.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\DevExpress 19.2\\Components\\System\\Components\\Packages": {},
@@ -42,8 +42,8 @@
           "https://www.nuget.org/api/v2/": {}
         },
         "frameworks": {
-          "net5.0": {
-            "targetAlias": "net5.0",
+          "netstandard2.0": {
+            "targetAlias": "netstandard2.0",
             "projectReferences": {}
           }
         },
@@ -54,8 +54,16 @@
         }
       },
       "frameworks": {
-        "net5.0": {
-          "targetAlias": "net5.0",
+        "netstandard2.0": {
+          "targetAlias": "netstandard2.0",
+          "dependencies": {
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -66,11 +74,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
         }
       }
