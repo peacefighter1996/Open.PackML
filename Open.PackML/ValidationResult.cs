@@ -8,7 +8,7 @@
             this.unSuccesfullText = unSuccesfullText;
         }
 
-        public bool success { get; private set; } 
+        public bool success { get; private set; }
         public string unSuccesfullText { get; private set; }
         public void AddResult(ValidationResult validationResult)
         {
@@ -32,5 +32,5 @@
         public string unSuccesfullText { get; }
         public T Object { get; }
     }
-    
+
 }

@@ -1,10 +1,12 @@
 ﻿namespace Open.PackML
 {
-    //https://medium.com/kb-controls/packml-essentials-610063f66138
+    //https://www.kb-controls.io/post/packml-essentials
     public enum Mode
     {
-        Production,
-        Maintenance,
-        Manual,
+        Undefined = 0,
+        Production = 1,
+        Maintenance = 2,
+        Manual = 3,
+
     }
 }

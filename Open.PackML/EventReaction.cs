@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Open.PackML
+﻿namespace Open.PackML
 {
-    public class EventReaction
+    public class EventReaction<T>
     {
-        public EventReaction(int machineEventId, State stateChangeId)
+        public EventReaction(T machineEventId, State stateChangeId)
         {
             MachineEventId = machineEventId;
             StateChangeId = stateChangeId;
         }
 
-        public int MachineEventId { get; }
+        public T MachineEventId { get; }
         public State StateChangeId { get; }
 
     }

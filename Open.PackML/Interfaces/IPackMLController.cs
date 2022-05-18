@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Open.PackML
 {
@@ -20,10 +21,8 @@ namespace Open.PackML
         Task<Mode> RetrieveCurrentPackMLModeAsync();
         Task<ValidationResult> SendPackMLCommandAsync(Command packMLCommand);
         Task<ValidationResult> SendPackMLModeAsync(Mode packMLMode);
-        void AddView(IPackMLView packMLView);
+
+        // events 
+        public event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
     }
-
-
-
-
 }

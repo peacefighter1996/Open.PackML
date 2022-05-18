@@ -10,7 +10,7 @@
         Stopped = 5,
         Resetting = 6,
         Idle = 7,
-        Starting = 8 ,
+        Starting = 8,
         Execute = 9,
         Held = 10,
         Holding = 11,

@@ -1,60 +1,75 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Open.PackML
 {
-    public abstract class DefaultPackMLAdapter : IPackMLView, IPackMLController
+    public abstract class DefaultPackMLAdapter<T> : IPackMLController where T : Enum
     {
-        protected State currentState;
-        protected Mode currentMode;
-        protected IPackMLView[] views = new IPackMLView[0];
-        protected IPackMLController controller;
-        
-
-        public bool PreferAsync => true;
+        protected State currentState = State.Undefined;
+        protected Mode currentMode = Mode.Undefined;
+        protected DateTime lastStateUpdate = DateTime.MinValue.ToUniversalTime();
+        protected DateTime lastTransition = DateTime.MinValue.ToUniversalTime();
+        protected IMachineController<T> controller;
+        protected IPackMLEventStore<T> packMLEventStore;
+        public bool PreferAsync { get; set; } = true;
         protected bool controllerPreferAsync;
 
-        public DefaultPackMLAdapter(IPackMLController controller, IPackMLView[] packMLViews)
+        public event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
+
+        public DefaultPackMLAdapter(IMachineController<T> controller, IPackMLEventStore<T> packMLEventStore)
         {
+            this.packMLEventStore = packMLEventStore;
             UpdateController(controller);
-            views = packMLViews;
-            UpdateViews();
         }
 
-        public virtual void UpdateViews()
+        public virtual ValidationResult UpdateController(IMachineController<T> controller)
         {
-            UpdateCurrentState(currentState, DateTime.UtcNow);
-            UpdateCurrentMode(currentMode);
-        }
+            if (this.controller != null)
+            {
+                this.controller.UpdateCurrentState -= Controller_UpdateCurrentState;
+                this.controller.MachineEvent -= Controller_MachineEvent;
+            }
 
-        public virtual ValidationResult UpdateController(IPackMLController controller)
-        {
             this.controller = controller;
-
             currentState = controller.CurrentPackMLState();
             currentMode = controller.CurrentPackMLMode();
             controllerPreferAsync = controller.PreferAsync;
+            this.controller.UpdateCurrentState += Controller_UpdateCurrentState;
+            this.controller.MachineEvent += Controller_MachineEvent;
 
             return new ValidationResult(true);
         }
 
-
-
-        public virtual async void UpdateCurrentState(State currentPackMLState, DateTime dateTime)
+        private void Controller_MachineEvent(object sender, MachineEventArguments<T> e)
         {
-            await Task.Run(delegate { Parallel.ForEach(views, view => { 
-                view.UpdateCurrentState(currentPackMLState, dateTime); 
-            }); });
+            var result = packMLEventStore.ProcessEvent(e.@enum);
+            if (result.success)
+            {
+                if (lastTransition < e.DateTime)
+                {
+                    currentState = result.Object;
+                    lastTransition = e.DateTime;
+
+                }
+
+            }
+            else
+            {
+                Console.WriteLine(string.Format("Event Id: {0} Does not have any state resolves", e.@enum));
+            }
         }
 
-        public virtual async void UpdateCurrentMode(Mode packMLMode)
+        protected async void Controller_UpdateCurrentState(object sender, PmlStateChangeEventArg currentPackMLState)
         {
-            await Task.Run(delegate { Parallel.ForEach(views, view => { 
-                view.UpdateCurrentMode(packMLMode); 
-            }); });
+            if (lastStateUpdate <= currentPackMLState.DateTime.ToUniversalTime())
+            {
+                lastStateUpdate = currentPackMLState.DateTime.ToUniversalTime();
+                currentState = currentPackMLState.CurrentState;
+                currentMode = currentPackMLState.CurrentMode;
+
+
+                UpdateCurrentState?.Invoke(this, currentPackMLState);
+            }
         }
 
         public virtual State CurrentPackMLState()
@@ -103,8 +118,8 @@ namespace Open.PackML
         public virtual Mode RetrieveCurrentPackMLMode()
         {
             currentMode = SyncDesissions.SyncDesider(
-                controllerPreferAsync, 
-                delegate { return controller.RetrieveCurrentPackMLMode(); }, 
+                controllerPreferAsync,
+                delegate { return controller.RetrieveCurrentPackMLMode(); },
                 delegate { return controller.RetrieveCurrentPackMLModeAsync(); }
                 );
 
@@ -127,16 +142,6 @@ namespace Open.PackML
                 delegate { return controller.SendPackMLMode(packMLMode); },
                 delegate { return controller.SendPackMLModeAsync(packMLMode); }
                 );
-        }
-
-        public void AddView(IPackMLView packMLView)
-        {
-            if (!views.Contains(packMLView))
-            {
-                var temp = views.ToList();
-                temp.Add( packMLView );
-                views = temp.ToArray();
-            }
         }
     }
 }

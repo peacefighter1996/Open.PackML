@@ -2,16 +2,35 @@
 {
     public static class TransitionCheck
     {
+        public static bool CheckTransition(Command command, State currentState, Mode currentMode)
+        {
+            switch (command)
+            {
+                case Command.Abort:
+                    return TransitionCheck.Abort(currentState, currentMode);
+                case Command.Clear:
+                    return TransitionCheck.Clear(currentState, currentMode);
+                case Command.Stop:
+                    return TransitionCheck.Stop(currentState, currentMode);
+                case Command.Reset:
+                    return TransitionCheck.Reset(currentState, currentMode);
+                case Command.Start:
+                    return TransitionCheck.Start(currentState, currentMode);
+                case Command.Hold:
+                    return TransitionCheck.Hold(currentState, currentMode);
+                case Command.Unhold:
+                    return TransitionCheck.UnHold(currentState, currentMode);
+                case Command.Suspend:
+                    return TransitionCheck.Suspend(currentState, currentMode);
+                case Command.UnSuspend:
+                    return TransitionCheck.UnSuspend(currentState, currentMode);
+                default:
+                    return false;
+            }
+        }
         public static bool Stop(State currentPackMLState, PackML.Mode packMLMode = Mode.Production)
         {
-            if (currentPackMLState < State.Stopping)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return currentPackMLState > State.Stopping;
         }
 
         public static bool Abort(State currentPackMLState, PackML.Mode packMLMode = Mode.Production)
