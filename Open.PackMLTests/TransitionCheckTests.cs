@@ -28,7 +28,7 @@ namespace Open.PackML.Tests
             Assert.True(expectation == TransitionCheck.Abort(state), $"Check {state} if it accepts {Command.Abort} Command");
         }
 
-        [Fact()]
+        [Theory]
         [InlineData(State.Undefined, false)]
         [InlineData(State.Aborting, false)]
         [InlineData(State.Aborted, false)]
@@ -47,51 +47,177 @@ namespace Open.PackML.Tests
         [InlineData(State.UnSuspending, true)]
         [InlineData(State.Completing, true)]
         [InlineData(State.Completed, true)]
-        public void StopTest()
+        public void StopTest(State state, bool expectation)
         {
-            Assert.True(false, "This test needs an implementation");
+            Assert.True(expectation == TransitionCheck.Stop(state), $"Check {state} if it accepts {Command.Stop} Command");
         }
 
-        [Fact()]
-        public void ResetTest()
+        [Theory]
+        [InlineData(State.Undefined, false)]
+        [InlineData(State.Aborting, false)]
+        [InlineData(State.Aborted, false)]
+        [InlineData(State.Clearing, false)]
+        [InlineData(State.Stopping, false)]
+        [InlineData(State.Stopped, true)]
+        [InlineData(State.Resetting, false)]
+        [InlineData(State.Idle, false)]
+        [InlineData(State.Starting, false)]
+        [InlineData(State.Execute, false)]
+        [InlineData(State.Held, false)]
+        [InlineData(State.Holding, false)]
+        [InlineData(State.UnHolding, false)]
+        [InlineData(State.Suspending, false)]
+        [InlineData(State.Suspended, false)]
+        [InlineData(State.UnSuspending, false)]
+        [InlineData(State.Completing, false)]
+        [InlineData(State.Completed, true)]
+        public void ResetTest(State state, bool expectation)
         {
-            Assert.True(false, "This test needs an implementation");
+            Assert.True(expectation == TransitionCheck.Reset(state), $"Check {state} if it accepts {Command.Reset} Command");
         }
 
-        [Fact()]
-        public void StartTest()
+        [Theory]
+        [InlineData(State.Undefined, false)]
+        [InlineData(State.Aborting, false)]
+        [InlineData(State.Aborted, false)]
+        [InlineData(State.Clearing, false)]
+        [InlineData(State.Stopping, false)]
+        [InlineData(State.Stopped, false)]
+        [InlineData(State.Resetting, false)]
+        [InlineData(State.Idle, true)]
+        [InlineData(State.Starting, false)]
+        [InlineData(State.Execute, false)]
+        [InlineData(State.Held, false)]
+        [InlineData(State.Holding, false)]
+        [InlineData(State.UnHolding, false)]
+        [InlineData(State.Suspending, false)]
+        [InlineData(State.Suspended, false)]
+        [InlineData(State.UnSuspending, false)]
+        [InlineData(State.Completing, false)]
+        [InlineData(State.Completed, false)]
+        public void StartTest(State state, bool expectation)
         {
-            Assert.True(false, "This test needs an implementation");
+            Assert.True(expectation == TransitionCheck.Start(state), $"Check {state} if it accepts {Command.Start} Command");
         }
 
-        [Fact()]
-        public void SuspendTest()
+        [Theory]
+        [InlineData(State.Undefined, false)]
+        [InlineData(State.Aborting, false)]
+        [InlineData(State.Aborted, false)]
+        [InlineData(State.Clearing, false)]
+        [InlineData(State.Stopping, false)]
+        [InlineData(State.Stopped, false)]
+        [InlineData(State.Resetting, false)]
+        [InlineData(State.Idle, false)]
+        [InlineData(State.Starting, false)]
+        [InlineData(State.Execute, true)]
+        [InlineData(State.Held, false)]
+        [InlineData(State.Holding, false)]
+        [InlineData(State.UnHolding, false)]
+        [InlineData(State.Suspending, false)]
+        [InlineData(State.Suspended, false)]
+        [InlineData(State.UnSuspending, false)]
+        [InlineData(State.Completing, false)]
+        [InlineData(State.Completed, false)]
+        public void SuspendTest(State state, bool expectation)
         {
-            Assert.True(false, "This test needs an implementation");
+            Assert.True(expectation == TransitionCheck.Suspend(state), $"Check {state} if it accepts {Command.Suspend} Command");
         }
 
-        [Fact()]
-        public void HoldTest()
+        [Theory]
+        [InlineData(State.Undefined, false)]
+        [InlineData(State.Aborting, false)]
+        [InlineData(State.Aborted, false)]
+        [InlineData(State.Clearing, false)]
+        [InlineData(State.Stopping, false)]
+        [InlineData(State.Stopped, false)]
+        [InlineData(State.Resetting, false)]
+        [InlineData(State.Idle, false)]
+        [InlineData(State.Starting, false)]
+        [InlineData(State.Execute, true)]
+        [InlineData(State.Held, false)]
+        [InlineData(State.Holding, false)]
+        [InlineData(State.UnHolding, false)]
+        [InlineData(State.Suspending, false)]
+        [InlineData(State.Suspended, false)]
+        [InlineData(State.UnSuspending, false)]
+        [InlineData(State.Completing, false)]
+        [InlineData(State.Completed, false)]
+        public void HoldTest(State state, bool expectation)
         {
-            Assert.True(false, "This test needs an implementation");
+            Assert.True(expectation == TransitionCheck.Hold(state), $"Check {state} if it accepts {Command.Hold} Command");
         }
 
-        [Fact()]
-        public void UnHoldTest()
+        [Theory]
+        [InlineData(State.Undefined, false)]
+        [InlineData(State.Aborting, false)]
+        [InlineData(State.Aborted, false)]
+        [InlineData(State.Clearing, false)]
+        [InlineData(State.Stopping, false)]
+        [InlineData(State.Stopped, false)]
+        [InlineData(State.Resetting, false)]
+        [InlineData(State.Idle, false)]
+        [InlineData(State.Starting, false)]
+        [InlineData(State.Execute, false)]
+        [InlineData(State.Held, true)]
+        [InlineData(State.Holding, false)]
+        [InlineData(State.UnHolding, false)]
+        [InlineData(State.Suspending, false)]
+        [InlineData(State.Suspended, false)]
+        [InlineData(State.UnSuspending, false)]
+        [InlineData(State.Completing, false)]
+        [InlineData(State.Completed, false)]
+        public void UnHoldTest(State state, bool expectation)
         {
-            Assert.True(false, "This test needs an implementation");
+            Assert.True(expectation == TransitionCheck.UnHold(state), $"Check {state} if it accepts {Command.Unhold} Command");
         }
 
-        [Fact()]
-        public void UnSuspendTest()
+        [Theory]
+        [InlineData(State.Undefined, false)]
+        [InlineData(State.Aborting, false)]
+        [InlineData(State.Aborted, false)]
+        [InlineData(State.Clearing, false)]
+        [InlineData(State.Stopping, false)]
+        [InlineData(State.Stopped, false)]
+        [InlineData(State.Resetting, false)]
+        [InlineData(State.Idle, false)]
+        [InlineData(State.Starting, false)]
+        [InlineData(State.Execute, false)]
+        [InlineData(State.Held, false)]
+        [InlineData(State.Holding, false)]
+        [InlineData(State.UnHolding, false)]
+        [InlineData(State.Suspending, false)]
+        [InlineData(State.Suspended, true)]
+        [InlineData(State.UnSuspending, false)]
+        [InlineData(State.Completing, false)]
+        [InlineData(State.Completed, false)]
+        public void UnSuspendTest(State state, bool expectation)
         {
-            Assert.True(false, "This test needs an implementation");
+            Assert.True(expectation == TransitionCheck.UnSuspend(state), $"Check {state} if it accepts {Command.UnSuspend} Command");
         }
 
-        [Fact()]
-        public void ClearTest()
+        [Theory]
+        [InlineData(State.Undefined, false)]
+        [InlineData(State.Aborting, false)]
+        [InlineData(State.Aborted, true)]
+        [InlineData(State.Clearing, false)]
+        [InlineData(State.Stopping, false)]
+        [InlineData(State.Stopped, false)]
+        [InlineData(State.Resetting, false)]
+        [InlineData(State.Idle, false)]
+        [InlineData(State.Starting, false)]
+        [InlineData(State.Execute, false)]
+        [InlineData(State.Held, false)]
+        [InlineData(State.Holding, false)]
+        [InlineData(State.UnHolding, false)]
+        [InlineData(State.Suspending, false)]
+        [InlineData(State.Suspended, false)]
+        [InlineData(State.UnSuspending, false)]
+        [InlineData(State.Completing, false)]
+        [InlineData(State.Completed, false)]
+        public void ClearTest(State state, bool expectation)
         {
-            Assert.True(false, "This test needs an implementation");
+            Assert.True(expectation == TransitionCheck.Clear(state), $"Check {state} if it accepts {Command.Clear} Command");
         }
     }
 }
