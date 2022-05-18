@@ -23,6 +23,6 @@ namespace Open.PackML
         Task<ValidationResult> SendPackMLModeAsync(Mode packMLMode);
 
         // events 
-        public event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
+        event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
     }
 }
