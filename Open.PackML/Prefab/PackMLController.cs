@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 
 namespace Open.PackML
 {
-    public class DefaultPackMLController<T> : DefaultPackMLAdapter<T> where T : Enum
+    public class PackMLController<T> : PackMLAdapter<T> where T : Enum
     {
 
 
-        public DefaultPackMLController(IMachineController<T> controller, IPackMLEventStore<T> packMLEventStore) : base(controller, packMLEventStore)
+        public PackMLController(IPackMLController<T> controller, IPackMLEventStore<T> packMLEventStore) : base(controller, packMLEventStore)
         {
 
         }

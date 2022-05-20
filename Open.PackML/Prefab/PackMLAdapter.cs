@@ -3,26 +3,27 @@ using System.Threading.Tasks;
 
 namespace Open.PackML
 {
-    public abstract class DefaultPackMLAdapter<T> : IPackMLController where T : Enum
+    public abstract class PackMLAdapter<T> : IPackMLController<T> where T : Enum
     {
         protected State currentState = State.Undefined;
         protected Mode currentMode = Mode.Undefined;
         protected DateTime lastStateUpdate = DateTime.MinValue.ToUniversalTime();
         protected DateTime lastTransition = DateTime.MinValue.ToUniversalTime();
-        protected IMachineController<T> controller;
+        protected IPackMLController<T> controller;
         protected IPackMLEventStore<T> packMLEventStore;
         public bool PreferAsync { get; set; } = true;
         protected bool controllerPreferAsync;
 
         public event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
+        public event EventHandler<MachineEventArguments<T>> MachineEvent;
 
-        public DefaultPackMLAdapter(IMachineController<T> controller, IPackMLEventStore<T> packMLEventStore)
+        public PackMLAdapter(IPackMLController<T> controller, IPackMLEventStore<T> packMLEventStore)
         {
             this.packMLEventStore = packMLEventStore;
             UpdateController(controller);
         }
 
-        public virtual ValidationResult UpdateController(IMachineController<T> controller)
+        public virtual ValidationResult UpdateController(IPackMLController<T> controller)
         {
             if (this.controller != null)
             {
@@ -49,13 +50,15 @@ namespace Open.PackML
                 {
                     currentState = result.Object;
                     lastTransition = e.DateTime;
-
                 }
-
+            }
+            else if (MachineEvent == null)
+            {
+                Console.WriteLine(string.Format("Event Id: {0} Does not have any state resolves", e.@enum));
             }
             else
             {
-                Console.WriteLine(string.Format("Event Id: {0} Does not have any state resolves", e.@enum));
+                MachineEvent.BeginInvoke(this, e, null, new { });
             }
         }
 

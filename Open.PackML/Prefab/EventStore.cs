@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Open.PackML.Controllers
 {
-    public class DefaultEventStore : Dictionary<Enum, EventReaction<Enum>>, IPackMLEventStore<Enum>
+    public class EventStore: Dictionary<Enum, EventReaction<Enum>>, IPackMLEventStore<Enum>
     {
-        public DefaultEventStore() { }
-        public DefaultEventStore(List<EventReaction<Enum>> eventReactions)
+        public EventStore() { }
+        public EventStore(List<EventReaction<Enum>> eventReactions)
         {
             foreach (var reaction in eventReactions)
             {

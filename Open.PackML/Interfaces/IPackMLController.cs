@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 
 namespace Open.PackML
 {
-    public interface IPackMLController
+    public interface IPackMLController<T> where T: Enum 
     {
         //local
         State CurrentPackMLState();
         Mode CurrentPackMLMode();
         bool PreferAsync { get; }
+        
 
         //Deep Synced
         State RetrieveCurrentPackMLState();
@@ -24,5 +25,6 @@ namespace Open.PackML
 
         // events 
         event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
+        event EventHandler<MachineEventArguments<T>> MachineEvent;
     }
 }
