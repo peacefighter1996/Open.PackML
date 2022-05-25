@@ -9,7 +9,7 @@
     <RepositoryUrl>https://github.com/peacefighter1996/Open.PackML</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.2.6-Alpha</Version>
+    <Version>0.2.7-Alpha</Version>
     
 
 
@@ -33,5 +33,13 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+      <None Include="docs\readme.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>
