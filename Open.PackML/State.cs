@@ -1,23 +1,27 @@
 ﻿namespace Open.PackML
 {
+    // Based on [1] 
+    /// <summary>
+    ///
+    /// </summary>
     public enum State
     {
         Undefined = 0,
-        Aborting = 1,
-        Aborted = 2,
-        Clearing = 3,
-        Stopping = 4,
-        Stopped = 5,
-        Resetting = 6,
-        Idle = 7,
-        Starting = 8,
-        Execute = 9,
-        Held = 10,
-        Holding = 11,
+        Clearing = 1,
+        Stopped = 2,
+        Starting = 3,
+        Idle = 4,
+        Suspended = 5,
+        Execute = 6,
+        Stopping = 7,
+        Aborting = 8,
+        Aborted = 9,
+        Holding = 10,
+        Held = 11,
         UnHolding = 12,
         Suspending = 13,
-        Suspended = 14,
-        UnSuspending = 15,
+        UnSuspending = 14,
+        Resetting = 15,
         Completing = 16,
         Completed = 17,
     }
