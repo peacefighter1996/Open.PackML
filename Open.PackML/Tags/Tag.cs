@@ -4,6 +4,11 @@ namespace Open.PackML
 {
     public abstract class Tag<T>
     {
+        public Tag(TagConfig tagConfig) : this(tagConfig.Name,tagConfig.EndUserTerm, tagConfig.Description)
+        {
+            
+        }
+
         public Tag(string name, string endUserTerm, string description = null)
         {
             var error = string.Empty;
@@ -37,5 +42,13 @@ namespace Open.PackML
         public string Name { get; }
         public string EndUserTerm { get; }
         public string Description { get; }
+    }
+    public class TagConfig
+    {
+        public string Name { get; set; }
+        public string EndUserTerm { get; set; }
+        public string Description { get; set; }
+        public Enum TagType { get; set; }
+        public Type DataType { get; set; }
     }
 }
