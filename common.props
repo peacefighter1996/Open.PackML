@@ -9,7 +9,7 @@
     <RepositoryUrl>https://github.com/peacefighter1996/Open.PackML</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.2.5-Alpha</Version>
+    <Version>0.2.6-Alpha</Version>
     
 
 
@@ -28,11 +28,10 @@
     <LangVersion>latest</LangVersion>
 
   </PropertyGroup>
-  <Target Name="BeforeBuild">
-    <Message Text="TF build: $(TF_BUILD)"/>
-  </Target>
-  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
-  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+  </ItemGroup>
 </Project>
