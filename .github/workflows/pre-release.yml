@@ -28,3 +28,4 @@ jobs:
           PROJECT_FILE_PATH: Open.PackML/Open.PackML.csproj
           NUGET_KEY: ${{secrets.NUGET_KEY}}
           VERSION_FILE_PATH: common.props
+          INCLUDE_SYMBOLS: true

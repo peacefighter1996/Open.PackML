@@ -3,11 +3,12 @@
   <PropertyGroup>
 
     <Authors>Ian Arbouw</Authors>
+    <Description>Open Library for development of PackML/ISA88 control systems.</Description>
     <PackageTags>packml;industrial-automation</PackageTags>
     <PackageProjectUrl>https://github.com/peacefighter1996/Open.PackML</PackageProjectUrl>
     <RepositoryUrl>https://github.com/peacefighter1996/Open.PackML</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.2.2-Alpha</Version>
+    <Version>0.2.3-Alpha</Version>
 
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

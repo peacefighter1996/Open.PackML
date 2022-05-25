@@ -1,5 +1,5 @@
 # Open.PackML
-![version](https://img.shields.io/badge/Version-alpha--0.2.1-orange)
+![version](https://img.shields.io/badge/Version-alpha--0.2.3-orange)
 
 Open prewritten classes for building control systems using the OMAC ISA-88 PackML standard in c# programs.
 
