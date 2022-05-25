@@ -2,5 +2,12 @@
   <Import Project="..\common.props" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net5.0;net48</TargetFrameworks>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 </Project>
