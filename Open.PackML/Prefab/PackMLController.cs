@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Open.PackML
+namespace Open.PackML.Prefab
 {
     public class PackMLController<T> : PackMLAdapter<T> where T : Enum
     {
-
-
         public PackMLController(IPackMLController<T> controller, IPackMLEventStore<T> packMLEventStore) : base(controller, packMLEventStore)
         {
 

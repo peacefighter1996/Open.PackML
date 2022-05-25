@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Open.PackML.Controllers
+namespace Open.PackML.Prefab
 {
     public class EventStore: Dictionary<Enum, EventReaction<Enum>>, IPackMLEventStore<Enum>
     {

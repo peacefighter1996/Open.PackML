@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Open.PackML
+namespace Open.PackML.Prefab
 {
     public abstract class PackMLAdapter<T> : IPackMLController<T> where T : Enum
     {
@@ -145,6 +145,46 @@ namespace Open.PackML
                 delegate { return controller.SendPackMLMode(packMLMode); },
                 delegate { return controller.SendPackMLModeAsync(packMLMode); }
                 );
+        }
+
+        public void ExecutePackTagCommand<G>(string name, G data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AsyncExecutePackTagCommand<G>(string name, G data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ExecutePackTagCommand<G>(int id, G data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AsyncExecutePackTagCommand<G>(int id, G data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public K ExecutePackTagCommand<G, K>(string name, G data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<K> AsyncExecutePackTagCommand<G, K>(string name, G data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public K ExecutePackTagCommand<G, K>(int id, G data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<K> AsyncExecutePackTagCommand<G, K>(int id, G data)
+        {
+            throw new NotImplementedException();
         }
     }
 }
