@@ -7,7 +7,7 @@
     <PackageProjectUrl>https://github.com/peacefighter1996/Open.PackML</PackageProjectUrl>
     <RepositoryUrl>https://github.com/peacefighter1996/Open.PackML</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.2.1-Alpha</Version>
+    <Version>0.2.2-Alpha</Version>
 
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
