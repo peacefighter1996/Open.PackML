@@ -28,6 +28,9 @@
     <LangVersion>latest</LangVersion>
 
   </PropertyGroup>
+  <Target Name="BeforeBuild">
+    <Message Text="TF build: $(TF_BUILD)"/>
+  </Target>
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
