@@ -30,3 +30,4 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_KEY}}
           VERSION_FILE_PATH: common.props
           INCLUDE_SYMBOLS: true
+          NO_BUILD: true
