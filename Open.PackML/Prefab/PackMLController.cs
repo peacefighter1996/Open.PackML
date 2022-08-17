@@ -22,31 +22,12 @@ namespace Open.PackML.Prefab
 
         public override ValidationResult SendPackMLMode(Mode packMLMode)
         {
-            var temp = CheckModeTransition(packMLMode);
-            if (temp.success)
+            var temp = PmlTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
+            if (temp.Success)
             {
-                return base.SendPackMLMode(packMLMode);
+                currentMode = packMLMode;
             }
             return temp;
-        }
-
-        private ValidationResult CheckModeTransition(Mode packMLMode)
-        {
-            if (currentMode == packMLMode)
-            {
-                return new ValidationResult(false, string.Format("State already {0}", packMLMode));
-            }
-            if (currentState == State.Aborted
-                || currentState == State.Idle
-                || currentState == State.Stopped)
-            {
-                return new ValidationResult(true);
-            }
-            else
-            {
-                return new ValidationResult(false,
-                    "Current State of machine not applicable for a mode transition.\nState needs to be Idle, Stopped or Aborted");
-            }
         }
 
         public override async Task<ValidationResult> SendPackMLModeAsync(Mode packMLMode)
@@ -60,16 +41,16 @@ namespace Open.PackML.Prefab
         {
             return SyncDesissions.SyncDesider(controllerPreferAsync,
                 delegate { return base.SendPackMLCommand(packMLCommand); },
-                delegate
+                async delegate
                 {
-                    return base.SendPackMLCommandAsync(packMLCommand);
+                    return await base.SendPackMLCommandAsync(packMLCommand);
                 });
         }
 
 
         private ValidationResult UpdateControlState(Command packMLCommand)
         {
-            if (TransitionCheck.CheckTransition(packMLCommand, currentState, currentMode))
+            if (PmlTransitionCheck.CheckTransition(packMLCommand, currentState, currentMode))
             {
                 return DesidedSendPackMLCommand(packMLCommand);
             }

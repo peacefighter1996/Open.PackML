@@ -2,7 +2,7 @@
 
 namespace Open.PackML.Tests
 {
-    public class TransitionCheckTests
+    public class PmlTransitionCheckTests
     {
         [Theory]
         [InlineData(State.Undefined, true)]
@@ -25,7 +25,7 @@ namespace Open.PackML.Tests
         [InlineData(State.Completed, true)]
         public void AbortTest(State state, bool expectation)
         {
-            Assert.True(expectation == TransitionCheck.Abort(state), $"Check {state} if it accepts {Command.Abort} Command");
+            Assert.True(expectation == PmlTransitionCheck.Abort(state), $"Check {state} if it accepts {Command.Abort} Command");
         }
 
         [Theory]
@@ -49,7 +49,7 @@ namespace Open.PackML.Tests
         [InlineData(State.Completed, true)]
         public void StopTest(State state, bool expectation)
         {
-            Assert.True(expectation == TransitionCheck.Stop(state), $"Check {state} if it accepts {Command.Stop} Command");
+            Assert.True(expectation == PmlTransitionCheck.Stop(state), $"Check {state} if it accepts {Command.Stop} Command");
         }
 
         [Theory]
@@ -73,7 +73,7 @@ namespace Open.PackML.Tests
         [InlineData(State.Completed, true)]
         public void ResetTest(State state, bool expectation)
         {
-            Assert.True(expectation == TransitionCheck.Reset(state), $"Check {state} if it accepts {Command.Reset} Command");
+            Assert.True(expectation == PmlTransitionCheck.Reset(state), $"Check {state} if it accepts {Command.Reset} Command");
         }
 
         [Theory]
@@ -97,7 +97,7 @@ namespace Open.PackML.Tests
         [InlineData(State.Completed, false)]
         public void StartTest(State state, bool expectation)
         {
-            Assert.True(expectation == TransitionCheck.Start(state), $"Check {state} if it accepts {Command.Start} Command");
+            Assert.True(expectation == PmlTransitionCheck.Start(state), $"Check {state} if it accepts {Command.Start} Command");
         }
 
         [Theory]
@@ -121,7 +121,7 @@ namespace Open.PackML.Tests
         [InlineData(State.Completed, false)]
         public void SuspendTest(State state, bool expectation)
         {
-            Assert.True(expectation == TransitionCheck.Suspend(state), $"Check {state} if it accepts {Command.Suspend} Command");
+            Assert.True(expectation == PmlTransitionCheck.Suspend(state), $"Check {state} if it accepts {Command.Suspend} Command");
         }
 
         [Theory]
@@ -145,7 +145,7 @@ namespace Open.PackML.Tests
         [InlineData(State.Completed, false)]
         public void HoldTest(State state, bool expectation)
         {
-            Assert.True(expectation == TransitionCheck.Hold(state), $"Check {state} if it accepts {Command.Hold} Command");
+            Assert.True(expectation == PmlTransitionCheck.Hold(state), $"Check {state} if it accepts {Command.Hold} Command");
         }
 
         [Theory]
@@ -169,7 +169,7 @@ namespace Open.PackML.Tests
         [InlineData(State.Completed, false)]
         public void UnHoldTest(State state, bool expectation)
         {
-            Assert.True(expectation == TransitionCheck.UnHold(state), $"Check {state} if it accepts {Command.Unhold} Command");
+            Assert.True(expectation == PmlTransitionCheck.UnHold(state), $"Check {state} if it accepts {Command.Unhold} Command");
         }
 
         [Theory]
@@ -193,7 +193,7 @@ namespace Open.PackML.Tests
         [InlineData(State.Completed, false)]
         public void UnSuspendTest(State state, bool expectation)
         {
-            Assert.True(expectation == TransitionCheck.UnSuspend(state), $"Check {state} if it accepts {Command.UnSuspend} Command");
+            Assert.True(expectation == PmlTransitionCheck.UnSuspend(state), $"Check {state} if it accepts {Command.UnSuspend} Command");
         }
 
         [Theory]
@@ -217,7 +217,7 @@ namespace Open.PackML.Tests
         [InlineData(State.Completed, false)]
         public void ClearTest(State state, bool expectation)
         {
-            Assert.True(expectation == TransitionCheck.Clear(state), $"Check {state} if it accepts {Command.Clear} Command");
+            Assert.True(expectation == PmlTransitionCheck.Clear(state), $"Check {state} if it accepts {Command.Clear} Command");
         }
     }
 }
