@@ -1,7 +1,8 @@
 ﻿namespace Open.PackML
 {
     //https://www.kb-controls.io/post/packml-essentials
-    public enum Mode
+    public enum PmlMode
+
     {
         Undefined = 0,
         Production = 1,

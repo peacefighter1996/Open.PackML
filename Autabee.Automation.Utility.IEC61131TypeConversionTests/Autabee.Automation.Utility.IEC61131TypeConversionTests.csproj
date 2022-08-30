@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Open.PackML\Open.PackML.csproj" />
+    <ProjectReference Include="..\Autabee.Utility.IEC61131TypeConversion\Autabee.Automation.Utility.IEC61131TypeConversion.csproj" />
   </ItemGroup>
 
 </Project>

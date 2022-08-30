@@ -19,11 +19,11 @@ namespace Open.PackML.Prefab.Tests
         }
 
         [Theory]
-        [InlineData(EventHanderEnum1.id1, State.Idle)]
-        [InlineData(EventHanderEnum1.id2, State.Aborted)]
-        [InlineData(EventHanderEnum2.id1, State.Clearing)]
-        [InlineData(EventHanderEnum2.id2, State.Held)]
-        public void ProcessEventTest(Enum arg, State expectation)
+        [InlineData(EventHanderEnum1.id1, PmlState.Idle)]
+        [InlineData(EventHanderEnum1.id2, PmlState.Aborted)]
+        [InlineData(EventHanderEnum2.id1, PmlState.Clearing)]
+        [InlineData(EventHanderEnum2.id2, PmlState.Held)]
+        public void ProcessEventTest(Enum arg, PmlState expectation)
         {
             Assert.Equal(expectation, eventStore.GetMachineEvent(arg).StateChangeId);
         }

@@ -5,8 +5,8 @@ namespace Open.PackML.Prefab
 {
     public abstract class PackMLAdapter<T> : IPackMLController<T> where T : Enum
     {
-        protected State currentState = State.Undefined;
-        protected Mode currentMode = Mode.Undefined;
+        protected PmlState currentState = PmlState.Undefined;
+        protected PmlMode currentMode = PmlMode.Undefined;
         protected DateTime lastStateUpdate = DateTime.MinValue.ToUniversalTime();
         protected DateTime lastTransition = DateTime.MinValue.ToUniversalTime();
         protected IPackMLController<T> controller;
@@ -75,39 +75,39 @@ namespace Open.PackML.Prefab
             }
         }
 
-        public virtual State CurrentPackMLState()
+        public virtual PmlState CurrentPackMLState()
         {
             return currentState;
         }
 
-        public virtual Mode CurrentPackMLMode()
+        public virtual PmlMode CurrentPackMLMode()
         {
             return currentMode;
         }
 
-        public virtual async Task<State> RetrieveCurrentPackMLStateAsync()
+        public virtual async Task<PmlState> RetrieveCurrentPackMLStateAsync()
         {
             currentState = controllerPreferAsync ? await controller.RetrieveCurrentPackMLStateAsync() : controller.RetrieveCurrentPackMLState();
             return currentState;
         }
 
-        public virtual async Task<Mode> RetrieveCurrentPackMLModeAsync()
+        public virtual async Task<PmlMode> RetrieveCurrentPackMLModeAsync()
         {
             currentMode = await controller.RetrieveCurrentPackMLModeAsync();
             return currentMode;
         }
 
-        public virtual async Task<ValidationResult> SendPackMLCommandAsync(Command packMLCommand)
+        public virtual async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand packMLCommand)
         {
             return await controller.SendPackMLCommandAsync(packMLCommand);
         }
 
-        public virtual async Task<ValidationResult> SendPackMLModeAsync(Mode packMLMode)
+        public virtual async Task<ValidationResult> SendPackMLModeAsync(PmlMode packMLMode)
         {
             return await controller.SendPackMLModeAsync(packMLMode);
         }
 
-        public virtual State RetrieveCurrentPackMLState()
+        public virtual PmlState RetrieveCurrentPackMLState()
         {
             currentState = SyncDesissions.SyncDesider(
                  controllerPreferAsync,
@@ -118,7 +118,7 @@ namespace Open.PackML.Prefab
             return currentState;
         }
 
-        public virtual Mode RetrieveCurrentPackMLMode()
+        public virtual PmlMode RetrieveCurrentPackMLMode()
         {
             currentMode = SyncDesissions.SyncDesider(
                 controllerPreferAsync,
@@ -129,7 +129,7 @@ namespace Open.PackML.Prefab
             return currentMode;
         }
 
-        public virtual ValidationResult SendPackMLCommand(Command packMLCommand)
+        public virtual ValidationResult SendPackMLCommand(PmlCommand packMLCommand)
         {
             return SyncDesissions.SyncDesider(
                 controllerPreferAsync,
@@ -138,7 +138,7 @@ namespace Open.PackML.Prefab
                 );
         }
 
-        public virtual ValidationResult SendPackMLMode(Mode packMLMode)
+        public virtual ValidationResult SendPackMLMode(PmlMode packMLMode)
         {
             return SyncDesissions.SyncDesider(
                 controllerPreferAsync,

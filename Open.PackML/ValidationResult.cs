@@ -19,17 +19,12 @@
             }
         }
     }
-    public class ValidationResult<T>
+    public class ValidationResult<T> : ValidationResult
     {
-        public ValidationResult(T Object, bool success, string unSuccesfullText = "")
+        public ValidationResult(T Object, bool success, string unSuccesfullText = ""): base(success, unSuccesfullText)
         {
-            this.success = success;
-            this.unSuccesfullText = unSuccesfullText;
             this.Object = Object;
         }
-
-        public bool success { get; }
-        public string unSuccesfullText { get; }
         public T Object { get; }
     }
 

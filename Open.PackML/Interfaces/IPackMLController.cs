@@ -19,22 +19,22 @@ namespace Open.PackML
 
 
         //local
-        State CurrentPackMLState();
-        Mode CurrentPackMLMode();
+        PmlState CurrentPackMLState();
+        PmlMode CurrentPackMLMode();
         bool PreferAsync { get; }
         
 
         //Deep Synced
-        State RetrieveCurrentPackMLState();
-        Mode RetrieveCurrentPackMLMode();
-        ValidationResult SendPackMLCommand(Command packMLCommand);
-        ValidationResult SendPackMLMode(Mode packMLMode);
+        PmlState RetrieveCurrentPackMLState();
+        PmlMode RetrieveCurrentPackMLMode();
+        ValidationResult SendPackMLCommand(PmlCommand packMLCommand);
+        ValidationResult SendPackMLMode(PmlMode packMLMode);
 
         //Deep Async
-        Task<State> RetrieveCurrentPackMLStateAsync();
-        Task<Mode> RetrieveCurrentPackMLModeAsync();
-        Task<ValidationResult> SendPackMLCommandAsync(Command packMLCommand);
-        Task<ValidationResult> SendPackMLModeAsync(Mode packMLMode);
+        Task<PmlState> RetrieveCurrentPackMLStateAsync();
+        Task<PmlMode> RetrieveCurrentPackMLModeAsync();
+        Task<ValidationResult> SendPackMLCommandAsync(PmlCommand packMLCommand);
+        Task<ValidationResult> SendPackMLModeAsync(PmlMode packMLMode);
 
         // events 
         event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
