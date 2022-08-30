@@ -5,86 +5,86 @@ namespace Open.PackML
     public static class PmlTransitionCheck
 
     {
-        public static bool CheckTransition(Command command, State currentState, Mode currentMode)
+        public static bool CheckTransition(PmlCommand PmlCommand, PmlState currentState, PmlMode currentMode)
         {
-            switch (command)
+            switch (PmlCommand)
             {
-                case Command.Abort:
+                case PmlCommand.Abort:
                     return Abort(currentState, currentMode);
-                case Command.Clear:
+                case PmlCommand.Clear:
                     return Clear(currentState, currentMode);
-                case Command.Stop:
+                case PmlCommand.Stop:
                     return Stop(currentState, currentMode);
-                case Command.Reset:
+                case PmlCommand.Reset:
                     return Reset(currentState, currentMode);
-                case Command.Start:
+                case PmlCommand.Start:
                     return Start(currentState, currentMode);
-                case Command.Hold:
+                case PmlCommand.Hold:
                     return Hold(currentState, currentMode);
-                case Command.Unhold:
+                case PmlCommand.Unhold:
                     return UnHold(currentState, currentMode);
-                case Command.Suspend:
+                case PmlCommand.Suspend:
                     return Suspend(currentState, currentMode);
-                case Command.UnSuspend:
+                case PmlCommand.UnSuspend:
                     return UnSuspend(currentState, currentMode);
                 default:
                     return false;
             }
         }
-        public static bool Stop(State currentPackMLState, PackML.Mode packMLMode = Mode.Production)
+        public static bool Stop(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
         {
             switch (currentPackMLState)
             {
-                case State.Undefined:
+                case PmlState.Undefined:
                     return false;
-                case State.Clearing:
+                case PmlState.Clearing:
                     return false;
-                case State.Stopped:
+                case PmlState.Stopped:
                     return true;
-                case State.Starting:
+                case PmlState.Starting:
                     return true;
-                case State.Idle:
+                case PmlState.Idle:
                     return true;
-                case State.Suspended:
+                case PmlState.Suspended:
                     return true;
-                case State.Execute:
+                case PmlState.Execute:
                     return true;
-                case State.Stopping:
+                case PmlState.Stopping:
                     return false;
-                case State.Aborting:
+                case PmlState.Aborting:
                     return false;
-                case State.Aborted:
+                case PmlState.Aborted:
                     return false;
-                case State.Holding:
+                case PmlState.Holding:
                     return true;
-                case State.Held:
+                case PmlState.Held:
                     return true;
-                case State.UnHolding:
+                case PmlState.UnHolding:
                     return true;
-                case State.Suspending:
+                case PmlState.Suspending:
                     return true;
-                case State.UnSuspending:
+                case PmlState.UnSuspending:
                     return true;
-                case State.Resetting:
+                case PmlState.Resetting:
                     return true;
-                case State.Completing:
+                case PmlState.Completing:
                     return true;
-                case State.Completed:
+                case PmlState.Completed:
                     return true;
                 default:
                     return false;
             }
         }
 
-        public static bool Abort(State currentPackMLState, PackML.Mode packMLMode = Mode.Production)
+        public static bool Abort(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
         {
             return true;
         }
 
-        public static bool Reset(State currentPackMLState, PackML.Mode packMLMode = Mode.Production)
+        public static bool Reset(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
         {
-            if (currentPackMLState == State.Stopped
-                || currentPackMLState == State.Completed)
+            if (currentPackMLState == PmlState.Stopped
+                || currentPackMLState == PmlState.Completed)
             {
                 return true;
             }
@@ -94,52 +94,52 @@ namespace Open.PackML
             }
         }
 
-        public static bool Start(State currentPackMLState, PackML.Mode packMLMode = Mode.Production)
+        public static bool Start(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
         {
-            return currentPackMLState == State.Idle;
+            return currentPackMLState == PmlState.Idle;
         }
 
-        public static bool Suspend(State currentPackMLState, PackML.Mode packMLMode = Mode.Production)
+        public static bool Suspend(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
         {
-            return currentPackMLState == State.Execute && packMLMode == Mode.Production;
+            return currentPackMLState == PmlState.Execute && packMLMode == PmlMode.Production;
         }
 
-        public static bool Hold(State currentPackMLState, PackML.Mode packMLMode = Mode.Production)
+        public static bool Hold(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
         {
-            return currentPackMLState == State.Execute && packMLMode == Mode.Production;
+            return currentPackMLState == PmlState.Execute && packMLMode == PmlMode.Production;
         }
 
-        public static bool UnHold(State currentPackMLState, PackML.Mode packMLMode = Mode.Production)
+        public static bool UnHold(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
         {
-            return currentPackMLState == State.Held;
+            return currentPackMLState == PmlState.Held;
         }
 
-        public static bool UnSuspend(State currentPackMLState, PackML.Mode packMLMode = Mode.Production)
+        public static bool UnSuspend(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
         {
-            return currentPackMLState == State.Suspended;
+            return currentPackMLState == PmlState.Suspended;
         }
 
-        public static bool Clear(State currentPackMLState, PackML.Mode packMLMode = Mode.Production)
+        public static bool Clear(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
         {
-            return currentPackMLState == State.Aborted;
+            return currentPackMLState == PmlState.Aborted;
         }
 
-        public static ValidationResult CheckModeUpdate(Mode currentMode, Mode packMLMode, State currentState)
+        public static ValidationResult CheckModeUpdate(PmlMode currentMode, PmlMode packMLMode, PmlState currentState)
         {
             if (currentMode == packMLMode)
             {
-                return new ValidationResult(false, string.Format("State already {0}", packMLMode));
+                return new ValidationResult(false, string.Format("PmlState already {0}", packMLMode));
             }
-            if (currentState == State.Aborted
-                || currentState == State.Idle
-                || currentState == State.Stopped)
+            if (currentState == PmlState.Aborted
+                || currentState == PmlState.Idle
+                || currentState == PmlState.Stopped)
             {
                 return new ValidationResult(true);
             }
             else
             {
                 return new ValidationResult(false,
-                    "Current State of machine not applicable for a mode transition.\nState needs to be Idle, Stopped or Aborted");
+                    "Current PmlState of machine not applicable for a PmlMode transition.\nState needs to be Idle, Stopped or Aborted");
             }
         }
 

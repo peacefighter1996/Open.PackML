@@ -1,7 +1,7 @@
 ﻿namespace Open.PackML
 {
     // Based on [1] 
-    public enum Command
+    public enum PmlCommand
     {
         NoCommand = 0,
         Reset = 1,

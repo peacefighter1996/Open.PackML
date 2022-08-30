@@ -15,15 +15,15 @@ namespace Open.PackML.Prefab
         }
 
 
-        public ValidationResult<State> ProcessEvent(Enum @event)
+        public ValidationResult<PmlState> ProcessEvent(Enum @event)
         {
             if (ContainsKey(@event))
             {
-                return new ValidationResult<State>(this[@event].StateChangeId, true);
+                return new ValidationResult<PmlState>(this[@event].StateChangeId, true);
             }
             else
             {
-                return new ValidationResult<State>(State.Undefined, false, $"Event {@event.GetType().Name} {@event} not found in event store");
+                return new ValidationResult<PmlState>(PmlState.Undefined, false, $"Event {@event.GetType().Name} {@event} not found in event store");
             }
         }
 

@@ -10,7 +10,7 @@ namespace Open.PackML.Prefab
     public class DefaultTagStore<T> : ITagStore where T : Enum
     {
         Dictionary<string, TagDetails> valuePairs;
-        public DefaultTagStore(Dictionary<string, IMachineController<T>> StoredObjects)
+        public DefaultTagStore(Dictionary<string, IPackMLEventStore<T>> StoredObjects)
         {
             valuePairs = new Dictionary<string, TagDetails>();
             foreach (var StoredObject in StoredObjects)
