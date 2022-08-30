@@ -1,6 +1,6 @@
 ﻿namespace Open.PackML
 {
-    public enum State
+    public enum PmlState
     {
         Undefined = 0,
         Aborting = 1,

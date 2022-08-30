@@ -1,6 +1,6 @@
 ﻿namespace Open.PackML
 {
-    public enum Command
+    public enum PmlCommand
     {
         Abort = 0,
         Clear = 1,

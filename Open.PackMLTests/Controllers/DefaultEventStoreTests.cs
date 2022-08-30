@@ -12,18 +12,18 @@ namespace Open.PackML.Controllers.Tests
         public DefaultEventStoreTests()
         {
             this.eventStore = new DefaultEventStore();
-            eventStore.Add(EventHanderEnum1.id1, new EventReaction<Enum>(EventHanderEnum1.id1, State.Idle));
-            eventStore.Add(EventHanderEnum1.id2, new EventReaction<Enum>(EventHanderEnum2.id2, State.Aborted));
-            eventStore.Add(EventHanderEnum2.id1, new EventReaction<Enum>(EventHanderEnum1.id1, State.Clearing));
-            eventStore.Add(EventHanderEnum2.id2, new EventReaction<Enum>(EventHanderEnum2.id2, State.Held));
+            eventStore.Add(EventHanderEnum1.id1, new EventReaction<Enum>(EventHanderEnum1.id1, PmlState.Idle));
+            eventStore.Add(EventHanderEnum1.id2, new EventReaction<Enum>(EventHanderEnum2.id2, PmlState.Aborted));
+            eventStore.Add(EventHanderEnum2.id1, new EventReaction<Enum>(EventHanderEnum1.id1, PmlState.Clearing));
+            eventStore.Add(EventHanderEnum2.id2, new EventReaction<Enum>(EventHanderEnum2.id2, PmlState.Held));
         }
 
         [Theory]
-        [InlineData(EventHanderEnum1.id1, State.Idle)]
-        [InlineData(EventHanderEnum1.id2, State.Aborted)]
-        [InlineData(EventHanderEnum2.id1, State.Clearing)]
-        [InlineData(EventHanderEnum2.id2, State.Held)]
-        public void ProcessEventTest(Enum arg, State expectation)
+        [InlineData(EventHanderEnum1.id1, PmlState.Idle)]
+        [InlineData(EventHanderEnum1.id2, PmlState.Aborted)]
+        [InlineData(EventHanderEnum2.id1, PmlState.Clearing)]
+        [InlineData(EventHanderEnum2.id2, PmlState.Held)]
+        public void ProcessEventTest(Enum arg, PmlState expectation)
         {
             Assert.Equal(expectation, eventStore.GetMachineEvent(arg).StateChangeId);
         }

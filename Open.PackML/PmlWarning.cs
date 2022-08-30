@@ -2,10 +2,10 @@
 
 namespace Open.PackML
 {
-    public class Warning
+    public class PmlWarning
     {
         public Enum Id { get; }
-        public Warning(Enum Id)
+        public PmlWarning(Enum Id)
         {
             this.Id = Id;
         }

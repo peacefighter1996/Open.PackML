@@ -12,17 +12,17 @@ namespace Open.PackML
 
         }
 
-        public override ValidationResult SendPackMLCommand(Command packMLCommand)
+        public override ValidationResult SendPackMLCommand(PmlCommand packMLCommand)
         {
             return UpdateControlState(packMLCommand);
         }
 
-        public override async Task<ValidationResult> SendPackMLCommandAsync(Command packMLCommand)
+        public override async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand packMLCommand)
         {
             return await Task.Run(delegate { return UpdateControlState(packMLCommand); });
         }
 
-        public override ValidationResult SendPackMLMode(Mode packMLMode)
+        public override ValidationResult SendPackMLMode(PmlMode packMLMode)
         {
             var temp = CheckModeTransition(packMLMode);
             if (temp.success)
@@ -32,15 +32,15 @@ namespace Open.PackML
             return temp;
         }
 
-        private ValidationResult CheckModeTransition(Mode packMLMode)
+        private ValidationResult CheckModeTransition(PmlMode packMLMode)
         {
             if (currentMode == packMLMode)
             {
                 return new ValidationResult(false, string.Format("State already {0}", packMLMode));
             }
-            if (currentState == State.Aborted
-                || currentState == State.Idle
-                || currentState == State.Stopped)
+            if (currentState == PmlState.Aborted
+                || currentState == PmlState.Idle
+                || currentState == PmlState.Stopped)
             {
                 return new ValidationResult(true);
             }
@@ -51,14 +51,14 @@ namespace Open.PackML
             }
         }
 
-        public override async Task<ValidationResult> SendPackMLModeAsync(Mode packMLMode)
+        public override async Task<ValidationResult> SendPackMLModeAsync(PmlMode packMLMode)
         {
 
             return await base.SendPackMLModeAsync(packMLMode);
         }
 
 
-        private ValidationResult DesidedSendPackMLCommand(Command packMLCommand)
+        private ValidationResult DesidedSendPackMLCommand(PmlCommand packMLCommand)
         {
             return SyncDesissions.SyncDesider(controllerPreferAsync,
                 delegate { return base.SendPackMLCommand(packMLCommand); },
@@ -69,7 +69,7 @@ namespace Open.PackML
         }
 
 
-        private ValidationResult UpdateControlState(Command packMLCommand)
+        private ValidationResult UpdateControlState(PmlCommand packMLCommand)
         {
             if (TransitionCheck.CheckTransition(packMLCommand, currentState, currentMode))
             {
