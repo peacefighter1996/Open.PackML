@@ -5,8 +5,6 @@ namespace Open.PackML.Prefab.Tests
 {
     public class DefaultEventStoreTests
     {
-
-
         IPackMLEventStore<Enum> eventStore;
 
         public DefaultEventStoreTests()
@@ -25,7 +23,8 @@ namespace Open.PackML.Prefab.Tests
         [InlineData(EventHanderEnum2.id2, PmlState.Held)]
         public void ProcessEventTest(Enum arg, PmlState expectation)
         {
-            Assert.Equal(expectation, eventStore.GetMachineEvent(arg).StateChangeId);
+            var newState = eventStore.ProcessEvent(arg);
+            Assert.Equal(expectation, newState.Object);
         }
 
         [Theory]

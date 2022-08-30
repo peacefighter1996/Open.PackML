@@ -1,4 +1,6 @@
-﻿namespace Open.PackML
+﻿using Open.PackML;
+
+namespace Open.PackML
 {
     public static class PmlTransitionCheck
 
@@ -35,61 +37,42 @@
             {
                 case State.Undefined:
                     return false;
-                    break;
                 case State.Clearing:
                     return false;
-                    break;
                 case State.Stopped:
                     return true;
-                    break;
                 case State.Starting:
                     return true;
-                    break;
                 case State.Idle:
                     return true;
-                    break;
                 case State.Suspended:
                     return true;
-                    break;
                 case State.Execute:
                     return true;
-                    break;
                 case State.Stopping:
                     return false;
-                    break;
                 case State.Aborting:
                     return false;
-                    break;
                 case State.Aborted:
                     return false;
-                    break;
                 case State.Holding:
                     return true;
-                    break;
                 case State.Held:
                     return true;
-                    break;
                 case State.UnHolding:
                     return true;
-                    break;
                 case State.Suspending:
                     return true;
-                    break;
                 case State.UnSuspending:
                     return true;
-                    break;
                 case State.Resetting:
                     return true;
-                    break;
                 case State.Completing:
                     return true;
-                    break;
                 case State.Completed:
                     return true;
-                    break;
                 default:
                     return false;
-                    break;
             }
         }
 
@@ -140,5 +123,25 @@
         {
             return currentPackMLState == State.Aborted;
         }
+
+        public static ValidationResult CheckModeUpdate(Mode currentMode, Mode packMLMode, State currentState)
+        {
+            if (currentMode == packMLMode)
+            {
+                return new ValidationResult(false, string.Format("State already {0}", packMLMode));
+            }
+            if (currentState == State.Aborted
+                || currentState == State.Idle
+                || currentState == State.Stopped)
+            {
+                return new ValidationResult(true);
+            }
+            else
+            {
+                return new ValidationResult(false,
+                    "Current State of machine not applicable for a mode transition.\nState needs to be Idle, Stopped or Aborted");
+            }
+        }
+
     }
 }

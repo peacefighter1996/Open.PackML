@@ -4,25 +4,25 @@
     {
         public ValidationResult(bool success, string unSuccesfullText = "")
         {
-            this.success = success;
-            this.unSuccesfullText = unSuccesfullText;
+            this.Success = success;
+            this.UnSuccesfullText = unSuccesfullText;
         }
 
-        public bool success { get; private set; }
-        public string unSuccesfullText { get; private set; }
+        public bool Success { get; private set; }
+        public string UnSuccesfullText { get; private set; }
         public void AddResult(ValidationResult validationResult)
         {
-            if (validationResult.success == false)
+            if (validationResult.Success == false)
             {
-                success = false;
-                unSuccesfullText += validationResult.unSuccesfullText;
+                Success = false;
+                UnSuccesfullText += validationResult.UnSuccesfullText;
             }
         }
     }
     public class ValidationResult<T> : ValidationResult
     {
-        public ValidationResult(T Object, bool success, string unSuccesfullText = ""): base(success, unSuccesfullText)
-        {
+        public ValidationResult(T Object, bool success, string unSuccesfullText = "")
+        : base(success,unSuccesfullText){
             this.Object = Object;
         }
         public T Object { get; }

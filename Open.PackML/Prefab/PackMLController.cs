@@ -22,10 +22,10 @@ namespace Open.PackML.Prefab
 
         public override ValidationResult SendPackMLMode(PmlMode packMLMode)
         {
-            var temp = CheckModeTransition(packMLMode);
-            if (temp.success)
+            var temp = PmlTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
+            if (temp.Success)
             {
-                return base.SendPackMLMode(packMLMode);
+                currentMode = packMLMode;
             }
             return temp;
         }
@@ -60,16 +60,16 @@ namespace Open.PackML.Prefab
         {
             return SyncDesissions.SyncDesider(controllerPreferAsync,
                 delegate { return base.SendPackMLCommand(packMLCommand); },
-                delegate
+                async delegate
                 {
-                    return base.SendPackMLCommandAsync(packMLCommand);
+                    return await base.SendPackMLCommandAsync(packMLCommand);
                 });
         }
 
 
         private ValidationResult UpdateControlState(PmlCommand packMLCommand)
         {
-            if (TransitionCheck.CheckTransition(packMLCommand, currentState, currentMode))
+            if (PmlTransitionCheck.CheckTransition(packMLCommand, currentState, currentMode))
             {
                 return DesidedSendPackMLCommand(packMLCommand);
             }

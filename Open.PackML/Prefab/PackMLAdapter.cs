@@ -44,7 +44,7 @@ namespace Open.PackML.Prefab
         private void Controller_MachineEvent(object sender, MachineEventArguments<T> e)
         {
             var result = packMLEventStore.ProcessEvent(e.@enum);
-            if (result.success)
+            if (result.Success)
             {
                 if (lastTransition < e.DateTime)
                 {
