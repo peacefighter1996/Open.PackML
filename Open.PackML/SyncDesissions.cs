@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Open.PackML
 {
-    public static class SyncDesissions
+    public static class SyncDecisions
     {
-        public static T SyncDesider<T>(bool preferAsync, Func<T> func, Func<Task<T>> asyncFunc)
+        public static T SyncDecider<T>(bool preferAsync, Func<T> func, Func<Task<T>> asyncFunc)
         {
             if (preferAsync == true)
             {
@@ -18,7 +18,7 @@ namespace Open.PackML
                 return func();
             }
         }
-        public static async Task<T> asyncSyncDesider<T>(bool preferAsync, Func<T> func, Func<Task<T>> asyncFunc)
+        public static async Task<T> asyncSyncDecider<T>(bool preferAsync, Func<T> func, Func<Task<T>> asyncFunc)
         {
             if (preferAsync == true)
             {

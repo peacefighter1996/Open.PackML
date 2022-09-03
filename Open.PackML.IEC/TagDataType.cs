@@ -1,4 +1,5 @@
 ﻿using Autabee.Automation.Utility.IEC61131TypeConversion;
+using Open.PackML.Tags;
 using System;
 
 namespace Open.PackML.Iec
@@ -7,7 +8,7 @@ namespace Open.PackML.Iec
     {
         public static string GetIecType(this TagDetails tag)
         {
-            return IecTypeConvertor.GetIecType(tag.DataType);
+            return IecTypeConvertor.GetIecTypeString<Type>(tag.DataType);
         }
     }
 }

@@ -109,7 +109,7 @@ namespace Open.PackML.Prefab
 
         public virtual PmlState RetrieveCurrentPackMLState()
         {
-            currentState = SyncDesissions.SyncDesider(
+            currentState = SyncDecisions.SyncDecider(
                  controllerPreferAsync,
                  delegate { return controller.RetrieveCurrentPackMLState(); },
                  delegate { return controller.RetrieveCurrentPackMLStateAsync(); }
@@ -120,7 +120,7 @@ namespace Open.PackML.Prefab
 
         public virtual PmlMode RetrieveCurrentPackMLMode()
         {
-            currentMode = SyncDesissions.SyncDesider(
+            currentMode = SyncDecisions.SyncDecider(
                 controllerPreferAsync,
                 delegate { return controller.RetrieveCurrentPackMLMode(); },
                 delegate { return controller.RetrieveCurrentPackMLModeAsync(); }
@@ -131,7 +131,7 @@ namespace Open.PackML.Prefab
 
         public virtual ValidationResult SendPackMLCommand(PmlCommand packMLCommand)
         {
-            return SyncDesissions.SyncDesider(
+            return SyncDecisions.SyncDecider(
                 controllerPreferAsync,
                 delegate { return controller.SendPackMLCommand(packMLCommand); },
                 delegate { return controller.SendPackMLCommandAsync(packMLCommand); }
@@ -140,7 +140,7 @@ namespace Open.PackML.Prefab
 
         public virtual ValidationResult SendPackMLMode(PmlMode packMLMode)
         {
-            return SyncDesissions.SyncDesider(
+            return SyncDecisions.SyncDecider(
                 controllerPreferAsync,
                 delegate { return controller.SendPackMLMode(packMLMode); },
                 delegate { return controller.SendPackMLModeAsync(packMLMode); }

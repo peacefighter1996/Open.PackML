@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Open.PackML
+namespace Open.PackML.Tags
 {
     public class TagDetails
     {
@@ -28,16 +28,5 @@ namespace Open.PackML
         }
         public bool FixedSize { get => !Writable; }
         public int Lenght { get; }
-    }
-
-    public class TagDetailBuilder
-    {
-        private Type dataType;
-
-        TagDetailBuilder DataType(Type type)
-        {
-            this.dataType = type;
-            return this;
-        }
     }
 }

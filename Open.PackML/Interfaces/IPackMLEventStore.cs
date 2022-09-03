@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Open.PackML
 {
-    public interface IPackMLEventStore<T> : IDictionary<T, EventReaction<T>> where T : Enum
+    public interface IPackMLEventStore<T> : IDictionary<T, PmlEventReaction<T>> where T : Enum
     {
         ValidationResult<PmlState> ProcessEvent(T MachineEventId);
-        EventReaction<T> GetMachineEvent(T @event);
+        PmlEventReaction<T> GetMachineEvent(T @event);
     }
 }

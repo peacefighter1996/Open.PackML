@@ -7,6 +7,7 @@ namespace Open.PackML.Tags
         public AdminTag(DataTagConfig dataTagConfig) : base(dataTagConfig)
         {
         }
+
         public override TagType TagType => TagType.Admin;
     }
 }

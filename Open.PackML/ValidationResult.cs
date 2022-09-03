@@ -5,17 +5,17 @@
         public ValidationResult(bool success, string unSuccesfullText = "")
         {
             this.Success = success;
-            this.unSuccesfullText = unSuccesfullText;
+            this.FailText = unSuccesfullText;
         }
 
         public bool Success { get; private set; }
-        public string unSuccesfullText { get; private set; }
+        public string FailText { get; private set; }
         public void AddResult(ValidationResult validationResult)
         {
             if (validationResult.Success == false)
             {
                 Success = false;
-                unSuccesfullText += validationResult.unSuccesfullText;
+                FailText += validationResult.FailText;
             }
         }
     }

@@ -58,7 +58,7 @@ namespace Open.PackML.Prefab
 
         private ValidationResult DesidedSendPackMLCommand(PmlCommand packMLCommand)
         {
-            return SyncDesissions.SyncDesider(controllerPreferAsync,
+            return SyncDecisions.SyncDecider(controllerPreferAsync,
                 delegate { return base.SendPackMLCommand(packMLCommand); },
                 async delegate
                 {

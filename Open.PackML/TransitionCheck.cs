@@ -7,38 +7,38 @@
             switch (command)
             {
                 case PmlCommand.Abort:
-                    return TransitionCheck.Abort(currentState, currentMode);
+                    return Abort(currentState, currentMode);
                 case PmlCommand.Clear:
-                    return TransitionCheck.Clear(currentState, currentMode);
+                    return Clear(currentState, currentMode);
                 case PmlCommand.Stop:
-                    return TransitionCheck.Stop(currentState, currentMode);
+                    return Stop(currentState, currentMode);
                 case PmlCommand.Reset:
-                    return TransitionCheck.Reset(currentState, currentMode);
+                    return Reset(currentState, currentMode);
                 case PmlCommand.Start:
-                    return TransitionCheck.Start(currentState, currentMode);
+                    return Start(currentState, currentMode);
                 case PmlCommand.Hold:
-                    return TransitionCheck.Hold(currentState, currentMode);
+                    return Hold(currentState, currentMode);
                 case PmlCommand.Unhold:
-                    return TransitionCheck.UnHold(currentState, currentMode);
+                    return UnHold(currentState, currentMode);
                 case PmlCommand.Suspend:
-                    return TransitionCheck.Suspend(currentState, currentMode);
+                    return Suspend(currentState, currentMode);
                 case PmlCommand.UnSuspend:
-                    return TransitionCheck.UnSuspend(currentState, currentMode);
+                    return UnSuspend(currentState, currentMode);
                 default:
                     return false;
             }
         }
-        public static bool Stop(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static bool Stop(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
             return currentPackMLState > PmlState.Stopping;
         }
 
-        public static bool Abort(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static bool Abort(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
             return true;
         }
 
-        public static bool Reset(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static bool Reset(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
             if (currentPackMLState == PmlState.Stopped
                 || currentPackMLState == PmlState.Completed)
@@ -51,32 +51,32 @@
             }
         }
 
-        public static bool Start(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static bool Start(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
             return currentPackMLState == PmlState.Idle;
         }
 
-        public static bool Suspend(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static bool Suspend(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
             return currentPackMLState == PmlState.Execute && packMLMode == PmlMode.Production;
         }
 
-        public static bool Hold(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static bool Hold(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
             return currentPackMLState == PmlState.Execute && packMLMode == PmlMode.Production;
         }
 
-        public static bool UnHold(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static bool UnHold(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
             return currentPackMLState == PmlState.Held;
         }
 
-        public static bool UnSuspend(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static bool UnSuspend(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
             return currentPackMLState == PmlState.Suspended;
         }
 
-        public static bool Clear(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static bool Clear(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
             return currentPackMLState == PmlState.Aborted;
         }

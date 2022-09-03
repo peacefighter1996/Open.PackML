@@ -48,7 +48,13 @@ namespace Open.PackML
         public string Name { get; set; }
         public string EndUserTerm { get; set; }
         public string Description { get; set; }
-        public Enum TagType { get; set; }
+        public TagType TagType { get; set; }
         public Type DataType { get; set; }
+
+        public override string ToString()
+        {
+            return String.Format("{0},{1},{2},{3},{4},{5}", TagType.ToString(), Name, EndUserTerm, Description, DataType.Name, DataType.Namespace);
+        }
+
     }
 }

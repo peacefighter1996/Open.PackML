@@ -1,4 +1,6 @@
-﻿namespace Open.PackML.Prefab
+﻿using Open.PackML.Tags;
+
+namespace Open.PackML.Prefab
 {
     public interface ITagStore
     {

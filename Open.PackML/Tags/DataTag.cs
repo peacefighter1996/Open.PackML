@@ -9,6 +9,7 @@ namespace Open.PackML.Tags
     {
         private T tagValue;
 
+
         public DataTag(DataTagConfig dataTagConfig) : base(dataTagConfig)
         {
 
@@ -18,8 +19,6 @@ namespace Open.PackML.Tags
         {
             tagValue = default;
         }
-
-        public override TagType TagType => throw new NotImplementedException();
 
         public DataTag(string name, T Initvalue, string endUserTerm = "", string description = "") : base(name, endUserTerm, description)
         {
@@ -37,6 +36,9 @@ namespace Open.PackML.Tags
                 }
             }
         }
+
+        public override TagType TagType => throw new NotImplementedException();
+
         public event EventHandler<T> ValueUpdated;
 
     }

@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Xml;
 
 namespace Autabee.Automation.Utility.IEC61131TypeConversion
 {
     public static class IecTypeConvertor
     {
         // source https://www.plcnext.help/te/Programming/Csharp/Csharp_programming/Csharp_Supported_data_types.htm
-        public static string GetIecType<T>(this T value)
+        public static string GetIecTypeString<T>(this T value)
         {
             Type type = value.GetType();
             if (type.IsArray)
             {
-                var result = GetIecType(type.GetElementType()) + "[]";
+                var result = GetIecTypeString(type.GetElementType()) + "[]";
                 if (result == "USINT[]")
                 {
                     return IEC.IECType.STRING;
@@ -26,43 +28,34 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion
             else if (type.FullName == "System.Collections.BitArray")
             {
                 var temp = value as BitArray;
-                if (temp.Count == 1)
+                switch (temp.Count)
                 {
-                    return IEC.IECType.BOOL;
-                }
-                else if (temp.Count == 8)
-                {
-                    return IEC.IECType.BYTE;
-                }
-                else if ( temp.Count == 16)
-                {
-                    return IEC.IECType.WORD;
-                }
-                else if (temp.Count == 32)
-                {
-                    return IEC.IECType.DWORD;
-                }
-                else if (temp.Count == 64)
-                {
-                    return IEC.IECType.LWORD;
-                }
-                else 
-                {
-                    return "BOOL[]";
+                    case 1:
+                        return IEC.IECType.BOOL;
+                    case 8:
+                        return IEC.IECType.BYTE;
+                    case 16:
+                        return IEC.IECType.WORD;
+                    case 32:
+                        return IEC.IECType.DWORD;
+                    case 64:
+                        return IEC.IECType.LWORD;
+                    default:
+                        return "BOOL[]";
                 }
             }
             else
             {
-                return GetIecType(type);
+                return GetIecTypeString(type);
             }
         }
-
-        private static string GetIecType(Type type)
+        public static string GetIecTypeString(this Type type)
         {
             switch (type.FullName)
             {
                 case "System.Boolean":
                     return IEC.IECType.BOOL;
+
                 //unsigned Integers 
                 case "System.Byte":
                     return IEC.IECType.USINT;
@@ -70,9 +63,9 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion
                     return IEC.IECType.UINT;
                 case "System.UInt32":
                     return IEC.IECType.UDINT;
-
                 case "System.UInt64":
                     return IEC.IECType.ULINT;
+
                 //signed Integers 
                 case "System.SByte":
                     return IEC.IECType.SINT;
@@ -88,6 +81,7 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion
                     return IEC.IECType.REAL;
                 case "System.Double":
                     return IEC.IECType.LREAL;
+
                 //Duration
                 case "System.TimeSpan":
                     return IEC.IECType.LTIME;
@@ -105,9 +99,9 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion
             }
         }
 
-        public static Type GetCsharpType<T>(string type, object value)
+        public static Type GetCsharpType<T>(string typeString)
         {
-            switch (type)
+            switch (typeString)
             {
                 case "BOOL":
                     return typeof(bool);
@@ -125,16 +119,41 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion
                     return typeof(uint);
                 case "ULINT":
                     return typeof(ulong);
-                case "":
+
                 default:
-                    if (type.StartsWith("UDT"))
+                    if (typeString.StartsWith("UDT"))
                     {
-                        return Assembly.GetEntryAssembly().GetType(type.Substring(4).Replace('_', '.'));
+                        return Assembly.GetEntryAssembly().GetType(typeString.Substring(4).Replace('_', '.'));
                     }
                     else
                     {
                         throw new ArgumentException("Unable to convert to c# type");
                     }
+            }
+        }
+
+
+        public static XmlDocument GetIecTypeStructure<T>(this T value, int depth = 1)
+        {
+            var item = new XmlDocument();
+            item.NameTable.Add(value.GetType().Namespace);
+            var node = item.CreateElement(value.GetIecTypeString());
+            item.AppendChild(node);
+            AddSubNodes(value.GetType(), item, node,depth-1);
+            return item;
+        }
+
+        private static void AddSubNodes(Type value, XmlDocument item, XmlNode node, int depth)
+        {
+            foreach (var property in value.GetProperties())
+            {
+                var node2 = item.CreateElement(property.Name);
+                node2.SetAttribute("type", property.PropertyType.GetIecTypeString());
+                node.AppendChild(node2);
+                if(depth > 0 && node2.Attributes[0].Value.Substring(0,3) == "UDT")
+                {
+                    AddSubNodes(property.PropertyType, item, node2, depth-1);
+                }
             }
         }
     }

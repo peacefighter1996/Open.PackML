@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Open.PackML.Prefab
 {
-    public class EventStore: Dictionary<Enum, EventReaction<Enum>>, IPackMLEventStore<Enum>
+    public class EventStore: Dictionary<Enum, PmlEventReaction<Enum>>, IPackMLEventStore<Enum>
     {
         public EventStore() { }
-        public EventStore(List<EventReaction<Enum>> eventReactions)
+        public EventStore(List<PmlEventReaction<Enum>> eventReactions)
         {
             foreach (var reaction in eventReactions)
             {
@@ -27,7 +27,7 @@ namespace Open.PackML.Prefab
             }
         }
 
-        public EventReaction<Enum> GetMachineEvent(Enum @event)
+        public PmlEventReaction<Enum> GetMachineEvent(Enum @event)
         {
             if (this.ContainsKey(@event))
             {

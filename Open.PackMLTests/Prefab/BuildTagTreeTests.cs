@@ -1,10 +1,11 @@
 ﻿using Xunit;
-using Open.PackML.Prefab;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit.Abstractions;
+using Open.PackML.Tags.Builders;
 
 namespace Open.PackML.Prefab.Tests
 {
@@ -29,10 +30,17 @@ namespace Open.PackML.Prefab.Tests
 
     public class BuildTagTreeTests
     {
+        ITestOutputHelper logger;
+        public BuildTagTreeTests(ITestOutputHelper output)
+        {
+            logger = output;
+        }
         [Fact()]
         public void GetTreeTest()
         {
             var temp = BuildTagTree.GetTree("Test1", new TestObject1());
+
+            var table = temp.BuildTable();
         }
     }
 }

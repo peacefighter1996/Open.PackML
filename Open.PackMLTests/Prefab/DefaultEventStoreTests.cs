@@ -10,10 +10,10 @@ namespace Open.PackML.Prefab.Tests
         public DefaultEventStoreTests()
         {
             this.eventStore = new EventStore();
-            eventStore.Add(EventHanderEnum1.id1, new EventReaction<Enum>(EventHanderEnum1.id1, PmlState.Idle));
-            eventStore.Add(EventHanderEnum1.id2, new EventReaction<Enum>(EventHanderEnum2.id2, PmlState.Aborted));
-            eventStore.Add(EventHanderEnum2.id1, new EventReaction<Enum>(EventHanderEnum1.id1, PmlState.Clearing));
-            eventStore.Add(EventHanderEnum2.id2, new EventReaction<Enum>(EventHanderEnum2.id2, PmlState.Held));
+            eventStore.Add(EventHanderEnum1.id1, new PmlEventReaction<Enum>(EventHanderEnum1.id1, PmlState.Idle));
+            eventStore.Add(EventHanderEnum1.id2, new PmlEventReaction<Enum>(EventHanderEnum2.id2, PmlState.Aborted));
+            eventStore.Add(EventHanderEnum2.id1, new PmlEventReaction<Enum>(EventHanderEnum1.id1, PmlState.Clearing));
+            eventStore.Add(EventHanderEnum2.id2, new PmlEventReaction<Enum>(EventHanderEnum2.id2, PmlState.Held));
         }
 
         [Theory]
