@@ -22,13 +22,13 @@ namespace Open.PackML.Tags.Builders
                 EndUserTerm = endUserTerm
             };
 
-            return GetTree(conf, obj, false, true, new());
+            return GetTree(conf, obj, false, true, new List<Type>());
         }
 
         private static TagDetails GetTree(TagConfig root, object obj, bool writable, bool readable, List<Type> types)
         {
             var properties = obj.GetType().GetProperties();
-            List<TagDetails> Children = new();
+            List<TagDetails> Children = new List<TagDetails>();
             foreach (var property in properties)
             {
                 if (property.GetCustomAttribute(typeof(TagIgnoreAttribute)) != null)
@@ -130,9 +130,14 @@ namespace Open.PackML.Tags.Builders
             return config;
         }
     }
-    public class TagTable : Collection<TagConfig>
+    public class TagTable : Collection<TagDetails>
     {
-        
+        public string GetTagTablePrint()
+        {
+            string print = "";
+            foreach (TagConfig item in this) print += item.ToString() + Environment.NewLine;
+            return print;
+        }
     }
 
     public static class TagTableBuilder
@@ -148,7 +153,7 @@ namespace Open.PackML.Tags.Builders
 
         public static void BuildTable(this TagDetails tagDetails, TagTable table)
         {
-            table.Add((TagConfig)tagDetails);
+            table.Add(tagDetails);
 
             foreach (TagDetails tagtree in tagDetails.ChildTags)
                 BuildTable(tagtree,table);

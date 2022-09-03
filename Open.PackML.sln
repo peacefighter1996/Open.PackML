@@ -1,17 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackML", "Open.PackML\Open.PackML.csproj", "{32B82727-AF8B-4D17-863C-6008135768D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackMLTests", "Open.PackMLTests\Open.PackMLTests.csproj", "{A6FE6E93-42AF-4E36-8A05-E1108E8FBC07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Open.PackML.Iec", "Open.PackML.IEC\Open.PackML.Iec.csproj", "{3795A4F6-41D3-4862-AD37-6CF9F5E84484}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackML.Iec", "Open.PackML.IEC\Open.PackML.Iec.csproj", "{3795A4F6-41D3-4862-AD37-6CF9F5E84484}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Autabee.Automation.Utility.IEC61131TypeConversion", "Autabee.Utility.IEC61131TypeConversion\Autabee.Automation.Utility.IEC61131TypeConversion.csproj", "{D96C5069-1885-4B22-A01E-B4F372119AA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autabee.Automation.Utility.IEC61131TypeConversion", "Autabee.Utility.IEC61131TypeConversion\Autabee.Automation.Utility.IEC61131TypeConversion.csproj", "{D96C5069-1885-4B22-A01E-B4F372119AA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Autabee.Automation.Utility.IEC61131TypeConversionTests", "Autabee.Automation.Utility.IEC61131TypeConversionTests\Autabee.Automation.Utility.IEC61131TypeConversionTests.csproj", "{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autabee.Automation.Utility.IEC61131TypeConversionTests", "Autabee.Automation.Utility.IEC61131TypeConversionTests\Autabee.Automation.Utility.IEC61131TypeConversionTests.csproj", "{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Open.PackML.Tags", "Open.PackML.Tags\Open.PackML.Tags.csproj", "{862C1E05-87A4-4E50-81D0-9185DD4C5B5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Autabee.Utility", "Autabee.Utility\Autabee.Utility.csproj", "{8C6B09BA-47F1-4952-A7EF-7862F181D979}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689}.Release|Any CPU.Build.0 = Release|Any CPU
+		{862C1E05-87A4-4E50-81D0-9185DD4C5B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{862C1E05-87A4-4E50-81D0-9185DD4C5B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{862C1E05-87A4-4E50-81D0-9185DD4C5B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{862C1E05-87A4-4E50-81D0-9185DD4C5B5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C6B09BA-47F1-4952-A7EF-7862F181D979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C6B09BA-47F1-4952-A7EF-7862F181D979}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C6B09BA-47F1-4952-A7EF-7862F181D979}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C6B09BA-47F1-4952-A7EF-7862F181D979}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

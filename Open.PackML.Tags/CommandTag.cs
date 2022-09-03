@@ -1,4 +1,5 @@
 ﻿using Open.PackML.Interfaces;
+using Open.PackML.Prefab;
 using System;
 using System.Threading.Tasks;
 
@@ -6,7 +7,7 @@ namespace Open.PackML.Tags
 {
     public class FunctionCommandTag<T, K> : Tag<T> where K : Enum
     {
-        public FunctionCommandTag(IPackMLController<K> machineController, TagConfig tagConfig) : base(tagConfig)
+        public FunctionCommandTag(PackMLController<K> machineController, TagConfig tagConfig) : base(tagConfig)
         {
             MachineController = machineController;
         }

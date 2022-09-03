@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Open.PackML.Tags\Open.PackML.Tags.csproj" />
     <ProjectReference Include="..\Open.PackML\Open.PackML.csproj" />
   </ItemGroup>
 

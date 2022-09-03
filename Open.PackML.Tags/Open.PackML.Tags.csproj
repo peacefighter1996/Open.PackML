@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\common.props" />
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net6.0;net48</TargetFrameworks>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="readme.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Autabee.Utility.IEC61131TypeConversion\Autabee.Automation.Utility.IEC61131TypeConversion.csproj" />
+	  <ProjectReference Include="..\Autabee.Utility\Autabee.Utility.csproj" />
+	  <ProjectReference Include="..\Open.PackML\Open.PackML.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -10,10 +10,10 @@ using Open.PackML.Tags.Builders;
 
 namespace Open.PackML.Prefab
 {
-    public class DefaultTagStore<T> : ITagStore where T : Enum
+    public class TagStore<T> : ITagStore where T : Enum
     {
         Dictionary<string, TagDetails> valuePairs;
-        public DefaultTagStore(Dictionary<string, IPackMLEventStore<T>> StoredObjects)
+        public TagStore(Dictionary<string, object> StoredObjects)
         {
             valuePairs = new Dictionary<string, TagDetails>();
             foreach (var StoredObject in StoredObjects)
