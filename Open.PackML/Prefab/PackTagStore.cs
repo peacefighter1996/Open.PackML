@@ -1,43 +1,21 @@
-﻿using System;
+﻿using Open.PackML.Interfaces;
+using Open.PackML.Tags;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Open.PackML.Prefab
 {
-    public class PackTagStore : Dictionary<Enum, PmlEventReaction<Enum>>, IPackMLEventStore<Enum>
+    public class PackTagStore : Dictionary<int, TagDetails>, ITagStore
     {
-        public PackTagStore() { }
-        public PackTagStore(List<PmlEventReaction<Enum>> eventReactions)
+        public ValidationResult<TagDetails> Browse(string Orgin)
         {
-            foreach (var reaction in eventReactions)
-            {
-                this.Add(reaction.MachineEventId, reaction);
-            }
+            throw new NotImplementedException();
         }
 
-
-        public ValidationResult<PmlState> ProcessEvent(Enum @event)
+        public ValidationResult<TagDetails> Browse(string Orgin, int Depth = 1)
         {
-            if (ContainsKey(@event))
-            {
-                return new ValidationResult<PmlState>(this[@event].StateChangeId, true);
-            }
-            else
-            {
-                return new ValidationResult<PmlState>(PmlState.Undefined, false, $"Event {@event.GetType().Name} {@event} not found in event store");
-            }
+            throw new NotImplementedException();
         }
-
-        public PmlEventReaction<Enum> GetMachineEvent(Enum @event)
-        {
-            if (this.ContainsKey(@event))
-            {
-                return this[@event];
-            }
-            else
-            {
-                return null;
-            }
-        }
-
     }
 }

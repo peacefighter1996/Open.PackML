@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Open.PackML.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace Open.PackML.Prefab
@@ -20,7 +21,7 @@ namespace Open.PackML.Prefab
             return await Task.Run(delegate { return UpdateControlState(packMLCommand); });
         }
 
-        public override ValidationResult SendPackMLMode(PmlMode packMLMode)
+        public override ValidationResult UpdatePackMLMode(PmlMode packMLMode)
         {
             var temp = PmlTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
             if (temp.Success)
@@ -49,10 +50,10 @@ namespace Open.PackML.Prefab
             }
         }
 
-        public override async Task<ValidationResult> SendPackMLModeAsync(PmlMode packMLMode)
+        public override async Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode)
         {
 
-            return await base.SendPackMLModeAsync(packMLMode);
+            return await base.UpdatePackMLModeAsync(packMLMode);
         }
 
 

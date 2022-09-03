@@ -1,6 +1,6 @@
 using System;
 
-namespace Open.PackML
+namespace Open.PackML.EventArguments
 {
     public class PmlStateChangeEventArg : EventArgs
     {

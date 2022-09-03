@@ -1,5 +1,4 @@
-﻿using Open.PackML.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,15 +11,11 @@ namespace Open.PackML.Tags
 
         public DataTag(DataTagConfig dataTagConfig) : base(dataTagConfig)
         {
-
-        }
-
-        public DataTag(string name, string endUserTerm = "", string description = "") : base(name, endUserTerm, description)
-        {
             tagValue = default;
         }
 
-        public DataTag(string name, T Initvalue, string endUserTerm = "", string description = "") : base(name, endUserTerm, description)
+
+        public DataTag(DataTagConfig config, T Initvalue) : base(config)
         {
             tagValue = Initvalue;
         }

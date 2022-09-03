@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Open.PackML.EventArguments;
+using Open.PackML.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace Open.PackML.Prefab
@@ -15,7 +17,7 @@ namespace Open.PackML.Prefab
         protected bool controllerPreferAsync;
 
         public event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
-        public event EventHandler<MachineEventArguments<T>> MachineEvent;
+        public event EventHandler<MachineEventArgs<T>> MachineEvent;
 
         public PackMLAdapter(IPackMLController<T> controller, IPackMLEventStore<T> packMLEventStore)
         {
@@ -41,7 +43,7 @@ namespace Open.PackML.Prefab
             return new ValidationResult(true);
         }
 
-        private void Controller_MachineEvent(object sender, MachineEventArguments<T> e)
+        private void Controller_MachineEvent(object sender, MachineEventArgs<T> e)
         {
             var result = packMLEventStore.ProcessEvent(e.@enum);
             if (result.Success)
@@ -62,7 +64,7 @@ namespace Open.PackML.Prefab
             }
         }
 
-        protected async void Controller_UpdateCurrentState(object sender, PmlStateChangeEventArg currentPackMLState)
+        protected void Controller_UpdateCurrentState(object sender, PmlStateChangeEventArg currentPackMLState)
         {
             if (lastStateUpdate <= currentPackMLState.DateTime.ToUniversalTime())
             {
@@ -71,7 +73,7 @@ namespace Open.PackML.Prefab
                 currentMode = currentPackMLState.CurrentMode;
 
 
-                UpdateCurrentState?.Invoke(this, currentPackMLState);
+                UpdateCurrentState?.BeginInvoke(this, currentPackMLState, null, new { });
             }
         }
 
@@ -102,9 +104,9 @@ namespace Open.PackML.Prefab
             return await controller.SendPackMLCommandAsync(packMLCommand);
         }
 
-        public virtual async Task<ValidationResult> SendPackMLModeAsync(PmlMode packMLMode)
+        public virtual async Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode)
         {
-            return await controller.SendPackMLModeAsync(packMLMode);
+            return await controller.UpdatePackMLModeAsync(packMLMode);
         }
 
         public virtual PmlState RetrieveCurrentPackMLState()
@@ -138,12 +140,12 @@ namespace Open.PackML.Prefab
                 );
         }
 
-        public virtual ValidationResult SendPackMLMode(PmlMode packMLMode)
+        public virtual ValidationResult UpdatePackMLMode(PmlMode packMLMode)
         {
             return SyncDecisions.SyncDecider(
                 controllerPreferAsync,
-                delegate { return controller.SendPackMLMode(packMLMode); },
-                delegate { return controller.SendPackMLModeAsync(packMLMode); }
+                delegate { return controller.UpdatePackMLMode(packMLMode); },
+                delegate { return controller.UpdatePackMLModeAsync(packMLMode); }
                 );
         }
 

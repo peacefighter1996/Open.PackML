@@ -35,12 +35,30 @@ namespace Open.PackML.Prefab.Tests
         {
             logger = output;
         }
-        [Fact()]
+        [Fact]
         public void GetTreeTest()
+        {
+            var temp = BuildTagTree.GetTree("", new TestObject1());
+
+            var table = temp.BuildTable();
+            table.RemoveAt(0);
+            foreach (var item in table)
+            {
+                logger.WriteLine(item.ToString()) ;
+            }
+        }
+
+        [Fact]
+        public void GetTreeTest1()
         {
             var temp = BuildTagTree.GetTree("Test1", new TestObject1());
 
             var table = temp.BuildTable();
+
+            foreach (var item in table)
+            {
+                logger.WriteLine(item.ToString());
+            }
         }
     }
 }

@@ -6,13 +6,13 @@ namespace Open.PackML.Tags.Attributes
     [AttributeUsage(AttributeTargets.Class |
                        AttributeTargets.Struct)
 ]
-    public class TagTypeAttribute : Attribute
+    public class TagEndUserTermAttribute : Attribute
     {
-        public TagType Type { get; }
+        public string EndUserTerm { get; }
 
-        public TagTypeAttribute(TagType type)
+        public TagEndUserTermAttribute(string endUserTerm)
         {
-            this.Type = type;
+            this.EndUserTerm = endUserTerm;
         }
     }
 }

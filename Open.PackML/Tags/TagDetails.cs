@@ -1,32 +1,72 @@
-﻿using System;
+﻿using Autabee.Automation.Utility.IEC61131TypeConversion;
+using System;
 
 namespace Open.PackML.Tags
 {
-    public class TagDetails
+    public class TagDetails:TagConfig
     {
-        public TagDetails(Type dataType, TagDetails[] childTags, string tagNodeAddress, bool writable, bool readable)
+        
+        public TagDetails(TagConfig config, TagDetails[] childTags, bool writable, bool readable): base(config)
         {
-            DataType = dataType;
-            ChildTags = childTags;
-            TagNodeAddress = tagNodeAddress;
+            DataType=config.DataType;
+
+            if (childTags != null) ChildTags = childTags;
+            else ChildTags = new TagDetails[0];
+            TagNodeAddress = config.TagName;
             Writable = writable;
             Readable = readable;
+            TagNodeAddressComponents = config.TagName.Split('.');
         }
-        public Type DataType { get; }
         public TagDetails[] ChildTags { get; }
         public string TagNodeAddress { get; }
-        public string[] TagNodeAddressComponents { get => TagNodeAddress.Split('.'); }
+        public string[] TagNodeAddressComponents { get; }
         public bool Writable { get; }
         public bool Readable { get; }
+
     }
 
     public class ArrayTagDetail : TagDetails
     {
-        public ArrayTagDetail(Type dataType, TagDetails[] childTags, string tagNodeAddress, bool writable, bool readable, int lenght) : base(dataType, childTags, tagNodeAddress, writable, readable)
+        public ArrayTagDetail(TagConfig config, TagDetails[] childTags,  bool writable, bool readable, int length) : base(config, childTags,  writable, readable)
         {
-            Lenght = lenght;
+            Length = length;
         }
         public bool FixedSize { get => !Writable; }
-        public int Lenght { get; }
+        public int Length { get; }
+    }
+
+    public class TagConfig
+    {
+        public string TagName { get; set; }
+        public string EndUserTerm { get; set; }
+        public string Description { get; set; }
+        public virtual TagType TagType { get; set; }
+        public Type DataType { get; set; }
+
+        public TagConfig() { }
+
+        public TagConfig(string name, string endUserTerm, string description, TagType tagType, Type dataType)
+        {
+            TagName = name;
+            EndUserTerm = endUserTerm;
+            Description = description;
+            TagType = tagType;
+            DataType = dataType;
+        }
+
+        public TagConfig(TagConfig tagConfig)
+        {
+            TagName = tagConfig.TagName;
+            EndUserTerm = tagConfig.EndUserTerm;
+            Description = tagConfig.Description;
+            TagType = tagConfig.TagType;
+            DataType = tagConfig.DataType;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0},{1},{2},{3},{4}", TagType.ToString(), TagName, EndUserTerm, Description, DataType.GetIecTypeString());
+        }
+
     }
 }

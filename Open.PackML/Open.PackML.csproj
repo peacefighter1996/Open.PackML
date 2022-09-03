@@ -10,4 +10,7 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Autabee.Utility.IEC61131TypeConversion\Autabee.Automation.Utility.IEC61131TypeConversion.csproj" />
+  </ItemGroup>
 </Project>

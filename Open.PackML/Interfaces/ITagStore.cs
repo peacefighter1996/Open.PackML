@@ -1,6 +1,6 @@
 ﻿using Open.PackML.Tags;
 
-namespace Open.PackML.Prefab
+namespace Open.PackML.Interfaces
 {
     public interface ITagStore
     {

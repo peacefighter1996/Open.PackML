@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Open.PackML.Interfaces;
+using System;
 using Xunit;
 
 namespace Open.PackML.Prefab.Tests

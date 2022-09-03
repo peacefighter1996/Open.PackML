@@ -1,5 +1,4 @@
-﻿using Open.PackML;
-
+﻿
 namespace Open.PackML
 {
     public static class PmlTransitionCheck

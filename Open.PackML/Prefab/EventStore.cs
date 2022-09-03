@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Open.PackML.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace Open.PackML.Prefab

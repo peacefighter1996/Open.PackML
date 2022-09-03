@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Open.PackML.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace Open.PackML.Tags
 {
-    public class CommandTag<T, K> : Tag<T> where K : Enum
+    public class FunctionCommandTag<T, K> : Tag<T> where K : Enum
     {
-        public CommandTag(string name, IPackMLController<K> machineController, string endUserTerm = "", string description = null) : base(name, endUserTerm, description)
+        public FunctionCommandTag(IPackMLController<K> machineController, TagConfig tagConfig) : base(tagConfig)
         {
             MachineController = machineController;
         }
@@ -16,11 +17,23 @@ namespace Open.PackML.Tags
 
         public void Execute(T data)
         {
-            MachineController.ExecutePackTagCommand(Name, data);
+            //MachineController.ExecutePackTagCommand(Name, data);
         }
         public async Task ExecuteAsync(T data)
         {
-            MachineController.AsyncExecutePackTagCommand(Name, data);
+           // await MachineController.AsyncExecutePackTagCommand(Name, data);
         }
+    }
+
+    public class DataCommandTag<T, K> : DataTag<T> where K : Enum where T : IComparable
+    {
+        public DataCommandTag(IPackMLController<K> machineController, DataTagConfig tagConfig) : base(tagConfig)
+        {
+            MachineController = machineController;
+        }
+
+        private IPackMLController<K> MachineController;
+
+        public override TagType TagType => TagType.Command;
     }
 }
