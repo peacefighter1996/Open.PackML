@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Autabee.Automation.Utility.IEC61131TypeConversion
 {
@@ -41,7 +42,7 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion
                     case 64:
                         return IEC.IECType.LWORD;
                     default:
-                        return "BOOL[]";
+                        return String.Format("BOOL[{0}]", temp.Count);
                 }
             }
             else
@@ -138,21 +139,22 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion
             var item = new XmlDocument();
             item.NameTable.Add(value.GetType().Namespace);
             var node = item.CreateElement(value.GetIecTypeString());
+            //node.SetAttribute("type", value.GetIecTypeString());
             item.AppendChild(node);
             AddSubNodes(value.GetType(), item, node,depth-1);
             return item;
         }
 
-        private static void AddSubNodes(Type value, XmlDocument item, XmlNode node, int depth)
+        private static void AddSubNodes(Type value, XmlDocument item, XmlNode baseNode, int depth)
         {
             foreach (var property in value.GetProperties())
             {
-                var node2 = item.CreateElement(property.Name);
-                node2.SetAttribute("type", property.PropertyType.GetIecTypeString());
-                node.AppendChild(node2);
-                if(depth > 0 && node2.Attributes[0].Value.Substring(0,3) == "UDT")
+                var node = item.CreateElement(property.Name);
+                node.SetAttribute("type", property.PropertyType.GetIecTypeString());
+                baseNode.AppendChild(node);
+                if(depth > 0 && node.Attributes[0].Value.Substring(0,3) == "UDT")
                 {
-                    AddSubNodes(property.PropertyType, item, node2, depth-1);
+                    AddSubNodes(property.PropertyType, item, node, depth-1);
                 }
             }
         }

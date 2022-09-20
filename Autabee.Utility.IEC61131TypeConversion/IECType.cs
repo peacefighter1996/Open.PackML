@@ -4,7 +4,7 @@ namespace IEC
 {
     public static class IECType
     {
-        private static string[] types =
+        private static string[] defaultTypes =
         {
             "BOOL",
             "BYTE",
@@ -17,6 +17,14 @@ namespace IEC
             "SINT",
             "INT",
             "DINT",
+            "USINT",
+            "UINT",
+            "UDINT",
+            "ULINT",
+            "REAL",
+            "LREAL",
+            "DATE",
+            "LTIME",
         };
 
         public static string BOOL { get => "BOOL"; }
@@ -45,9 +53,6 @@ namespace IEC
         public static string DATE { get => "DATE"; }
         public static string LTIME { get => "LTIME"; }
 
-        public static bool ContainsType(string type)
-        {
-            return types.Contains(type);
-        }
+        public static bool ContainsType(string type) { return defaultTypes.Contains(type); }
     }
 }

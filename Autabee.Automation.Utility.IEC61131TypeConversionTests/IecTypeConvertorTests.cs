@@ -8,14 +8,10 @@ using System.Linq;
 using Xunit.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using System.Net.Sockets;
+using System.Windows.Markup;
 
 namespace Autabee.Automation.Utility.IEC61131TypeConversion.Tests
 {
-    public class TestObject
-    {
-        public int[] Warnings = new int[3];
-    }
-
     public class IecTypeConvertorTests
     {
         ITestOutputHelper logger;
@@ -36,20 +32,20 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion.Tests
             Assert.Equal(expected, IecTypeConvertor.GetIecTypeString(new BitArray(i, false)));
 
         }
-        [Theory]
-        [InlineData(new int[] { 1, 8, 16, 32, 64 })]
-        public void GetIecBitArrayTest(int[] i)
+        [Fact]
+        public void GetIecBitArrayTest()
         {
+            var ByteValues = new int[] { 1, 8, 16, 32, 64 };
             for (var j = 0; j < 100; j++)
             {
-                if (i.Contains(j))
+                if (ByteValues.Contains(j))
                 {
 
                     Assert.NotEqual("BOOL[]", IEC61131TypeConversion.IecTypeConvertor.GetIecTypeString(new BitArray(j, false)));
                 }
                 else
                 {
-                    Assert.Equal("BOOL[]", IEC61131TypeConversion.IecTypeConvertor.GetIecTypeString(new BitArray(j, false)));
+                    Assert.Equal($"BOOL[{j}]", IEC61131TypeConversion.IecTypeConvertor.GetIecTypeString(new BitArray(j, false)));
                 }
             }
 
@@ -104,24 +100,5 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion.Tests
         }
     }
 
-
-
-    class Person
-    {
-        public string Name { get; set; }
-        public int PasswordHash { get; set; }
-        public Address Address { get; set; }
-    }
-
-    class Address
-    {
-        public string Postcode { get; set; }
-        public GpsCoordinates GPS { get; set; }
-    }
-
-    class GpsCoordinates
-    {
-        public double Lognitude { get; set; }
-        public double Latitude { get; set; }
-    }
+    
 }

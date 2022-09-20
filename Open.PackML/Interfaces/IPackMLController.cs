@@ -1,34 +1,34 @@
-﻿using Open.PackML.EventArguments;
+﻿using Autabee.Utility;
+using Open.PackML.EventArguments;
 using System;
 using System.Threading.Tasks;
 
 namespace Open.PackML.Interfaces
 {
-    public interface IPackMLController<T> where T: Enum 
+    public interface IPmlController<T>: IPmlMachineController<T> where T : Enum
     {
-        
-
-
-
         //local
-        PmlState CurrentPackMLState();
-        PmlMode CurrentPackMLMode();
-        bool PreferAsync { get; }
-        
+        PmlState CurrentPmlState();
+        PmlMode CurrentPmlMode();
 
         //Deep Synced
         PmlState RetrieveCurrentPackMLState();
         PmlMode RetrieveCurrentPackMLMode();
-        ValidationResult SendPackMLCommand(PmlCommand packMLCommand);
-        ValidationResult UpdatePackMLMode(PmlMode packMLMode);
 
         //Deep Async
         Task<PmlState> RetrieveCurrentPackMLStateAsync();
         Task<PmlMode> RetrieveCurrentPackMLModeAsync();
+
+        //Send PackML Function
+        ValidationResult SendPmlCommand(PmlCommand packMLCommand);
+        ValidationResult UpdatePmlMode(PmlMode packMLMode);
         Task<ValidationResult> SendPackMLCommandAsync(PmlCommand packMLCommand);
         Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode);
+    }
 
-        // events 
+    public interface IPmlMachineController<T> where T : Enum
+    {
+        //Events 
         event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
         event EventHandler<MachineEventArgs<T>> MachineEvent;
     }

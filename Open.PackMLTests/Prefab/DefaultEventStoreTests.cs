@@ -6,7 +6,7 @@ namespace Open.PackML.Prefab.Tests
 {
     public class DefaultEventStoreTests
     {
-        IPackMLEventStore<Enum> eventStore;
+        IPmlEventStore<Enum> eventStore;
 
         public DefaultEventStoreTests()
         {

@@ -1,10 +1,11 @@
-﻿using Open.PackML.Interfaces;
+﻿using Autabee.Utility;
+using Open.PackML.Interfaces;
 using System;
 using System.Collections.Generic;
 
 namespace Open.PackML.Prefab
 {
-    public class EventStore: Dictionary<Enum, PmlEventReaction<Enum>>, IPackMLEventStore<Enum>
+    public class EventStore: Dictionary<Enum, PmlEventReaction<Enum>>, IPmlEventStore<Enum>
     {
         public EventStore() { }
         public EventStore(List<PmlEventReaction<Enum>> eventReactions)

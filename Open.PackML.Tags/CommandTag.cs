@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace Open.PackML.Tags
 {
-    public class FunctionCommandTag<T, K> : Tag<T> where K : Enum
+    public class FunctionCommandTag<T> : Tag<T> 
     {
-        public FunctionCommandTag(PackMLController<K> machineController, TagConfig tagConfig) : base(tagConfig)
-        {
-            MachineController = machineController;
-        }
+        private readonly object baseObject;
 
-        private IPackMLController<K> MachineController;
+        public FunctionCommandTag(object baseObject, TagConfig tagConfig) : base(tagConfig)
+        {
+            this.baseObject = baseObject;
+        }
 
         public override TagType TagType => TagType.Command;
 
@@ -28,12 +28,12 @@ namespace Open.PackML.Tags
 
     public class DataCommandTag<T, K> : DataTag<T> where K : Enum where T : IComparable
     {
-        public DataCommandTag(IPackMLController<K> machineController, DataTagConfig tagConfig) : base(tagConfig)
+        public DataCommandTag(IPmlController<K> machineController, DataTagConfig tagConfig) : base(tagConfig)
         {
             MachineController = machineController;
         }
 
-        private IPackMLController<K> MachineController;
+        private IPmlController<K> MachineController;
 
         public override TagType TagType => TagType.Command;
     }
