@@ -2,6 +2,8 @@
 using Open.PackML.EventArguments;
 using Open.PackML.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -43,7 +45,7 @@ namespace Open.PackML.Prefab
 
             controller.MachineEvent += Controller_MachineEvent;
             controller.UpdateCurrentState += Controller_UpdateCurrentState;
-            
+
             currentState = controller.CurrentPmlState();
             currentMode = controller.CurrentPmlMode();
         }
@@ -54,8 +56,7 @@ namespace Open.PackML.Prefab
                 lastStateUpdate = currentPackMLState.DateTime.ToUniversalTime();
                 currentState = currentPackMLState.CurrentState;
                 currentMode = currentPackMLState.CurrentMode;
-
-
+                
                 UpdateCurrentState?.Invoke(this, currentPackMLState);
             }
         }
@@ -63,69 +64,54 @@ namespace Open.PackML.Prefab
         public ValidationResult UpdatePmlMode(PmlMode packMLMode)
         {
             var temp = PmlTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
-            if (temp.Success)
-            {
-                temp.AddResult(controller.UpdatePmlMode(packMLMode));
-            }
+            if (temp.Success) temp.AddResult(controller.UpdatePmlMode(packMLMode));
+
             return temp;
         }
         public async Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode)
         {
             var temp = PmlTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
-            if (temp.Success)
-            {
-                temp.AddResult(await controller.UpdatePackMLModeAsync(packMLMode));
-            }
+            if (temp.Success) temp.AddResult(await controller.UpdatePackMLModeAsync(packMLMode));
+
             return temp;
         }
 
         public ValidationResult SendPmlCommand(PmlCommand command)
         {
             var temp = PmlTransitionCheck.CheckTransition(command, currentState, currentMode);
-            if (temp.Success)
-            {
-                temp.AddResult(controller.SendPmlCommand(command));
-            }
+            if (temp.Success) temp.AddResult(controller.SendPmlCommand(command));
+
             return temp;
         }
 
         public async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand command)
         {
             var temp = PmlTransitionCheck.CheckTransition(command, currentState, currentMode);
-            if (temp.Success)
-            {
-                temp.AddResult(await controller.SendPackMLCommandAsync(command));
-            }
+            if (temp.Success) temp.AddResult(await controller.SendPackMLCommandAsync(command));
+
             return temp;
         }
-
-
-
 
         private void Controller_MachineEvent(object sender, MachineEventArgs<T> e)
         {
             //Prcesses the event 
             var result = eventStore.ProcessEvent(e.@enum);
 
-
             if (result.Success && (lastTransition < e.DateTime))
             {
                 currentState = result.Object;
                 lastTransition = e.DateTime;
-                UpdateCurrentState.BeginInvoke(
+                UpdateCurrentState?.Invoke(
                     this,
                     new PmlStateChangeEventArg
                     {
                         CurrentMode = currentMode,
-                        CurrentState = currentState,
-                        DateTime = e.DateTime
-                    },
-                    null,
-                    new { });
+                        CurrentState = currentState
+                    });
             }
 
             //pass through event for subsequent event handelings.
-            MachineEvent.Invoke(this, e);
+            MachineEvent?.Invoke(this, e);
         }
 
         public PmlState CurrentPmlState() => currentState;

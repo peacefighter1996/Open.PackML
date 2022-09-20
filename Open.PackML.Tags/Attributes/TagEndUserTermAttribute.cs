@@ -4,7 +4,8 @@ using System.Linq;
 namespace Open.PackML.Tags.Attributes
 {
     [AttributeUsage(AttributeTargets.Class |
-                       AttributeTargets.Struct)
+                       AttributeTargets.Struct
+        | AttributeTargets.Property)
 ]
     public class TagEndUserTermAttribute : Attribute
     {

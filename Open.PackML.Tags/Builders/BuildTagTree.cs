@@ -11,7 +11,7 @@ namespace Open.PackML.Tags.Builders
 {
     public static class BuildTagTree
     {
-        public static TagDetails GetTree(string root, object obj, string description = "", string endUserTerm= "")
+        public static TagDetails GetTree(string root, object obj, string description = "", string endUserTerm = "")
         {
             TagConfig conf = new TagConfig()
             {
@@ -22,12 +22,12 @@ namespace Open.PackML.Tags.Builders
                 EndUserTerm = endUserTerm
             };
 
-            return GetTree(conf, obj, false, true, new List<Type>());
+            return GetTree(conf, obj.GetType(), false, true, new List<Type>(), TagType.Undefined);
         }
 
-        private static TagDetails GetTree(TagConfig root, object obj, bool writable, bool readable, List<Type> types)
+        private static TagDetails GetTree(TagConfig root, Type obj, bool writable, bool readable, List<Type> types, TagType TagTypeCarry)
         {
-            var properties = obj.GetType().GetProperties();
+            var properties = obj.GetProperties();
             List<TagDetails> Children = new List<TagDetails>();
             foreach (var property in properties)
             {
@@ -35,35 +35,42 @@ namespace Open.PackML.Tags.Builders
                 {
                     continue;
                 }
-                var config = GetPropertyTagConfig(property, root.TagName);
+                var config = GetPropertyTagConfig(property, root.TagName, TagTypeCarry);
 
-                if (config.DataType.IsArray
+                if ((config.DataType.IsArray
+                    || config.DataType.GetInterface("System.Collections.IEnumerable") != null)
                     && config.DataType != typeof(string))
                 {
-                    types.Add(config.DataType);
-
-
-
-                    var list = property.GetValue(obj) as Array;
-                    var tempvalue = Activator.CreateInstance(config.DataType.GetElementType());
-                    int lenght = -1;
-                    string arrayRoot = string.IsNullOrWhiteSpace(root.TagName) ? root.TagName : root.TagName + '.';
-
-                    if (!property.CanWrite)
+                    Type elementType;
+                    if (config.DataType.IsArray)
                     {
-                        config.TagName = arrayRoot + property.Name + $"[0..{list.Length}]";
-                        lenght = list.Length;
+                        elementType = config.DataType.GetElementType();
                     }
                     else
                     {
-                        //ArrayChildren.Add(new TagDetails(config.DataType.BaseType, new TagDetails[0], root + '.' + property.Name + ".Lenght", false, true));
+                        if (config.DataType.GenericTypeArguments.Count() > 0)
+                            elementType = config.DataType.GenericTypeArguments[0];
+                        else continue;
+                    }
+
+                    int lenght = -1;
+                    string arrayRoot = string.IsNullOrWhiteSpace(root.TagName) ? root.TagName : root.TagName + '.';
+                    var fixedSizeAttribute = property.GetCustomAttribute(typeof(TagFixedSizeAttribute)) as TagFixedSizeAttribute;
+                    if (fixedSizeAttribute != null && fixedSizeAttribute.Size >= 0)
+                    {
+                        config.TagName = arrayRoot + property.Name + $"[0..{fixedSizeAttribute.Size}]";
+                        lenght = fixedSizeAttribute.Size;
+                    }
+                    else
+                    {                      
                         config.TagName = arrayRoot + property.Name + $"[#]";
                     }
                     var tree = GetTree(config,
-                       tempvalue,
-                    property.CanWrite,
-                    property.CanRead,
-                    types);
+                        elementType,
+                        property.CanWrite,
+                        property.CanRead,
+                        types,
+                        config.TagType);
 
                     Children.Add(new ArrayTagDetail(
                         config,
@@ -96,22 +103,23 @@ namespace Open.PackML.Tags.Builders
                 {
                     types.Add(config.DataType);
                     Children.Add(GetTree(config,
-                        property.GetValue(obj),
+                        property.PropertyType,
                         property.CanWrite,
                         property.CanRead,
-                        types));
+                        types,
+                        config.TagType));
                     types.Remove(config.DataType);
                 }
                 else
                 {
-                    Children.Add(new TagDetails(config, new TagDetails[0],  property.CanWrite, property.CanRead));
+                    Children.Add(new TagDetails(config, new TagDetails[0], property.CanWrite, property.CanRead));
                 }
             }
-            
+
             return new TagDetails(root, Children.ToArray(), writable, readable);
         }
 
-        private static TagConfig GetPropertyTagConfig(PropertyInfo property, string root)
+        private static TagConfig GetPropertyTagConfig(PropertyInfo property, string root, TagType TagCarry)
         {
             TagConfig config = new TagConfig()
             {
@@ -120,22 +128,25 @@ namespace Open.PackML.Tags.Builders
                 TagName = string.IsNullOrWhiteSpace(root) ? property.Name : root + '.' + property.Name,
                 EndUserTerm = property.GetCustomAttribute<TagEndUserTermAttribute>() is TagEndUserTermAttribute e ? e.EndUserTerm : string.Empty,
 
-                TagType = property.GetCustomAttribute<TagTypeAttribute>() is TagTypeAttribute p ? p.Type : TagType.Status,
+                TagType = property.GetCustomAttribute<TagTypeAttribute>() is TagTypeAttribute p ? p.Type : TagCarry,
                 Description = property.GetCustomAttribute<DescriptionAttribute>() is DescriptionAttribute description
                 ? description.Description
                 : string.Empty
             };
-       
+
 
             return config;
         }
     }
     public class TagTable : Collection<TagDetails>
     {
-        public string GetTagTablePrint()
+        public string GetTagTablePrint(bool filterUndifined = false)
         {
             string print = "";
-            foreach (TagConfig item in this) print += item.ToString() + Environment.NewLine;
+            IEnumerable<TagDetails> collection = this;
+            if (filterUndifined)
+                collection = collection.Where(o => o.TagType != TagType.Undefined);
+            foreach (TagConfig item in collection) print += item.ToString() + Environment.NewLine;
             return print;
         }
     }
@@ -156,7 +167,7 @@ namespace Open.PackML.Tags.Builders
             table.Add(tagDetails);
 
             foreach (TagDetails tagtree in tagDetails.ChildTags)
-                BuildTable(tagtree,table);
+                BuildTable(tagtree, table);
         }
     }
 }

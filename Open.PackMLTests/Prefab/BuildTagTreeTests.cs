@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Open.PackML.Tags.Builders;
 using Open.PackML.Tags.Attributes;
+using Moq;
+using Open.PackML.Interfaces;
 
 namespace Open.PackML.Prefab.Tests
 {
@@ -23,6 +25,7 @@ namespace Open.PackML.Prefab.Tests
         //[ArrayTagFixed(size = true, object = true)]
         public int[] IntegerArray { get; } = new int[3];
         public int[] IntegerArray2 { get; set; } = new int[4];
+        [TagFixedSize(5)]
         public TestObject2[] ObjectArray { get; } = new TestObject2[5];
     }
 
@@ -61,6 +64,31 @@ namespace Open.PackML.Prefab.Tests
             foreach (var item in table) if (!item.TagName.Contains('.')) temptable.Add(item);
             foreach (var item in temptable) table.Remove(item);
             logger.WriteLine(table.GetTagTablePrint());
+        }
+        [Fact]
+        public void GetTreeTestTr88()
+        {
+            var moqController = new Mock<IPmlController<Enum>>();
+            var eventStore = new EventStore();
+            var temp = BuildTagTree.GetTree("", new PackMLTr88Controller<Enum>(moqController.Object, eventStore));
+            logger.WriteLine(temp.BuildTable().GetTagTablePrint());
+        }
+        [Fact]
+        public void GetTreeTestTr88Filtered()
+        {
+            var moqController = new Mock<IPmlController<Enum>>();
+            var eventStore = new EventStore();
+            var temp = BuildTagTree.GetTree("", new PackMLTr88Controller<Enum>(moqController.Object, eventStore));
+            logger.WriteLine(temp.BuildTable().GetTagTablePrint(true));
+        }
+
+        [Fact]
+        public void GetTreeTestEumFiltered()
+        {
+            var moqController = new Mock<IPmlController<Enum>>();
+            var eventStore = new EventStore();
+            var temp = BuildTagTree.GetTree("", new PackMLEumController<Enum>(moqController.Object, eventStore));
+            logger.WriteLine(temp.BuildTable().GetTagTablePrint(true));
         }
     }
 }
