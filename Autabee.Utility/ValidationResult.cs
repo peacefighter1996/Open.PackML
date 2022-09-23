@@ -16,8 +16,6 @@ namespace Autabee.Utility
 
         }
 
-        public bool Success { get; private set; }
-        public List<(string, object[])> FailInfo { get; }
         public void AddResult(ValidationResult validationResult)
         {
             if (validationResult.Success == false)
@@ -43,13 +41,19 @@ namespace Autabee.Utility
             }
             return failString;
         }
+
+        public List<(string, object[])> FailInfo { get; }
+
+        public bool Success { get; private set; }
     }
+
     public class ValidationResult<T> : ValidationResult
     {
-        public ValidationResult(T Object, bool success, string unSuccesfullText = "") : base(success, unSuccesfullText)
+        public ValidationResult(bool success = true, T Object = default, string unSuccesfullText = "", params object[] formatObjects) : base(success, unSuccesfullText, formatObjects)
         {
             this.Object = Object;
         }
+
         public T Object { get; }
     }
 

@@ -1,72 +1,117 @@
 ﻿using Autabee.Automation.Utility.IEC61131TypeConversion;
+using Autabee.Utility;
 using System;
+using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Open.PackML.Tags
 {
-    public class TagDetails:TagConfig
+    public class TagDetail : TagConfig
     {
-        
-        public TagDetails(TagConfig config, TagDetails[] childTags, bool writable, bool readable): base(config)
-        {
-            DataType=config.DataType;
 
+        private object baseObject;
+        private MethodInfo getMethod;
+        private object lastData;
+        private MethodInfo setMethod;
+
+        public TagDetail(TagConfig config, object baseObject, TagDetail[] childTags, PropertyInfo[] propertyInfos) : base(config)
+        {
+            if (baseObject == null)
+            {
+                throw new ArgumentNullException(nameof(baseObject));
+            }
+            DataType = config.DataType;
+            this.baseObject = baseObject;
             if (childTags != null) ChildTags = childTags;
-            else ChildTags = new TagDetails[0];
-            TagNodeAddress = config.TagName;
-            Writable = writable;
-            Readable = readable;
-            TagNodeAddressComponents = config.TagName.Split('.');
+            else ChildTags = new TagDetail[0];
+
+            PropertyInfos = propertyInfos;
+            if (propertyInfos.Length >= 1)
+            {
+                PropertyInfo last = propertyInfos[propertyInfos.Length - 1];
+                setMethod = last.GetSetMethod();
+                getMethod = last.GetGetMethod();
+
+            }
+
         }
-        public TagDetails[] ChildTags { get; }
-        public string TagNodeAddress { get; }
-        public string[] TagNodeAddressComponents { get; }
-        public bool Writable { get; }
-        public bool Readable { get; }
 
-    }
-
-    public class ArrayTagDetail : TagDetails
-    {
-        public ArrayTagDetail(TagConfig config, TagDetails[] childTags,  bool writable, bool readable, int length) : base(config, childTags,  writable, readable)
+        public ValidationResult<object> GetValue()
         {
-            Length = length;
+            var result = baseObject;
+            //if (PropertyInfos != null)
+            //{
+                foreach (var propertyInfo in PropertyInfos)
+                {
+                    result = propertyInfo.GetValue(result);
+                }
+            //}
+            //else
+            //{
+            //    for (int j = 1; j < TagAddress.Length; j++)
+            //    {
+            //        if (result == null) return new ValidationResult<object>(false, null);
+            //        result = result.GetType().GetProperty(TagAddress[j]).GetValue(result);
+            //    }
+            //}
+            return new ValidationResult<object>(Object: result);
         }
-        public bool FixedSize { get => !Writable; }
-        public int Length { get; }
-    }
 
-    public class TagConfig
-    {
-        public string TagName { get; set; }
-        public string EndUserTerm { get; set; }
-        public string Description { get; set; }
-        public virtual TagType TagType { get; set; }
-        public Type DataType { get; set; }
-
-        public TagConfig() { }
-
-        public TagConfig(string name, string endUserTerm, string description, TagType tagType, Type dataType)
+        public ValidationResult<object> GetValueIsUpdated()
         {
-            TagName = name;
-            EndUserTerm = endUserTerm;
-            Description = description;
-            TagType = tagType;
-            DataType = dataType;
+            var result = GetValue();
+            if (result.Success)
+            {
+                if (lastData == result.Object)
+                {
+                    return new ValidationResult<object>(false, null, "Data not updated");
+                }
+                else
+                {
+                    lastData = result.Object;
+                    return new ValidationResult<object>(true, result.Object);
+                }
+            }
+            else
+            {
+                return result;
+            }
         }
 
-        public TagConfig(TagConfig tagConfig)
+        public ValidationResult<object> SetValue(object obj)
         {
-            TagName = tagConfig.TagName;
-            EndUserTerm = tagConfig.EndUserTerm;
-            Description = tagConfig.Description;
-            TagType = tagConfig.TagType;
-            DataType = tagConfig.DataType;
+
+            if (!Writable) return new ValidationResult<object>(false, null, "Object not writable");
+            if (DataType != obj.GetType()) return new ValidationResult<object>(false, null, "Object type mismatch");
+            var result = baseObject;
+            //if (PropertyInfos != null)
+            //{
+                for (int i = 0; i < PropertyInfos.Length - 1; i++)
+                {
+                    result = PropertyInfos[i].GetValue(result);
+                    if (result == null) return new ValidationResult<object>(false, null, "Object not found");
+                }
+                PropertyInfos[PropertyInfos.Length - 1].SetValue(result, obj);
+            //}
+            //else
+            //{
+            //    for (int j = 1; j < TagAddress.Length - 1; j++)
+            //    {
+            //        if (result == null) return new ValidationResult<object>(false, null);
+            //        result = result.GetType().GetProperty(TagAddress[j]).GetValue(result);
+            //        if (result == null) return new ValidationResult<object>(false, null, "Object not found");
+            //    }
+            //    result.GetType().GetProperty(TagAddress[TagAddress.Length - 1]).SetValue(result, obj);
+            //}
+            return new ValidationResult<object>(Object: result);
         }
 
-        public override string ToString()
-        {
-            return String.Format("{0},{1},{2},{3},{4}", TagType.ToString(), TagName, EndUserTerm, Description, DataType.GetIecTypeString());
-        }
-
+        public TagDetail[] ChildTags { get; }
+        public PropertyInfo[] PropertyInfos { get; }
+        public bool Readable { get => !(getMethod != null && getMethod.IsPublic); }
+        public bool Writable { get => !(setMethod != null && setMethod.IsPublic); }
     }
 }

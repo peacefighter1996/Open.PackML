@@ -145,9 +145,9 @@ namespace Open.PackML.Prefab
         [TagEndUserTerm("OEE.Bad count")]
         [TagType(TagType.Admin)]
         public int ProdProcessedCount { get; protected set; }
-        
+
         [TagEndUserTerm("Stop Reason")]
-        public PmlStopReason StopReason { get; protected set; }
+        public PmlStopReason StopReason { get; protected set; } = new PmlStopReason();
 
 
         
@@ -179,7 +179,7 @@ namespace Open.PackML.Prefab
     {
         [TagEndUserTerm("Event and stop reason")]
         [TagType(TagType.Admin)]
-        public int ID { get; set; }
+        public int ID { get; private set; }
 
         [TagEndUserTerm("Detailed Error Information")]
         [TagType(TagType.Admin)]

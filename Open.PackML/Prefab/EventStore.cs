@@ -21,11 +21,11 @@ namespace Open.PackML.Prefab
         {
             if (ContainsKey(@event))
             {
-                return new ValidationResult<PmlState>(this[@event].StateChangeId, true);
+                return new ValidationResult<PmlState>(true, this[@event].StateChangeId);
             }
             else
             {
-                return new ValidationResult<PmlState>(PmlState.Undefined, false, $"Event {@event.GetType().Name} {@event} not found in event store");
+                return new ValidationResult<PmlState>(false, PmlState.Undefined, $"Event {@event.GetType().Name} {@event} not found in event store");
             }
         }
 

@@ -13,22 +13,22 @@ namespace Open.PackML.Prefab
 {
     public class TagStore<T> : ITagStore where T : Enum
     {
-        Dictionary<string, TagDetails> valuePairs;
+        Dictionary<string, TagDetail> valuePairs;
         public TagStore(Dictionary<string, object> StoredObjects)
         {
-            valuePairs = new Dictionary<string, TagDetails>();
+            valuePairs = new Dictionary<string, TagDetail>();
             foreach (var StoredObject in StoredObjects)
             {
-                valuePairs.Add(StoredObject.Key, BuildTagTree.GetTree(StoredObject.Key, StoredObject.Value));
+                valuePairs.Add(StoredObject.Key, TagTreeBuilder.GetTree(StoredObject.Key, StoredObject.Value));
             }
         }
 
-        public ValidationResult<TagDetails> Browse(string Orgin)
+        public ValidationResult<TagDetail> Browse(string Orgin)
         {
             throw new NotImplementedException();
         }
 
-        public ValidationResult<TagDetails> Browse(string Orgin, int Depth = 1)
+        public ValidationResult<TagDetail> Browse(string Orgin, int Depth = 1)
         {
             throw new NotImplementedException();
         }

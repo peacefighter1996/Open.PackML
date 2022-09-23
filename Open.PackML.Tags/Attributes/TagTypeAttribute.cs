@@ -3,17 +3,17 @@ using System.Linq;
 
 namespace Open.PackML.Tags.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class 
-        | AttributeTargets.Struct 
-        | AttributeTargets.Property)
+    [AttributeUsage(
+        AttributeTargets.Property
+        | AttributeTargets.Method)
 ]
     public class TagTypeAttribute : Attribute
     {
-        public TagType Type { get; }
+        public TagType TagType { get; }
 
         public TagTypeAttribute(TagType type)
         {
-            this.Type = type;
+            this.TagType = type;
         }
     }
 }

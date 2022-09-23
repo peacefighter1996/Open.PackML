@@ -27,6 +27,11 @@ namespace Open.PackML.Prefab.Tests
         public int[] IntegerArray2 { get; set; } = new int[4];
         [TagFixedSize(5)]
         public TestObject2[] ObjectArray { get; } = new TestObject2[5];
+        [TagType(TagType.Command)]
+        public void SetValue(int value1)
+        {
+            Integer1 = value1;
+        }
     }
 
     internal class TestObject2
@@ -45,24 +50,18 @@ namespace Open.PackML.Prefab.Tests
         [Fact]
         public void GetTreeTest()
         {
-            var temp = BuildTagTree.GetTree("", new TestObject1());
-
+            var temp = TagTreeBuilder.GetTree("", new TestObject1());
             var table = temp.BuildTable();
-            table.RemoveAt(0);
-
             logger.WriteLine(table.GetTagTablePrint());
         }
 
         [Fact]
         public void GetTreeTest1()
         {
-            var temp = BuildTagTree.GetTree("Machine1", new TestObject1());
-            var table = temp.BuildTable();
-            temp = BuildTagTree.GetTree("Machine2", new TestObject2());
-            foreach (var item in temp.BuildTable()) table.Add(item);
-            var temptable = new TagTable();
-            foreach (var item in table) if (!item.TagName.Contains('.')) temptable.Add(item);
-            foreach (var item in temptable) table.Remove(item);
+            var temp1 = TagTreeBuilder.GetTree("Machine1",new TestObject1());
+            
+            var temp2 = TagTreeBuilder.GetTree("Machine2", new TestObject2());
+            var table = TagTableBuilder.BuildTable(new TagDetail[2] { temp1, temp2 });
             logger.WriteLine(table.GetTagTablePrint());
         }
         [Fact]
@@ -70,7 +69,7 @@ namespace Open.PackML.Prefab.Tests
         {
             var moqController = new Mock<IPmlController<Enum>>();
             var eventStore = new EventStore();
-            var temp = BuildTagTree.GetTree("", new PackMLTr88Controller<Enum>(moqController.Object, eventStore));
+            var temp = TagTreeBuilder.GetTree("", new PackMLTr88Controller<Enum>(moqController.Object, eventStore));
             logger.WriteLine(temp.BuildTable().GetTagTablePrint());
         }
         [Fact]
@@ -78,7 +77,7 @@ namespace Open.PackML.Prefab.Tests
         {
             var moqController = new Mock<IPmlController<Enum>>();
             var eventStore = new EventStore();
-            var temp = BuildTagTree.GetTree("", new PackMLTr88Controller<Enum>(moqController.Object, eventStore));
+            var temp = TagTreeBuilder.GetTree("", new PackMLTr88Controller<Enum>(moqController.Object,eventStore));
             logger.WriteLine(temp.BuildTable().GetTagTablePrint(true));
         }
 
@@ -87,8 +86,10 @@ namespace Open.PackML.Prefab.Tests
         {
             var moqController = new Mock<IPmlController<Enum>>();
             var eventStore = new EventStore();
-            var temp = BuildTagTree.GetTree("", new PackMLEumController<Enum>(moqController.Object, eventStore));
+            var temp = TagTreeBuilder.GetTree("", new PackMLTr88Controller<Enum>(moqController.Object, eventStore));
             logger.WriteLine(temp.BuildTable().GetTagTablePrint(true));
         }
+
+        
     }
 }

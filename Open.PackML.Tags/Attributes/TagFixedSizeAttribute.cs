@@ -10,13 +10,13 @@ namespace Open.PackML.Tags.Attributes
             this.Size = size;
         }
     }
-
-    public class TagFixedInstanceAttribute : Attribute
-    {
-        public bool Value { get; }
-        public TagFixedInstanceAttribute(bool value)
-        {
-            this.Value = value;
-        }
-    }
+    
+    //public class TagFixedInstanceAttribute : Attribute
+    //{
+    //    public bool Value { get; }
+    //    public TagFixedInstanceAttribute(bool value)
+    //    {
+    //        this.Value = value;
+    //    }
+    //}
 }

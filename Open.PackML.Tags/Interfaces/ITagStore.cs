@@ -5,7 +5,7 @@ namespace Open.PackML.Interfaces
 {
     public interface ITagStore
     {
-        ValidationResult<TagDetails> Browse(string Orgin);
-        ValidationResult<TagDetails> Browse(string Orgin, int Depth = 1);
+        ValidationResult<TagDetail> Browse(string Orgin);
+        ValidationResult<TagDetail> Browse(string Orgin, int Depth = 1);
     }
 }

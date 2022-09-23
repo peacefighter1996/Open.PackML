@@ -33,8 +33,8 @@ namespace Open.PackML
                 case PmlState.Stopping:
                 case PmlState.Aborting:
                 case PmlState.Aborted:
-                case PmlState.Completed:
                     return new ValidationResult(false, "Currently not in a state that accepts Stop.");
+                case PmlState.Completed:
                 case PmlState.Starting:
                 case PmlState.Idle:
                 case PmlState.Suspended:
@@ -54,7 +54,15 @@ namespace Open.PackML
 
         public static ValidationResult Abort(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
         {
-            return new ValidationResult();
+            if (currentPackMLState == PmlState.Aborted 
+                || currentPackMLState == PmlState.Aborting)
+            {
+                return new ValidationResult(false, "Already aborted or aborting");
+            }
+            else
+            {
+                return new ValidationResult();
+            }
         }
 
         public static ValidationResult Reset(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
