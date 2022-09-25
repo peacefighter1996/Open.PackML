@@ -31,9 +31,9 @@ namespace Open.PackML.Prefab
 
         public PmlEventReaction<Enum> GetMachineEvent(Enum @event)
         {
-            if (this.ContainsKey(@event))
+            if (this.TryGetValue(@event, out PmlEventReaction<Enum> value))
             {
-                return this[@event];
+                return value;
             }
             else
             {

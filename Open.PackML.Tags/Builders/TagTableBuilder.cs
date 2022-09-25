@@ -6,6 +6,17 @@ namespace Open.PackML.Tags.Builders
 {
     public static class TagTableBuilder
     {
+        public static TagTable BuildTagTable(Dictionary<string,object> collection)
+        {
+            var table = new TagTable();
+            foreach (var item in collection)
+            {
+                BuildTable(TagTreeBuilder.GetTree(item.Key, item.Value), table);
+            }
+            table.GenerateArray();
+            table.GenerateOnUpdate = true;
+            return table;
+        }
 
         public static TagTable BuildTable(IEnumerable<TagDetail> tagDetails)
         {
@@ -15,6 +26,7 @@ namespace Open.PackML.Tags.Builders
                 tagDetail.BuildTable(table);
             }
             table.GenerateArray();
+            table.GenerateOnUpdate = true;
             return table;
         }
         public static TagTable BuildTable(this TagDetail tagDetails)
@@ -22,6 +34,7 @@ namespace Open.PackML.Tags.Builders
             var table = new TagTable();
             tagDetails.BuildTable(table);
             table.GenerateArray();
+            table.GenerateOnUpdate = true;
             return table;
         }
 

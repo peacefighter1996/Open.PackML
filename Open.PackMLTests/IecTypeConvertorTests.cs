@@ -10,7 +10,7 @@ using System.Net.Sockets;
 using System.Windows.Markup;
 using Open.PackML.Tags.IEC;
 
-namespace Autabee.Automation.Utility.IEC61131TypeConversion.Tests
+namespace Open.PackMLTests
 {
     public class IecTypeConvertorTests
     {
@@ -81,7 +81,7 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion.Tests
         {
             Guid guid = new Guid();
             var person = new Person() { Name = guid.ToString(), PasswordHash = guid.GetHashCode() };
-            Assert.Equal("UDT_Autabee_Automation_Utility_IEC61131TypeConversion_Tests_Person", person.GetIecTypeString());
+            Assert.Equal("UDT_Open_PackMLTests_Person", person.GetIecTypeString());
         }
 
 

@@ -6,11 +6,10 @@ namespace Open.PackML.Tags
 {
     public class ArrayTagDetail : TagDetail
     {
-        public ArrayTagDetail(TagConfig config, object baseObject, TagDetail[] childTags, int length, PropertyInfo[] propertyInfos) : base(config, baseObject, childTags, propertyInfos)
+        public ArrayTagDetail(TagConfig config, object baseObject, TagDetail[] childTags, int length, MemberInfo[] propertyInfos, bool[] arrayType) : base(config, baseObject, childTags, propertyInfos, arrayType)
         {
             Length = length;
         }
-        public bool FixedSize { get => !Writable; }
         public int Length { get; }
 
     }

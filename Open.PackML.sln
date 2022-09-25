@@ -15,12 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackML.Tags", "Open.Pa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autabee.Utility", "Autabee.Utility\Autabee.Utility.csproj", "{8C6B09BA-47F1-4952-A7EF-7862F181D979}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackML.Prefab", "Open.PackML.Prefab\Open.PackML.Prefab.csproj", "{737D1F80-64E6-4874-9900-697FC66D2BFC}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6B85148A-2C13-4F40-99BE-CD46C8A7F493}"
-	ProjectSection(SolutionItems) = preProject
-		test.runsettings = test.runsettings
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackML.Prefab", "Open.PackML.Prefab\Open.PackML.Prefab.csproj", "{45C563AA-FCE6-45B1-9CFD-E9210D844ED7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,10 +47,10 @@ Global
 		{8C6B09BA-47F1-4952-A7EF-7862F181D979}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C6B09BA-47F1-4952-A7EF-7862F181D979}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C6B09BA-47F1-4952-A7EF-7862F181D979}.Release|Any CPU.Build.0 = Release|Any CPU
-		{737D1F80-64E6-4874-9900-697FC66D2BFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{737D1F80-64E6-4874-9900-697FC66D2BFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{737D1F80-64E6-4874-9900-697FC66D2BFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{737D1F80-64E6-4874-9900-697FC66D2BFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45C563AA-FCE6-45B1-9CFD-E9210D844ED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45C563AA-FCE6-45B1-9CFD-E9210D844ED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45C563AA-FCE6-45B1-9CFD-E9210D844ED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45C563AA-FCE6-45B1-9CFD-E9210D844ED7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

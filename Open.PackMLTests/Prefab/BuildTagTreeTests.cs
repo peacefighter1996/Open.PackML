@@ -10,8 +10,10 @@ using Open.PackML.Tags.Builders;
 using Open.PackML.Tags.Attributes;
 using Moq;
 using Open.PackML.Interfaces;
+using Open.PackML;
+using Open.PackML.Prefab;
 
-namespace Open.PackML.Prefab.Tests
+namespace Open.PackMLTests.Prefab
 {
     internal class TestObject1
     {
@@ -25,6 +27,8 @@ namespace Open.PackML.Prefab.Tests
         //[ArrayTagFixed(size = true, object = true)]
         public int[] IntegerArray { get; } = new int[3];
         public int[] IntegerArray2 { get; set; } = new int[4];
+
+        public List<int> IntegerList { get; set; } = new List<int>() { 1, 2, 3, 4 };
         [TagFixedSize(5)]
         public TestObject2[] ObjectArray { get; } = new TestObject2[5];
         [TagType(TagType.Command)]
@@ -59,11 +63,19 @@ namespace Open.PackML.Prefab.Tests
         public void GetTreeTest1()
         {
             var temp1 = TagTreeBuilder.GetTree("Machine1",new TestObject1());
-            
             var temp2 = TagTreeBuilder.GetTree("Machine2", new TestObject2());
             var table = TagTableBuilder.BuildTable(new TagDetail[2] { temp1, temp2 });
             logger.WriteLine(table.GetTagTablePrint());
+            
         }
+
+
+
+
+
+
+
+        
         [Fact]
         public void GetTreeTestTr88()
         {

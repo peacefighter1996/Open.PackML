@@ -1,5 +1,6 @@
 ﻿using Xunit;
 using Open.PackML.Prefab;
+using Open.PackMLTests.Prefab;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,9 @@ using Open.PackML.Interfaces;
 using Open.PackML.EventArguments;
 using Autabee.Utility;
 using Moq;
+using Open.PackML;
 
-namespace Open.PackML.Prefab.Tests
+namespace Open.PackMLTests
 {
     public class TestPmlController : IPmlController<Enum>
     {

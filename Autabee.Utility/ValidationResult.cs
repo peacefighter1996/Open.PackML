@@ -24,11 +24,12 @@ namespace Autabee.Utility
                 FailInfo.AddRange(validationResult.FailInfo);
             }
         }
-        public void AddResult(string failText, params object[] formatObjects)
+        public void AddResult(bool succes, string failText, params object[] formatObjects)
         {
+            
+            Success &= succes;
             if (!string.IsNullOrWhiteSpace(failText))
             {
-                Success = false;
                 FailInfo.Add((failText, formatObjects));
             }
         }

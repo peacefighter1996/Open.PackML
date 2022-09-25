@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Open.PackML.Tags.Tests
+namespace Open.PackMLTests
 {
     public class TagConfigTests
     {

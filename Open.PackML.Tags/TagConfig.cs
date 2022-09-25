@@ -1,4 +1,5 @@
-﻿using Autabee.Automation.Utility.IEC61131TypeConversion;
+﻿
+using Open.PackML.Tags.IEC;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -44,8 +45,7 @@ namespace Open.PackML.Tags
         public string Description { get; set; }
         public virtual TagType TagType { get; set; }
         public virtual Type DataType { get; set; }
-
-        public ParameterInfo[] InputParameters { get; set; } = null;
+        
         [XmlIgnore]
         public string[] TagAddress { get; private set; }
 

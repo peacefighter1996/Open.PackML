@@ -1,12 +1,14 @@
 ﻿using Open.PackML.Interfaces;
 using System;
 using Xunit;
+using Open.PackML;
+using Open.PackML.Prefab;
 
-namespace Open.PackML.Prefab.Tests
+namespace Open.PackMLTests.Prefab
 {
     public class DefaultEventStoreTests
     {
-        IPmlEventStore<Enum> eventStore;
+        EventStore eventStore;
 
         public DefaultEventStoreTests()
         {

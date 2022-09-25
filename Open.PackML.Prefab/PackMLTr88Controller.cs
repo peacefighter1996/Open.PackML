@@ -39,8 +39,7 @@ namespace Open.PackML.Prefab
             {
                 throw new ArgumentNullException(string.Join(", ", argumentsNull.Select(x => x.Item1)));
             }
-
-
+            
             this.eventStore = eventStore;
             this.controller = controller;
 
@@ -148,8 +147,6 @@ namespace Open.PackML.Prefab
 
         [TagEndUserTerm("Stop Reason")]
         public PmlStopReason StopReason { get; protected set; } = new PmlStopReason();
-
-
         
     }
 
@@ -177,9 +174,16 @@ namespace Open.PackML.Prefab
 
     public class PmlStopReason
     {
+        public PmlStopReason() { }
+        public PmlStopReason(int id, int value)
+        {
+            ID = id;
+            Value = value;
+        }
+
         [TagEndUserTerm("Event and stop reason")]
         [TagType(TagType.Admin)]
-        public int ID { get; private set; }
+        public int ID { get; set; }
 
         [TagEndUserTerm("Detailed Error Information")]
         [TagType(TagType.Admin)]

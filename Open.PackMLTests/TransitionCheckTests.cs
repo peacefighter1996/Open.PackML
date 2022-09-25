@@ -1,6 +1,7 @@
 ﻿using Xunit;
+using Open.PackML;
 
-namespace Open.PackML.Tests
+namespace Open.PackMLTests
 {
     public class PmlTransitionCheckTests
     {

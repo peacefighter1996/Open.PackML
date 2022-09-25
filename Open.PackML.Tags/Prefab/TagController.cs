@@ -2,11 +2,13 @@
 using Open.PackML.Interfaces;
 using Open.PackML.Tags.Builders;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
 namespace Open.PackML.Tags.Prefab
 {
@@ -15,11 +17,11 @@ namespace Open.PackML.Tags.Prefab
     {
         // Dictionary<string, TagDetails> valuePairs;
         TagTable tagTable;
+
         public TagController(Dictionary<string, object> StoredObjects
             //, System.Timers.Timer timer = null
             )
         {
-            // valuePairs = new Dictionary<string, TagDetails>();
             var tagdetails = StoredObjects.Select(StoredObject => TagTreeBuilder.GetTree(StoredObject.Key, StoredObject.Value));
             tagTable = TagTableBuilder.BuildTable(tagdetails);
             //if(timer != null)
@@ -27,7 +29,18 @@ namespace Open.PackML.Tags.Prefab
             //    timer.Elapsed += Timer_Elapsed;
             //}
         }
-        
+
+        public TagController(IEnumerable<TagDetail> tagDetails)
+        {
+            tagTable = TagTableBuilder.BuildTable(tagDetails);
+        }
+
+        public TagController(TagTable tagTable)
+        {
+
+            this.tagTable = tagTable;
+        }
+
         //private bool updating;
         //private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         //{
@@ -43,48 +56,92 @@ namespace Open.PackML.Tags.Prefab
 
         //public event EventHandler<TagUpdate> NotifySubscriptions;
 
-        public Task<object[]> AsyncExecutePackTagCommand(string name, params object[] args)
+        ValidationResult<Queue<int>> GetTagArrayIndexes(string name)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Queue<int> queue = new Queue<int>();
+                var index = name.IndexOf('[');
+                while (index > -1)
+                {
+                    var index2 = name.IndexOf(']',index);
+                    var value = int.Parse(name.Substring(index + 1, index2 - index - 1));
+                    queue.Enqueue(value);
+                    index = name.IndexOf('[', index2 +1);
+                }
+                return new ValidationResult<Queue<int>>(true, queue);
+            }
+            catch (FormatException e)
+            {
+                return new ValidationResult<Queue<int>>(false, null, e.Message);
+            }
+        }
+        public async Task<ValidationResult<object>> AsyncExecutePackTagCommand(string name, params object[] args)
+        {
+            if (tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagDetail tagDetail))
+            {
+                var queue = GetTagArrayIndexes(name);
+                if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
+                return await tagDetail.ExecuteAsync(queue.Object, args);
+            }
+            else return new ValidationResult<object>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
         }
 
-        public ValidationResult<TagDetail> Browse(string Orgin)
+
+
+        public ValidationResult<TagDetail> Browse(string name)
         {
-            return tagTable.TryGetValue(Orgin, out TagDetail tagDetail)
+            return tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagDetail tagDetail)
                 ? new ValidationResult<TagDetail>(true, tagDetail)
-                : new ValidationResult<TagDetail>(false, unSuccesfullText: "Browse item not found");
+                : new ValidationResult<TagDetail>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
         }
 
-        public ValidationResult<TagDetail> Browse(string Orgin, int Depth = 1)
+        public ValidationResult<TagDetail> Browse(string name, int Depth = 1)
         {
-            return tagTable.TryGetValue(Orgin, out TagDetail tagDetail)
+            return tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagDetail tagDetail)
                 ? new ValidationResult<TagDetail>(true, tagDetail)
-                : new ValidationResult<TagDetail>(false, unSuccesfullText: "Browse item not found");
+                : new ValidationResult<TagDetail>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
         }
 
-        public object[] ExecutePackTagCommand(string name, params object[] args)
+        public ValidationResult<object> ExecutePackTagCommand(string name, params object[] args)
         {
-            throw new NotImplementedException();
+            if (tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagDetail tagDetail))
+            {
+                var queue = GetTagArrayIndexes(name);
+                if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
+                return tagDetail.Execute(queue.Object, args);
+            }
+            else
+            {
+                return new ValidationResult<object>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
+            }
         }
 
-        public ValidationResult<object> GetTagData(string name)
-        {
-            if (tagTable.TryGetValue(
-                TagConfig.TagStringToSearch(name), 
-                out TagDetail tagDetails))
-                return tagDetails.GetValue();
-            
-            return new ValidationResult<object>(false, null, "Tag not found");
-        }
-
-        public ValidationResult SetTagData(string name, object data)
+        public ValidationResult<T> GetTagData<T>(string name)
         {
             if (tagTable.TryGetValue(
                 TagConfig.TagStringToSearch(name),
                 out TagDetail tagDetails))
-                return tagDetails.SetValue(data);
+            {
+                var queue = GetTagArrayIndexes(name);
+                if (!queue.Success) return new ValidationResult<T>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
+                return tagDetails.GetValue<T>(queue.Object);
+            }
 
-            return new ValidationResult<object>(false, null, "Tag not found");
+            return new ValidationResult<T>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
+        }
+
+        public ValidationResult SetTagData<T>(string name, T data)
+        {
+            if (tagTable.TryGetValue(
+                TagConfig.TagStringToSearch(name),
+                out TagDetail tagDetails))
+            {
+                var queue = GetTagArrayIndexes(name);
+                if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
+                return tagDetails.SetValue(queue.Object,data);
+            }
+            return new ValidationResult<object>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
         }
     }
 }
