@@ -1,14 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-    <PackageReference Include="Moq" Version="4.18.2" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
@@ -17,10 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Autabee.Utility.IEC61131TypeConversion\Autabee.Utility.IEC61131TypeConversion.csproj" />
-    <ProjectReference Include="..\Open.PackML.Prefab\Open.PackML.Prefab.csproj" />
     <ProjectReference Include="..\Open.PackML.Tags\Open.PackML.Tags.csproj" />
-    <ProjectReference Include="..\Open.PackML\Open.PackML.csproj" />
   </ItemGroup>
 
 </Project>
