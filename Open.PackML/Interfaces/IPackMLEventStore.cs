@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Autabee.Utility;
+using System;
 using System.Collections.Generic;
 
-namespace Open.PackML
+namespace Open.PackML.Interfaces
 {
-    public interface IPackMLEventStore<T> : IDictionary<T, EventReaction<T>> where T : Enum
+    public interface IPmlEventStore<T> where T : Enum
     {
-        ValidationResult<State> ProcessEvent(T MachineEventId);
-        EventReaction<T> GetMachineEvent(T @event);
+        ValidationResult<PmlState> ProcessEvent(T MachineEventId);
+        PmlEventReaction<T> GetMachineEvent(T @event);
     }
 }
