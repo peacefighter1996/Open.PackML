@@ -1,6 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\common.props" />
   <PropertyGroup>
+    <Authors>Ian Arbouw</Authors>
+    <Description>Open Library for development of PackML/ISA88 control systems.</Description>
+    <PackageTags>packml;industrial-automation;ISA;ISA88;88</PackageTags>
+    <PackageProjectUrl>https://github.com/peacefighter1996/Open.PackML</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/peacefighter1996/Open.PackML</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>0.3-Beta</Version>
+  </PropertyGroup>
+  <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0;net48</TargetFrameworks>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>

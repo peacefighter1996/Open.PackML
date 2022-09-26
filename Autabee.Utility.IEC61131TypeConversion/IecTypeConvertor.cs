@@ -22,7 +22,7 @@ namespace Autabee.Utility.IEC61131TypeConversion
             if (type.IsArray)
             {
                 var result = GetIecTypeString(type.GetElementType()) + "[]";
-                if (result == "USINT[]")
+                if (string.Equals( result, "USINT[]"))
                 {
                     return IECType.STRING;
                 }

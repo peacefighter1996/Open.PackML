@@ -16,7 +16,7 @@ namespace Open.PackML
                 PmlCommand.Reset => Reset(currentState, currentMode),
                 PmlCommand.Start => Start(currentState, currentMode),
                 PmlCommand.Hold => Hold(currentState, currentMode),
-                PmlCommand.Unhold => UnHold(currentState, currentMode),
+                PmlCommand.UnHold => UnHold(currentState, currentMode),
                 PmlCommand.Suspend => Suspend(currentState, currentMode),
                 PmlCommand.UnSuspend => UnSuspend(currentState, currentMode),
                 _ => new ValidationResult(false, "Unsupported Command"),
@@ -129,7 +129,7 @@ namespace Open.PackML
         {
             if (packMLMode == PmlMode.Undefined)
             {
-                return new ValidationResult(false, string.Format("Not allowed to translate to undifined mode", packMLMode));
+                return new ValidationResult(false, "Not allowed to translate to undifined mode");
             }
             if (currentMode == packMLMode)
             {

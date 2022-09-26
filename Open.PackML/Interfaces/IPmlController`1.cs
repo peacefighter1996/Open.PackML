@@ -25,11 +25,4 @@ namespace Open.PackML.Interfaces
         Task<ValidationResult> SendPackMLCommandAsync(PmlCommand packMLCommand);
         Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode);
     }
-
-    public interface IPmlMachineController<T> where T : Enum
-    {
-        //Events 
-        event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
-        event EventHandler<MachineEventArgs<T>> MachineEvent;
-    }
 }

@@ -103,6 +103,63 @@ namespace Open.PackMLTests.Prefab
             Assert.Equal(45, value.Object);
         }
 
+        [Fact()]
+        // Call a method with a parameter
+        public void CallArrayVoidFunction()
+        {
+            TagController controller = GetTestController();
+            for (int i = 0; i < 4; i++) {
+                var result = controller.ExecutePackTagCommand($"Machine1.ExecuteObjects[{i}].SetValue(DINT value1)", 45);
+                Assert.True(result.Success, result.FailString());
+                var value = controller.GetTagData<int>($"Machine1.ExecuteObjects[{i}].Integer1");
+                Assert.True(value.Success, value.FailString());
+                Assert.Equal(45, value.Object);
+            }
+            
+        }
+
+        [Fact()]
+        // Call a method with a parameter
+        public void CallArrayIntFunction()
+        {
+            TagController controller = GetTestController();
+            for (int i = 0; i < 4; i++)
+            {
+                var result = controller.ExecutePackTagCommand($"Machine1.ExecuteObjects[{i}].PlusOne(DINT value1)", 45);
+                Assert.True(result.Success, result.FailString());
+                Assert.Equal(result.Object, 46);
+            }
+        }
+
+        [Fact()]
+        // Call a method with a parameter
+        public void CallListVoidFunction()
+        {
+            TagController controller = GetTestController();
+            for (int i = 0; i < 3; i++)
+            {
+                var result = controller.ExecutePackTagCommand($"Machine2.ExecuteObjects[{i}].SetValue(DINT value1)", 45);
+                Assert.True(result.Success, result.FailString());
+                var value = controller.GetTagData<int>($"Machine2.ExecuteObjects[{i}].Integer1");
+                Assert.True(value.Success, value.FailString());
+                Assert.Equal(45, value.Object);
+            }
+
+        }
+
+        [Fact()]
+        // Call a method with a parameter
+        public void CallListIntFunction()
+        {
+            TagController controller = GetTestController();
+            for (int i = 0; i < 3; i++)
+            {
+                var result = controller.ExecutePackTagCommand($"Machine2.ExecuteObjects[{i}].PlusOne(DINT value1)", 45);
+                Assert.True(result.Success, result.FailString());
+                Assert.Equal(result.Object, 46);
+            }
+        }
+
         private static TagController GetDefaultcontroller()
         {
             var moqController = new Mock<IPmlController<Enum>>();

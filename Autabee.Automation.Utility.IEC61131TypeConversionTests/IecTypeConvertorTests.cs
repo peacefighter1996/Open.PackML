@@ -35,19 +35,15 @@ namespace Autabee.Utility.IEC61131TypeConversionTests
         [Fact]
         public void GetIecBitArrayTest()
         {
-            var ByteValues = new int[] { 1, 8, 16, 32, 64 };
             for (var j = 0; j < 100; j++)
             {
-
-                    Assert.Equal($"BOOL[]", IecTypeConvertor.GetIecTypeString(new BitArray(j, false)));
-                
+                Assert.Equal($"BOOL[]", IecTypeConvertor.GetIecTypeString(new BitArray(j, false)));
             }
 
         }
         [Fact()]
         public void GetIecByteArrayTest()
         {
-
             Assert.Equal("STRING", IecTypeConvertor.GetIecTypeString(new byte[3]));
 
         }
@@ -94,5 +90,5 @@ namespace Autabee.Utility.IEC61131TypeConversionTests
         }
     }
 
-    
+
 }

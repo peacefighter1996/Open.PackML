@@ -31,17 +31,43 @@ namespace Open.PackMLTests.Prefab
         public List<int> IntegerList { get; set; } = new List<int>() { 1, 2, 3, 4 };
         [TagFixedSize(5)]
         public TestObject2[] ObjectArray { get; } = new TestObject2[5];
+
+
+        public ExecuteObject[] ExecuteObjects { get; } = new ExecuteObject[]
+        {
+            new ExecuteObject(), new ExecuteObject(), new ExecuteObject(), new ExecuteObject()
+        };
         [TagType(TagType.Command)]
         public void SetValue(int value1)
         {
             Integer1 = value1;
         }
     }
-
+    internal class ExecuteObject
+    {
+        public int Integer1 { get; private set; }
+        [TagType(TagType.Command)]
+        public void SetValue(int value1)
+        {
+            Integer1 = value1;
+        }
+        [TagType(TagType.Command)]
+        public int PlusOne(int value1)
+        {
+            return value1 + 1;
+        }
+    }
     internal class TestObject2
     {
         public int Integer1 { get; }
         public PmlState PmlState { get; }
+
+        public List<ExecuteObject> ExecuteObjects { get; set; } = new List<ExecuteObject>()
+        {
+            new ExecuteObject(),
+            new ExecuteObject(),
+            new ExecuteObject()
+        };
     }
 
     public class BuildTagTreeTests
@@ -60,10 +86,18 @@ namespace Open.PackMLTests.Prefab
         }
 
         [Fact]
+        public void GetTreeIecTest()
+        {
+            var temp = TagTreeBuilder.GetTree("", new TestObject1(), Iec:true);
+            var table = temp.BuildTable();
+            logger.WriteLine(table.GetTagTablePrint());
+        }
+
+        [Fact]
         public void GetTreeTest1()
         {
-            var temp1 = TagTreeBuilder.GetTree("Machine1",new TestObject1());
-            var temp2 = TagTreeBuilder.GetTree("Machine2", new TestObject2());
+            var temp1 = TagTreeBuilder.GetTree("Machine1",new TestObject1(), Iec:true);
+            var temp2 = TagTreeBuilder.GetTree("Machine2", new TestObject2(), Iec: true);
             var table = TagTableBuilder.BuildTable(new TagDetail[2] { temp1, temp2 });
             logger.WriteLine(table.GetTagTablePrint());
             

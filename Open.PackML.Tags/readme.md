@@ -3,4 +3,4 @@
 ![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/Open.PackML) 
 ![GitHub](https://img.shields.io/github/license/peacefighter1996/Open.PackML) 
 
-Open prewritten classes for building control systems using the OMAC ISA-88 PackML standard in c# programs.
+Extending Open PackML and adding the Tag control feature.

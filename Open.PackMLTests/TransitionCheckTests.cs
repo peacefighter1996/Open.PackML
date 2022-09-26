@@ -170,7 +170,7 @@ namespace Open.PackMLTests
         [InlineData(PmlState.Completed, false)]
         public void UnHoldTest(PmlState PmlState, bool expectation)
         {
-            Assert.True(expectation == PmlTransitionCheck.UnHold(PmlState).Success, $"Check {PmlState} if it accepts {PmlCommand.Unhold} PmlCommand");
+            Assert.True(expectation == PmlTransitionCheck.UnHold(PmlState).Success, $"Check {PmlState} if it accepts {PmlCommand.UnHold} PmlCommand");
         }
 
         [Theory]

@@ -4,15 +4,27 @@
 		<TargetFrameworks>netstandard2.0;net6.0;net48</TargetFrameworks>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 	</PropertyGroup>
+
+	<PropertyGroup>
+		<Authors>Ian Arbouw</Authors>
+		<Description>Base package for Open Packml implementation of the tag system</Description>
+		<PackageTags>packml;industrial-automation;ISA;ISA88;88;tags</PackageTags>
+		<PackageProjectUrl>https://github.com/peacefighter1996/Open.PackML</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/peacefighter1996/Open.PackML</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Version>0.3-Beta</Version>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<None Include="readme.md">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
+	
 	<ItemGroup>
 	  <ProjectReference Include="..\Autabee.Utility.IEC61131TypeConversion\Autabee.Utility.IEC61131TypeConversion.csproj" />
 	  <ProjectReference Include="..\Autabee.Utility\Autabee.Utility.csproj" />
 	</ItemGroup>
-
 </Project>

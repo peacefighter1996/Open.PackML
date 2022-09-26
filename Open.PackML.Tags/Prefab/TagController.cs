@@ -82,7 +82,7 @@ namespace Open.PackML.Tags.Prefab
             {
                 var queue = GetTagArrayIndexes(name);
                 if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
-                return await tagDetail.ExecuteAsync(queue.Object, args);
+                return await tagDetail.ExecuteAsync(queue.Object, args).ConfigureAwait(true);
             }
             else return new ValidationResult<object>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
         }

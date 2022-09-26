@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Autabee.Utility
 {
@@ -35,11 +36,7 @@ namespace Autabee.Utility
         }
         public string FailString()
         {
-            string failString = "";
-            foreach (var fail in FailInfo)
-            {
-                failString += string.Format(fail.Item1, fail.Item2) + Environment.NewLine;
-            }
+            string failString = FailInfo.Aggregate("", (accumulator, fail) => accumulator += string.Format(fail.Item1, fail.Item2) + Environment.NewLine);
             return failString;
         }
 
