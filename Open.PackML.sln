@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackML", "Open.PackML\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackMLTests", "Open.PackMLTests\Open.PackMLTests.csproj", "{A6FE6E93-42AF-4E36-8A05-E1108E8FBC07}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autabee.Automation.Utility.IEC61131TypeConversion", "Autabee.Utility.IEC61131TypeConversion\Autabee.Automation.Utility.IEC61131TypeConversion.csproj", "{D96C5069-1885-4B22-A01E-B4F372119AA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autabee.Utility.IEC61131TypeConversion", "Autabee.Utility.IEC61131TypeConversion\Autabee.Utility.IEC61131TypeConversion.csproj", "{D96C5069-1885-4B22-A01E-B4F372119AA8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autabee.Automation.Utility.IEC61131TypeConversionTests", "Autabee.Automation.Utility.IEC61131TypeConversionTests\Autabee.Automation.Utility.IEC61131TypeConversionTests.csproj", "{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autabee.Utility.IEC61131TypeConversionTests", "Autabee.Automation.Utility.IEC61131TypeConversionTests\Autabee.Utility.IEC61131TypeConversionTests.csproj", "{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackML.Tags", "Open.PackML.Tags\Open.PackML.Tags.csproj", "{862C1E05-87A4-4E50-81D0-9185DD4C5B5A}"
 EndProject

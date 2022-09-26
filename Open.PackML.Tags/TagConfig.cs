@@ -1,5 +1,4 @@
-﻿
-using Open.PackML.Tags.IEC;
+﻿using Autabee.Utility.IEC61131TypeConversion;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -63,10 +62,13 @@ namespace Open.PackML.Tags
         public TagConfig(TagConfig tagConfig) : this(tagConfig.TagName, tagConfig.EndUserTerm, tagConfig.Description, tagConfig.TagType, tagConfig.DataType)
         {
         }
-
-        public override string ToString()
+        public string ToIecString()
         {
             return string.Format("{0},{1},{2},{3},{4}", TagType.ToString(), TagName, EndUserTerm, Description, DataType.GetIecTypeString());
+        }
+        public override string ToString()
+        {
+            return string.Format("{0},{1},{2},{3},{4}", TagType.ToString(), TagName, EndUserTerm, Description, DataType.ToString());
         }
         public static string TagStringToSearch(string name)
         {

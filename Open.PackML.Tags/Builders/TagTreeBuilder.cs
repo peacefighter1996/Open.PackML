@@ -1,6 +1,6 @@
 ﻿
+using Autabee.Utility.IEC61131TypeConversion;
 using Open.PackML.Tags.Attributes;
-using Open.PackML.Tags.IEC;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace Open.PackML.Tags.Builders
         /// <param name="StartTagType"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static TagDetail GetTree(string root, object obj, string description = "", string endUserTerm = "", TagType StartTagType = TagType.Undefined)
+        public static TagDetail GetTree(string root, object obj, string description = "", string endUserTerm = "", TagType StartTagType = TagType.Undefined, bool Iec = false)
         {
             Type type = obj.GetType();
             if ((type.IsArray
@@ -40,7 +40,7 @@ namespace Open.PackML.Tags.Builders
                 EndUserTerm = endUserTerm
             };
 
-            return GetTree(conf, type, obj, new List<Type>() { type }, TagType.Undefined, new List<MemberInfo>(), new List<bool>() { });
+            return GetTree(conf, type, obj, new List<Type>() { type }, TagType.Undefined, new List<MemberInfo>(), new List<bool>() { }, Iec);
         }
 
         private static TagDetail GetTree(TagConfig root,
@@ -49,7 +49,8 @@ namespace Open.PackML.Tags.Builders
             List<Type> types,
             TagType TagTypeCarry,
             List<MemberInfo> propertyChain,
-            List<bool> arraytree)
+            List<bool> arraytree,
+            bool Iec)
         {
             List<TagDetail> Children = new List<TagDetail>();
             foreach (var property in objType.GetProperties())
@@ -97,7 +98,7 @@ namespace Open.PackML.Tags.Builders
                         types,
                         config.TagType,
                         propertyChain,
-                        arraytree
+                        arraytree, Iec
                         );
 
                     Children.Add(new ArrayTagDetail(
@@ -129,7 +130,7 @@ namespace Open.PackML.Tags.Builders
                         types,
                         config.TagType,
                         propertyChain,
-                        arraytree
+                        arraytree,Iec
                         ));
                     arraytree.RemoveAt(arraytree.Count - 1);
                     types.Remove(config.DataType);
@@ -147,7 +148,7 @@ namespace Open.PackML.Tags.Builders
                 arraytree.Add(false);
                 if (method.GetCustomAttribute(typeof(TagTypeAttribute)) is TagTypeAttribute attribute)
                 {
-                    var config = GetPropertyTagConfig(method, root.TagName, attribute.TagType);
+                    var config = GetPropertyTagConfig(method, root.TagName, attribute.TagType, Iec);
                     propertyChain.Add(method);
                     Children.Add(new TagDetail(config, baseObject, new TagDetail[0], propertyChain.ToArray(), arraytree.ToArray()));
                     propertyChain.Remove(method);
@@ -177,13 +178,15 @@ namespace Open.PackML.Tags.Builders
             return config;
         }
 
-        private static TagConfig GetPropertyTagConfig(MethodInfo property, string root, TagType TagCarry)
+        private static TagConfig GetPropertyTagConfig(MethodInfo property, string root, TagType TagCarry, bool Iec)
         {
-            var value = property.GetParameters().Aggregate("", (accumulator, item) => accumulator += item.ParameterType.GetIecTypeString() + " " + item.Name + ",");
+            var paramters = property.GetParameters().Aggregate("", (accumulator, item) => 
+                accumulator += (Iec?item.ParameterType.GetIecTypeString(): item.ParameterType.ToString())
+                    + " " + item.Name + ",").TrimEnd(',');
             TagConfig config = new TagConfig()
             {
                 DataType = property.ReturnType,
-                TagName = (string.IsNullOrWhiteSpace(root) ? property.Name : root + '.' + property.Name) + "(" + value.Substring(0, value.Length - 1) + ")",
+                TagName = (string.IsNullOrWhiteSpace(root) ? property.Name : root + '.' + property.Name) + "(" + paramters + ")",
                 EndUserTerm = property.GetCustomAttribute<TagEndUserTermAttribute>() is TagEndUserTermAttribute e ? e.EndUserTerm : string.Empty,
 
                 TagType = property.GetCustomAttribute<TagTypeAttribute>() is TagTypeAttribute p ? p.TagType : TagCarry,

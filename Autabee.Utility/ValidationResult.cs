@@ -57,5 +57,4 @@ namespace Autabee.Utility
 
         public T Object { get; }
     }
-
 }

@@ -1,4 +1,4 @@
-﻿namespace Autabee.Automation.Utility.IEC61131TypeConversion.Tests
+﻿namespace Autabee.Utility.IEC61131TypeConversionTests
 {
     class Person
     {

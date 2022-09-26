@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Autabee.Automation.Utility.IEC61131TypeConversion
+namespace Autabee.Utility.IEC61131TypeConversion
 {
     public static class IecTypeConvertor
     {
@@ -24,7 +24,7 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion
                 var result = GetIecTypeString(type.GetElementType()) + "[]";
                 if (result == "USINT[]")
                 {
-                    return IEC.IECType.STRING;
+                    return IECType.STRING;
                 }
                 else
                 {
@@ -36,46 +36,46 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion
                 switch (type.FullName)
                 {
                     case "System.Boolean":
-                        return IEC.IECType.BOOL;
+                        return IECType.BOOL;
 
                     //unsigned Integers 
                     case "System.Byte":
-                        return IEC.IECType.USINT;
+                        return IECType.USINT;
                     case "System.UInt16":
-                        return IEC.IECType.UINT;
+                        return IECType.UINT;
                     case "System.UInt32":
-                        return IEC.IECType.UDINT;
+                        return IECType.UDINT;
                     case "System.UInt64":
-                        return IEC.IECType.ULINT;
+                        return IECType.ULINT;
 
                     //signed Integers 
                     case "System.SByte":
-                        return IEC.IECType.SINT;
+                        return IECType.SINT;
                     case "System.Int16":
-                        return IEC.IECType.INT;
+                        return IECType.INT;
                     case "System.Int32":
-                        return IEC.IECType.DINT;
+                        return IECType.DINT;
                     case "System.Int64":
-                        return IEC.IECType.LINT;
+                        return IECType.LINT;
 
                     //Floating Points
                     case "System.Float":
-                        return IEC.IECType.REAL;
+                        return IECType.REAL;
                     case "System.Double":
-                        return IEC.IECType.LREAL;
+                        return IECType.LREAL;
 
                     //Duration
                     case "System.TimeSpan":
-                        return IEC.IECType.LTIME;
+                        return IECType.LTIME;
                     case "System.Date":
-                        return IEC.IECType.DATE;
+                        return IECType.DATE;
 
                     case "System.Char":
-                        return IEC.IECType.CHAR;
+                        return IECType.CHAR;
                     case "System.String":
-                        return IEC.IECType.WSTRING;
+                        return IECType.WSTRING;
                     case "System.Collections.BitArray":
-                        return IEC.IECType.BOOL + "[]";
+                        return IECType.BOOL + "[]";
                     default:
                         return "UDT_" + type.FullName.Replace('.', '_');
                 }

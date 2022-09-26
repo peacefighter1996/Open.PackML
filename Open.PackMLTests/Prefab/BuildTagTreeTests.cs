@@ -25,7 +25,7 @@ namespace Open.PackMLTests.Prefab
         [TagType(TagType.Command)]
         public PmlState PmlState { get; set; }
         //[ArrayTagFixed(size = true, object = true)]
-        public int[] IntegerArray { get; } = new int[3];
+        public int[] IntegerArray1 { get; } = new int[3];
         public int[] IntegerArray2 { get; set; } = new int[4];
 
         public List<int> IntegerList { get; set; } = new List<int>() { 1, 2, 3, 4 };

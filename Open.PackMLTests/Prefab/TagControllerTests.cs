@@ -14,7 +14,6 @@ namespace Open.PackMLTests.Prefab
 {
     public class TagControllerTests
     {
-
         
         [Fact()]
         public void GetTagDataTest()
@@ -57,16 +56,40 @@ namespace Open.PackMLTests.Prefab
             Assert.False(result.Success, result.FailString());
         }
 
-        [Fact()]
-        public void SetArrayTagDataTest()
+        [Theory]
+        [InlineData("Machine1.IntegerArray2[0]", 45)]
+        [InlineData("Machine1.IntegerArray1[0]", 45)]
+        [InlineData("Machine1.IntegerArray2[1]", 125)]
+        public void SetArrayValueTagDataTest<T>(string tagName, T tagValue)
         {
             TagController controller = GetTestController();
-            var result = controller.SetTagData("Machine1.IntegerArray2[0]", 45);
+            var result = controller.SetTagData(tagName, tagValue);
             Assert.True(result.Success, result.FailString());
-            var value  = controller.GetTagData<int>("Machine1.IntegerArray2[0]");
+            var value  = controller.GetTagData<T>(tagName);
             Assert.True(value.Success, value.FailString());
-            Assert.Equal(45, value.Object);
+            Assert.Equal(tagValue, value.Object);
         }
+
+        
+        
+        [Fact()]
+        public void SetArrayTagDataTest1FailWrite()
+        {
+            TagController controller = GetTestController();
+            var result = controller.SetTagData("Machine1.IntegerArray1", new int[] { 112, 25564 });
+            Assert.False(result.Success, result.FailString());
+        }
+        [Fact()]
+        public void SetArrayTagDataTest2()
+        {
+            TagController controller = GetTestController();
+            var result = controller.SetTagData("Machine1.IntegerArray2", new int[] { 112, 25564 });
+            Assert.True(result.Success, result.FailString());
+            var value  = controller.GetTagData<int[]>("Machine1.IntegerArray2");
+            Assert.True(value.Success, value.FailString());
+            Assert.Equal(new int[] { 112, 25564 }, value.Object);
+        }
+        
 
         [Fact()]
         // Call a method with a parameter
@@ -94,7 +117,7 @@ namespace Open.PackMLTests.Prefab
             var controller = new TagController(new Dictionary<string, object>() { 
                 { "Machine1", new TestObject1() }, 
                 { "Machine2", new TestObject2() } 
-            });
+            }, Iec: true);
             return controller;
         }
     }

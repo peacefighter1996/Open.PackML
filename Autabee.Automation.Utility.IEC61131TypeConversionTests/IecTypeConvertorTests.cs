@@ -8,9 +8,9 @@ using Xunit.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using System.Net.Sockets;
 using System.Windows.Markup;
-using Open.PackML.Tags.IEC;
+using Autabee.Utility.IEC61131TypeConversion;
 
-namespace Autabee.Automation.Utility.IEC61131TypeConversion.Tests
+namespace Autabee.Utility.IEC61131TypeConversionTests
 {
     public class IecTypeConvertorTests
     {
@@ -81,7 +81,7 @@ namespace Autabee.Automation.Utility.IEC61131TypeConversion.Tests
         {
             Guid guid = new Guid();
             var person = new Person() { Name = guid.ToString(), PasswordHash = guid.GetHashCode() };
-            Assert.Equal("UDT_Autabee_Automation_Utility_IEC61131TypeConversion_Tests_Person", person.GetIecTypeString());
+            Assert.Equal("UDT_Autabee_Utility_IEC61131TypeConversionTests_Person", person.GetIecTypeString());
         }
 
 
