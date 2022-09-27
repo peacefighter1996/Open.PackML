@@ -6,7 +6,7 @@
 
 Open prewritten classes for building control systems using the OMAC ISA-88 PackML standard in c# programs.
 
-⚠️ Currently In alpha state so don't use directly yet within production enviorment as namingscheme is still volitile.
+⚠️ Currently In beta state so don't use directly yet within production enviorment as namingscheme is still volitile.
 
 ## Releases
 | Source | Pre-Release | Stable Version | Downloads |

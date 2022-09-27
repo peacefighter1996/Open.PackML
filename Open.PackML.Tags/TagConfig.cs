@@ -1,7 +1,6 @@
 ﻿using Autabee.Utility.IEC61131TypeConversion;
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Serialization;
 
 namespace Open.PackML.Tags

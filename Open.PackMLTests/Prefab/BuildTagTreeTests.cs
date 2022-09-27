@@ -115,7 +115,7 @@ namespace Open.PackMLTests.Prefab
         {
             var moqController = new Mock<IPmlController<Enum>>();
             var eventStore = new EventStore();
-            var temp = TagTreeBuilder.GetTree("", new PackMLTr88Controller<Enum>(moqController.Object, eventStore));
+            var temp = TagTreeBuilder.GetTree("", new PmlTr88Controller<Enum>(moqController.Object, eventStore));
             logger.WriteLine(temp.BuildTable().GetTagTablePrint());
         }
         [Fact]
@@ -123,7 +123,7 @@ namespace Open.PackMLTests.Prefab
         {
             var moqController = new Mock<IPmlController<Enum>>();
             var eventStore = new EventStore();
-            var temp = TagTreeBuilder.GetTree("", new PackMLTr88Controller<Enum>(moqController.Object,eventStore));
+            var temp = TagTreeBuilder.GetTree("", new PmlTr88Controller<Enum>(moqController.Object,eventStore));
             logger.WriteLine(temp.BuildTable().GetTagTablePrint(true));
         }
 
@@ -132,7 +132,7 @@ namespace Open.PackMLTests.Prefab
         {
             var moqController = new Mock<IPmlController<Enum>>();
             var eventStore = new EventStore();
-            var temp = TagTreeBuilder.GetTree("", new PackMLTr88Controller<Enum>(moqController.Object, eventStore));
+            var temp = TagTreeBuilder.GetTree("", new PmlTr88Controller<Enum>(moqController.Object, eventStore));
             logger.WriteLine(temp.BuildTable().GetTagTablePrint(true));
         }
 
