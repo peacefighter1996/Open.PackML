@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+		<None Include="readme.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+  
+  <ItemGroup>
     <ProjectReference Include="..\Open.PackML.Tags\Open.PackML.Tags.csproj" />
     <ProjectReference Include="..\Open.PackML\Open.PackML.csproj" />
   </ItemGroup>
