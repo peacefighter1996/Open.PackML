@@ -34,7 +34,7 @@ jobs:
       # uses: brandedoutcast/publish-nuget@c12b8546b67672ee38ac87bea491ac94a587f7cc
       uses: alirezanet/publish-nuget@v3.0.4
       with:
-          PROJECT_FILE_PATH: Open.PackML.Tags/Open.PackMLTags.csproj
+          PROJECT_FILE_PATH: Open.PackML.Tags/Open.PackML.Tags.csproj
           NUGET_KEY: ${{secrets.NUGET_KEY}}
           VERSION_FILE_PATH: OpenPackMLTags.props
           INCLUDE_SYMBOLS: true
