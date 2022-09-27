@@ -14,7 +14,11 @@ namespace Autabee.Utility
             {
                 FailInfo.Add((unSuccessfulText, formatObjects));
             }
-
+        }
+        public ValidationResult(bool success = true, List<(string, object[])> failInfo = default)
+        {
+            this.Success = success;
+            this.FailInfo = failInfo ?? new List<(string, object[])>();
         }
 
         public void AddResult(ValidationResult validationResult)
@@ -27,7 +31,6 @@ namespace Autabee.Utility
         }
         public void AddResult(bool succes, string failText, params object[] formatObjects)
         {
-            
             Success &= succes;
             if (!string.IsNullOrWhiteSpace(failText))
             {
@@ -48,6 +51,11 @@ namespace Autabee.Utility
     public class ValidationResult<T> : ValidationResult
     {
         public ValidationResult(bool success = true, T Object = default, string unSuccesfullText = "", params object[] formatObjects) : base(success, unSuccesfullText, formatObjects)
+        {
+            this.Object = Object;
+        }
+
+        public ValidationResult(bool success = true, T Object = default, List<(string, object[])> failInfo = default) : base(success, failInfo)
         {
             this.Object = Object;
         }
