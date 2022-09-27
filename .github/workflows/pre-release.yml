@@ -19,7 +19,7 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    - name: Publish NuGet
+    - name: Publish Open PackML to NuGet
       # You may pin to the exact commit or the version.
       # uses: brandedoutcast/publish-nuget@c12b8546b67672ee38ac87bea491ac94a587f7cc
       uses: alirezanet/publish-nuget@v3.0.4
@@ -27,5 +27,25 @@ jobs:
           PROJECT_FILE_PATH: Open.PackML/Open.PackML.csproj
           NUGET_KEY: ${{secrets.NUGET_KEY}}
           VERSION_FILE_PATH: common.props
+          INCLUDE_SYMBOLS: true
+          NO_BUILD: true
+    - name: Publish Open PackML Tags to NuGet
+      # You may pin to the exact commit or the version.
+      # uses: brandedoutcast/publish-nuget@c12b8546b67672ee38ac87bea491ac94a587f7cc
+      uses: alirezanet/publish-nuget@v3.0.4
+      with:
+          PROJECT_FILE_PATH: Open.PackML.Tags/Open.PackML.Tags.csproj
+          NUGET_KEY: ${{secrets.NUGET_KEY}}
+          VERSION_FILE_PATH: OpenPackMLTags.props
+          INCLUDE_SYMBOLS: true
+          NO_BUILD: true
+    - name: Publish Open PackML PRefabs to NuGet
+      # You may pin to the exact commit or the version.
+      # uses: brandedoutcast/publish-nuget@c12b8546b67672ee38ac87bea491ac94a587f7cc
+      uses: alirezanet/publish-nuget@v3.0.4
+      with:
+          PROJECT_FILE_PATH: Open.PackML.Prefab/Open.PackML.Prefab.csproj
+          NUGET_KEY: ${{secrets.NUGET_KEY}}
+          VERSION_FILE_PATH: OpenPackMLPrefab.props
           INCLUDE_SYMBOLS: true
           NO_BUILD: true
