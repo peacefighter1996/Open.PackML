@@ -101,30 +101,28 @@ namespace Open.PackML.Tags
             object result = baseObject;
             for (int i = 0; i < memberInfo.Length - 1; i++)
             {
-
-                if (ArrayType[i])
-                {
-                    var temp = ((PropertyInfo)memberInfo[i]).GetValue(result);
-                    switch (temp)
-                    {
-                        case Array a:
-                            result = a.GetValue(queue.Dequeue());
-                            break;
-                        case IList b:
-                            result = b[queue.Dequeue()];
-                            break;
-                        default:
-                            return ObjectNotFound();
-                    }
-                }
-                else
-                {
-                    result = ((PropertyInfo)memberInfo[i]).GetValue(result);
-                }
-
-                if (result == null) ObjectNotFound();
+                result = GetNextObject(ArrayType[i], (PropertyInfo)memberInfo[i], result, queue);
+                if (result == null) return ObjectNotFound();
             }
             return new ValidationResult<object>(Object: result);
+        }
+
+        private static object GetNextObject(bool arraytype, PropertyInfo info, object obj, Queue<int> queue)
+        {
+
+            if (arraytype)
+            {
+                switch ((info).GetValue(obj))
+                {
+                    case Array a:
+                        return a.GetValue(queue.Dequeue());
+                    case IList b:
+                        return b[queue.Dequeue()];
+                    default:
+                        return null;
+                }
+            }
+            return info.GetValue(obj);
         }
 
 
@@ -138,27 +136,29 @@ namespace Open.PackML.Tags
             return new Task<ValidationResult<object>>(delegate { return Execute(queue, args); });
         }
 
-        public ValidationResult<T> GetValue<T>(Queue<int> queue)
+        public ValidationResult<object> GetValue(Queue<int> queue)
         {
-            if (!Readable) return new ValidationResult<T>(false, default, "Object not readable");
-            if (!IsProperty) return new ValidationResult<T>(false, default, "Tag not a property");
+            if (!Readable) return new ValidationResult<object>(false, null, "Object not readable");
+            if (!IsProperty) return new ValidationResult<object>(false, null, "Tag not a property");
 
 
             var validation = MoveToLastBase(queue);
-            if (!validation.Success)
-            {
-                var returnVal = new ValidationResult<T>();
-                returnVal.AddResult(validation);
-                return returnVal;
-            }
-            object result = validation.Object;
+            if (!validation.Success) return validation;;
 
             PropertyInfo info = (PropertyInfo)last;
 
             if (info.PropertyType.IsArray && queue.Count == 1)
-                return new ValidationResult<T>(Object: ((T[])info.GetValue(result))[queue.Dequeue()]);
+                switch (info.GetValue(validation.Object))
+                {
+                    case Array a:
+                        return new ValidationResult<object>(Object: a.GetValue(queue.Dequeue()));
+                    case IList b:
+                        return new ValidationResult<object>(Object: b[queue.Dequeue()]);
+                    default:
+                        return null;
+                }
             else
-                return new ValidationResult<T>(Object: (T)info.GetValue(result));
+                return new ValidationResult<object>(Object: info.GetValue(validation.Object));
 
         }
 
@@ -183,7 +183,7 @@ namespace Open.PackML.Tags
         //    }
         //}
 
-        public ValidationResult SetValue<T>(Queue<int> queue, T obj)
+        public ValidationResult SetValue(Queue<int> queue, object obj)
         {
             Type type = obj.GetType();
             if (!Writable && !DataType.IsArray) return new ValidationResult(false, "Object not writable");
@@ -191,30 +191,39 @@ namespace Open.PackML.Tags
             if ((type.IsArray && base.DataType.IsArray && base.DataType != type)
                 || (!type.IsArray && base.DataType.IsArray && base.DataType.GetElementType() != type)
                 || (!base.DataType.IsArray && base.DataType != type))
-                return ObjectTypeMisMatch<T>();
+                return ObjectTypeMisMatch();
 
 
-            var result = baseObject;
-            for (int i = 0; i < memberInfo.Length - 1; i++)
-            {
-                result = ((PropertyInfo)memberInfo[i]).GetValue(result);
-                if (result == null) return new ValidationResult(false, "Object not found");
-            }
+            var validation = MoveToLastBase(queue);
+            if (!validation.Success) return validation;
+            
             if (last is PropertyInfo info)
             {
                 if (info.PropertyType.IsArray && queue.Count == 1)
-                    ((T[])info.GetValue(result))[queue.Dequeue()] = obj;
+                {
+                    switch (info.GetValue(validation.Object))
+                    {
+                        case Array a:
+                            a.SetValue(obj, queue.Dequeue());
+                            break;
+                        case IList b:
+                            b[queue.Dequeue()] = obj;
+                            break;
+                        default:
+                            return new ValidationResult(false, "Failed To write Array");
+                    };
+                }
                 else if (!Writable) return new ValidationResult(false, "Object not writable");
                 else
-                    (info).SetValue(result, obj);
+                    (info).SetValue(validation.Object, obj);
             }
             return new ValidationResult();
 
         }
 
-        private static ValidationResult ObjectTypeMisMatch<T>()
+        private static ValidationResult ObjectTypeMisMatch()
         {
-            return new ValidationResult<T>(false, unSuccesfullText: "Object type mismatch");
+            return new ValidationResult(false, "Object type mismatch");
         }
 
         public TagDetail[] ChildTags { get; }

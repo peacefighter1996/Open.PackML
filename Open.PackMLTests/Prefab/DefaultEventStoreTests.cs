@@ -1,5 +1,4 @@
-﻿using Open.PackML.Interfaces;
-using System;
+﻿using System;
 using Xunit;
 using Open.PackML;
 using Open.PackML.Prefab;
