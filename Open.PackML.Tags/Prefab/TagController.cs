@@ -119,19 +119,31 @@ namespace Open.PackML.Tags.Prefab
 
         public ValidationResult<T> GetTagData<T>(string name)
         {
+            var result = GetTagData(name);
+            if (result.Success) return new ValidationResult<T>(true, (T)result.Object);
+            else return new ValidationResult<T>(false, default, result.FailInfo);
+        }
+
+        public ValidationResult<object> GetTagData(string name)
+        {
             if (tagTable.TryGetValue(
                 TagConfig.TagStringToSearch(name),
                 out TagDetail tagDetails))
             {
                 var queue = GetTagArrayIndexes(name);
-                if (!queue.Success) return new ValidationResult<T>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
-                return tagDetails.GetValue<T>(queue.Object);
+                if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
+                return tagDetails.GetValue(queue.Object);
             }
 
-            return new ValidationResult<T>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
+            return new ValidationResult<object>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
         }
 
         public ValidationResult SetTagData<T>(string name, T data)
+        {
+            return SetTagData(name,(object)data);
+        }
+
+        public ValidationResult SetTagData(string name, object data)
         {
             if (tagTable.TryGetValue(
                 TagConfig.TagStringToSearch(name),
