@@ -1,0 +1,37 @@
+<Project>
+  <PropertyGroup>
+          <Authors>Ian Arbouw</Authors>
+      <Description>Open Library for development of PackML/ISA88 control systems.</Description>
+      <PackageTags>packml;industrial-automation;ISA;ISA88;88</PackageTags>
+      <PackageProjectUrl>https://github.com/peacefighter1996/Open.PackML</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/peacefighter1996/Open.PackML</RepositoryUrl>
+      <RepositoryType>git</RepositoryType>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <Version>0.3-Beta</Version>
+    
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugSymbols>true</DebugSymbols>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IsPackable>true</IsPackable>
+
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors>false</WarningsAsErrors>
+
+    <CLSCompliant>true</CLSCompliant>
+    <ComVisible>false</ComVisible>
+    <LangVersion>latest</LangVersion>
+
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+  </PropertyGroup>
+</Project>
