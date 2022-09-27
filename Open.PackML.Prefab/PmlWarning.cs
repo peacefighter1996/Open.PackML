@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 
-namespace Open.PackML
+namespace Open.PackML.Prefab
 {
     public class PmlWarning
     {

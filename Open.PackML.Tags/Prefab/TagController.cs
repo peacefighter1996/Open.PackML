@@ -76,16 +76,16 @@ namespace Open.PackML.Tags.Prefab
             }
         }
 
-        public async Task<ValidationResult<object>> AsyncExecutePackTagCommand(string name, params object[] args)
-        {
-            if (tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagDetail tagDetail))
-            {
-                var queue = GetTagArrayIndexes(name);
-                if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
-                return await tagDetail.ExecuteAsync(queue.Object, args).ConfigureAwait(true);
-            }
-            else return new ValidationResult<object>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
-        }
+        //public async Task<ValidationResult<object>> AsyncExecutePackTagCommand(string name, params object[] args)
+        //{
+        //    if (tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagDetail tagDetail))
+        //    {
+        //        var queue = GetTagArrayIndexes(name);
+        //        if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
+        //        return await tagDetail.ExecuteAsync(queue.Object, args).ConfigureAwait(true);
+        //    }
+        //    else return new ValidationResult<object>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
+        //}
 
 
 
@@ -140,7 +140,7 @@ namespace Open.PackML.Tags.Prefab
 
         public ValidationResult SetTagData<T>(string name, T data)
         {
-            return SetTagData(name,(object)data);
+            return SetTagData(name, (object)data);
         }
 
         public ValidationResult SetTagData(string name, object data)
@@ -155,5 +155,43 @@ namespace Open.PackML.Tags.Prefab
             }
             return new ValidationResult<object>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
         }
+
+        public ValidationResult[] BatchSetTagData(List<(string, object)> data)
+        {
+            return data.AsParallel().Select(d => SetTagData(d.Item1, d.Item2)).ToArray();
+        }
+
+        public ValidationResult<object>[] BatchGetTagData(List<string> data)
+        {
+            return data.AsParallel().Select(d => GetTagData(d)).ToArray();
+        }
+
+        public ValidationResult<object>[] ExecutePackTagCommand(List<(string, object[])> data)
+        {
+            return data.AsParallel().Select(d => ExecutePackTagCommand(d.Item1, d.Item2)).ToArray();
+        }
+
+        public ValidationResult<object> TagCall(TagCall tagCall)
+        {
+            switch (tagCall.TagCallType)
+            {
+                case TagCallType.Get:
+                    return GetTagData(tagCall.TagName);
+                case TagCallType.Set:
+                    return new ValidationResult<object>(SetTagData(tagCall.TagName, tagCall.Data));
+                case TagCallType.Execute:
+                    return ExecutePackTagCommand(tagCall.TagName, tagCall.Data);
+                default:
+                    return new ValidationResult<object>(false, unSuccesfullText: "TagCallType {0} not found", formatObjects: tagCall.TagCallType);
+            }
+        }
+
+
+        public ValidationResult<object>[] BatchCall(List<TagCall> tagCalls)
+        {
+            return tagCalls.AsParallel().Select(o => TagCall(o)).ToArray();
+        }
     }
+
+
 }

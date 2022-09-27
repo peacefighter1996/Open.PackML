@@ -2,25 +2,26 @@
 using Open.PackML.Tags;
 using Open.PackML.Tags.Attributes;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Open.PackML.Prefab
 {
-    public class PackMLEumController<T> : PackMLTr88Controller<T> where T : Enum
+    public class PmlEumController<T> : PmlTr88Controller<T> where T : Enum
     {
-        public PackMLEumController(IPmlController<T> controller, IPmlEventStore<T> eventStore) : base(controller, eventStore)
+        public PmlEumController(IPmlController<T> controller, IPmlEventStore<T> eventStore) : base(controller, eventStore)
         {
 
         }
 
         [TagEndUserTerm("Warning")]
         [TagType(TagType.Admin)]
-        public PmlWarning[] Warning { get; protected set; } = new PmlWarning[10];
+        public List<PmlWarning> Warning { get; protected set; } = new List<PmlWarning>();
 
 
         [TagEndUserTerm("Parameter")]
         [TagType(TagType.Status)]
-        public PmlParameter[] Parameter { get; protected set; } = new PmlParameter[10];
+        public List<PmlWarning> Parameter { get; protected set; } = new List<PmlWarning>();
 
         [TagEndUserTerm("Parameter")]
         [TagType(TagType.Status)]

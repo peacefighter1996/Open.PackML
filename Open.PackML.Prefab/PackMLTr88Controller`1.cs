@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Open.PackML.Prefab
 {
-    public class PackMLTr88Controller<T> : IPmlController<T> where T : Enum
+    public class PmlTr88Controller<T> : IPmlController<T> where T : Enum
     {
 
         protected PmlState currentState = PmlState.Undefined;
@@ -23,7 +23,7 @@ namespace Open.PackML.Prefab
         public event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
         public event EventHandler<MachineEventArgs<T>> MachineEvent;
 
-        public PackMLTr88Controller(IPmlController<T> controller, IPmlEventStore<T> eventStore)
+        public PmlTr88Controller(IPmlController<T> controller, IPmlEventStore<T> eventStore)
         {
             //Guard Check null
             List<(string, string)> argumentsNull = new List<(string, string)>();
@@ -39,7 +39,7 @@ namespace Open.PackML.Prefab
             {
                 throw new ArgumentNullException(string.Join(", ", argumentsNull.Select(x => x.Item1)));
             }
-            
+
             this.eventStore = eventStore;
             this.controller = controller;
 
@@ -147,6 +147,6 @@ namespace Open.PackML.Prefab
 
         [TagEndUserTerm("Stop Reason")]
         public PmlStopReason StopReason { get; protected set; } = new PmlStopReason();
-        
+
     }
 }

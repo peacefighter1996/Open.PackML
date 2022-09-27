@@ -60,6 +60,10 @@ namespace Autabee.Utility
             this.Object = Object;
         }
 
+        public ValidationResult(ValidationResult result) : base(result.Success, result.FailInfo)
+        {
+            this.Object = default;
+        }
         public T Object { get; }
     }
 }
