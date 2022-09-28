@@ -63,12 +63,12 @@ namespace Open.PackML.Tags
 
         public ValidationResult<object> Execute(Queue<int> queue, object[] args)
         {
-            if (queue.Count() != arrayTreeCount) return new ValidationResult<object>(false, unSuccesfullText: "Array chain mismatch");
-            if (!IsMethod) return new ValidationResult<object>(false, unSuccesfullText: "Not a method");
-            if (args == null) args = Array.Empty<object>();
-            if (args.Length != parameters.Length) return new ValidationResult<object>(false, unSuccesfullText: "tyring to call a function with {0} parmeters with {1}", formatObjects: new object[] { parameters.Length, args.Length });
-
             var validation = new ValidationResult<object>();
+            if (queue.Count() != arrayTreeCount) validation.AddResult(false, "Array chain mismatch");
+            if (!IsMethod) validation.AddResult(false, "Not a method");
+            if (args == null) args = Array.Empty<object>();
+            if (args.Length != parameters.Length) validation.AddResult(false, "tyring to call a function with {0} parmeters with {1}", formatObjects: new object[] { parameters.Length, args.Length });
+            if (!validation.Success) return validation;
             for (int i = 0; i < parameters.Length; i++)
             {
                 var parType = parameters[i].ParameterType;
@@ -87,7 +87,7 @@ namespace Open.PackML.Tags
             try
             {
                 result = ((MethodInfo)last).Invoke(result, args);
-                if (DataType != typeof(void) && result == null) return new ValidationResult<object>(false, null, "Object not found");
+                if (DataType != typeof(void) && result == null) return ObjectNotFound(TagName);
             }
             catch (Exception e)
             {
@@ -102,7 +102,7 @@ namespace Open.PackML.Tags
             for (int i = 0; i < memberInfo.Length - 1; i++)
             {
                 result = GetNextObject(ArrayType[i], (PropertyInfo)memberInfo[i], result, queue);
-                if (result == null) return ObjectNotFound();
+                if (result == null) return ObjectNotFound(TagAddress,i);
             }
             return new ValidationResult<object>(Object: result);
         }
@@ -125,24 +125,29 @@ namespace Open.PackML.Tags
             return info.GetValue(obj);
         }
 
-
-        private static ValidationResult<object> ObjectNotFound()
+        private static ValidationResult<object> ObjectNotFound(string tagName)
         {
-            return new ValidationResult<object>(false, null, "Object not found");
+            return new ValidationResult<object>(false, null, "Object not found at {0}", tagName);
+        }
+        private static ValidationResult<object> ObjectNotFound(string[] address, int i)
+        {
+            address = address.Take(i + 1).ToArray();
+            return new ValidationResult<object>(false, null, "Object not found at {0}", string.Join(".", address));
         }
 
-        public Task<ValidationResult<object>> ExecuteAsync(Queue<int> queue, object[] args)
-        {
-            return new Task<ValidationResult<object>>(delegate { return Execute(queue, args); });
-        }
+        //public Task<ValidationResult<object>> ExecuteAsync(Queue<int> queue, object[] args)
+        //{
+        //    return new Task<ValidationResult<object>>(delegate { return Execute(queue, args); });
+        //}
 
         public ValidationResult<object> GetValue(Queue<int> queue)
         {
-            if (!Readable) return new ValidationResult<object>(false, null, "Object not readable");
-            if (!IsProperty) return new ValidationResult<object>(false, null, "Tag not a property");
+            var validation = new ValidationResult<object>();
+            if (!Readable)validation.AddResult(false, null, "Object not readable");
+            if (!IsProperty) validation.AddResult(false, null, "Tag not a property");
+            if (!validation.Success) return validation;
 
-
-            var validation = MoveToLastBase(queue);
+            validation = MoveToLastBase(queue);
             if (!validation.Success) return validation;;
 
             PropertyInfo info = (PropertyInfo)last;
@@ -186,12 +191,12 @@ namespace Open.PackML.Tags
         public ValidationResult SetValue(Queue<int> queue, object obj)
         {
             Type type = obj.GetType();
-            if (!Writable && !DataType.IsArray) return new ValidationResult(false, "Object not writable");
+            if (!Writable && !DataType.IsArray) return ObjectNotWritable(TagName);
             if (!IsProperty) return new ValidationResult(false, "Tag not a property");
             if ((type.IsArray && base.DataType.IsArray && base.DataType != type)
                 || (!type.IsArray && base.DataType.IsArray && base.DataType.GetElementType() != type)
                 || (!base.DataType.IsArray && base.DataType != type))
-                return ObjectTypeMisMatch();
+                return ObjectTypeMisMatch(base.DataType, type);
 
 
             var validation = MoveToLastBase(queue);
@@ -213,7 +218,7 @@ namespace Open.PackML.Tags
                             return new ValidationResult(false, "Failed To write Array");
                     };
                 }
-                else if (!Writable) return new ValidationResult(false, "Object not writable");
+                else if (!Writable) return ObjectNotWritable(TagName);
                 else
                     (info).SetValue(validation.Object, obj);
             }
@@ -221,10 +226,12 @@ namespace Open.PackML.Tags
 
         }
 
-        private static ValidationResult ObjectTypeMisMatch()
+        private static ValidationResult ObjectNotWritable(string TagName)
         {
-            return new ValidationResult(false, "Object type mismatch");
+            return new ValidationResult(false, "{0} not writable", TagName);
         }
+
+        private static ValidationResult ObjectTypeMisMatch(Type expected, Type actually) => new ValidationResult(false, "Object type mismatch. Expected {0} but got {1}", expected.Name, actually.Name);
 
         public TagDetail[] ChildTags { get; }
     }

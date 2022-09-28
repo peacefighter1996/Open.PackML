@@ -14,7 +14,7 @@ namespace Open.PackML.Tags
             get => tagName; set
             {
                 if (value != string.Empty && string.IsNullOrWhiteSpace(value)) TagName = string.Empty;
-                if (tagName == value) return;
+                if (value.Equals(TagName)) return;
                 if (value == string.Empty)
                 {
                     tagName = value;
