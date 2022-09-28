@@ -12,64 +12,10 @@ using Moq;
 using Open.PackML.Interfaces;
 using Open.PackML;
 using Open.PackML.Prefab;
+using Open.PackMLTests.TestObjects;
 
 namespace Open.PackMLTests.Prefab
 {
-    internal class TestObject1
-    {
-        public TestObject1()
-        {
-        }
-        [TagType(TagType.Admin)]
-        public int Integer1 { get; set; }
-        [TagType(TagType.Command)]
-        public PmlState PmlState { get; set; }
-        //[ArrayTagFixed(size = true, object = true)]
-        public int[] IntegerArray1 { get; } = new int[3];
-        public int[] IntegerArray2 { get; set; } = new int[4];
-
-        public List<int> IntegerList { get; set; } = new List<int>() { 1, 2, 3, 4 };
-        [TagFixedSize(5)]
-        public TestObject2[] ObjectArray { get; } = new TestObject2[5];
-
-
-        public ExecuteObject[] ExecuteObjects { get; } = new ExecuteObject[]
-        {
-            new ExecuteObject(), new ExecuteObject(), new ExecuteObject(), new ExecuteObject()
-        };
-        [TagType(TagType.Command)]
-        public void SetValue(int value1)
-        {
-            Integer1 = value1;
-        }
-    }
-    internal class ExecuteObject
-    {
-        public int Integer1 { get; private set; }
-        [TagType(TagType.Command)]
-        public void SetValue(int value1)
-        {
-            Integer1 = value1;
-        }
-        [TagType(TagType.Command)]
-        public int PlusOne(int value1)
-        {
-            return value1 + 1;
-        }
-    }
-    internal class TestObject2
-    {
-        public int Integer1 { get; }
-        public PmlState PmlState { get; }
-
-        public List<ExecuteObject> ExecuteObjects { get; set; } = new List<ExecuteObject>()
-        {
-            new ExecuteObject(),
-            new ExecuteObject(),
-            new ExecuteObject()
-        };
-    }
-
     public class BuildTagTreeTests
     {
         ITestOutputHelper logger;

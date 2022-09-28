@@ -135,7 +135,7 @@ namespace Autabee.Utility.IEC61131TypeConversion
                 var node = item.CreateElement(property.Name);
                 node.SetAttribute("type", property.PropertyType.GetIecTypeString());
                 baseNode.AppendChild(node);
-                if (depth > 0 && node.Attributes[0].Value.Substring(0, 3) == "UDT")
+                if (depth > 0 && node.Attributes[0].Value.Substring(0, 3).Equals("UDT"))
                 {
                     AddSubNodes(property.PropertyType, item, node, depth - 1);
                 }

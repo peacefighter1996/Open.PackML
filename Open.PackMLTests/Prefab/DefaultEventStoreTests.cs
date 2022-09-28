@@ -2,6 +2,7 @@
 using Xunit;
 using Open.PackML;
 using Open.PackML.Prefab;
+using Open.PackMLTests.TestObjects;
 
 namespace Open.PackMLTests.Prefab
 {
@@ -36,19 +37,5 @@ namespace Open.PackMLTests.Prefab
         {
             Assert.Equal(null, eventStore.GetMachineEvent(arg));
         }
-    }
-
-    public enum EventHanderEnum1
-    {
-        id1,
-        id2,
-        id3
-    }
-
-    public enum EventHanderEnum2
-    {
-        id1,
-        id2,
-        id3
     }
 }

@@ -10,6 +10,7 @@ using Open.PackML.Prefab;
 using Open.PackML.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using Open.PackML.Tags;
+using Open.PackMLTests.TestObjects;
 
 namespace Open.PackMLTests.Prefab
 {

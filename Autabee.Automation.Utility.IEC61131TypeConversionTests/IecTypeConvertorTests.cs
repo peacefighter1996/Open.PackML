@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using System.Net.Sockets;
 using System.Windows.Markup;
 using Autabee.Utility.IEC61131TypeConversion;
+using Autabee.Utility.IEC61131TypeConversionTests.TestObjects;
 
 namespace Autabee.Utility.IEC61131TypeConversionTests
 {
@@ -77,7 +78,7 @@ namespace Autabee.Utility.IEC61131TypeConversionTests
         {
             Guid guid = new Guid();
             var person = new Person() { Name = guid.ToString(), PasswordHash = guid.GetHashCode() };
-            Assert.Equal("UDT_Autabee_Utility_IEC61131TypeConversionTests_Person", person.GetIecTypeString());
+            Assert.Equal("UDT_Autabee_Utility_IEC61131TypeConversionTests_TestObjects_Person", person.GetIecTypeString());
         }
 
 

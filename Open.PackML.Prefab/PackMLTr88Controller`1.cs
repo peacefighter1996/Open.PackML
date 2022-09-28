@@ -71,7 +71,7 @@ namespace Open.PackML.Prefab
         public async Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode)
         {
             var temp = PmlTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
-            if (temp.Success) temp.AddResult(await controller.UpdatePackMLModeAsync(packMLMode));
+            if (temp.Success) temp.AddResult(await controller.UpdatePackMLModeAsync(packMLMode).ConfigureAwait(true));
 
             return temp;
         }
@@ -87,7 +87,7 @@ namespace Open.PackML.Prefab
         public async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand command)
         {
             var temp = PmlTransitionCheck.CheckTransition(command, currentState, currentMode);
-            if (temp.Success) temp.AddResult(await controller.SendPackMLCommandAsync(command));
+            if (temp.Success) temp.AddResult(await controller.SendPackMLCommandAsync(command).ConfigureAwait(true));
 
             return temp;
         }
@@ -128,13 +128,13 @@ namespace Open.PackML.Prefab
         }
         public async Task<PmlState> RetrieveCurrentPackMLStateAsync()
         {
-            currentState = await controller.RetrieveCurrentPackMLStateAsync();
+            currentState = await controller.RetrieveCurrentPackMLStateAsync().ConfigureAwait(true);
             return currentState;
         }
 
         public async Task<PmlMode> RetrieveCurrentPackMLModeAsync()
         {
-            currentMode = await controller.RetrieveCurrentPackMLModeAsync();
+            currentMode = await controller.RetrieveCurrentPackMLModeAsync().ConfigureAwait(true);
             return currentMode;
         }
 
