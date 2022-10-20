@@ -1,29 +1,28 @@
 ﻿using Autabee.Utility;
 using Open.PackML.EventArguments;
-using Open.PackML.Interfaces;
-using Open.PackML.Tags;
-using Open.PackML.Tags.Attributes;
+using Open.PackML;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Open.PackML.Prefab
 {
-    public class PmlTr88Controller<T> : IPmlController<T> where T : Enum
+    public class PmlGuardController : IPmlController 
     {
 
         protected PmlState currentState = PmlState.Undefined;
         protected PmlMode currentMode = PmlMode.Undefined;
         protected DateTime lastStateUpdate = DateTime.MinValue.ToUniversalTime();
         protected DateTime lastTransition = DateTime.MinValue.ToUniversalTime();
-        protected IPmlController<T> controller;
-        protected IPmlEventStore<T> eventStore;
+        protected IPmlController controller;
+        protected IPmlEventStore eventStore;
 
         public event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
-        public event EventHandler<MachineEventArgs<T>> MachineEvent;
+        public event EventHandler<PmlMachineEventArgs> MachineEvent;
 
-        public PmlTr88Controller(IPmlController<T> controller, IPmlEventStore<T> eventStore)
+        public PmlGuardController(IPmlController controller, IPmlEventStore eventStore)
         {
             //Guard Check null
             List<(string, string)> argumentsNull = new List<(string, string)>();
@@ -39,6 +38,7 @@ namespace Open.PackML.Prefab
             {
                 throw new ArgumentNullException(string.Join(", ", argumentsNull.Select(x => x.Item1)));
             }
+
 
             this.eventStore = eventStore;
             this.controller = controller;
@@ -65,34 +65,30 @@ namespace Open.PackML.Prefab
         {
             var temp = PmlTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
             if (temp.Success) temp.AddResult(controller.UpdatePmlMode(packMLMode));
-
             return temp;
         }
         public async Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode)
         {
             var temp = PmlTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
             if (temp.Success) temp.AddResult(await controller.UpdatePackMLModeAsync(packMLMode).ConfigureAwait(true));
-
             return temp;
         }
 
-        public ValidationResult SendPmlCommand(PmlCommand command)
+        public virtual ValidationResult SendPmlCommand(PmlCommand command)
         {
             var temp = PmlTransitionCheck.CheckTransition(command, currentState, currentMode);
             if (temp.Success) temp.AddResult(controller.SendPmlCommand(command));
-
             return temp;
         }
 
-        public async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand command)
+        public virtual async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand command)
         {
             var temp = PmlTransitionCheck.CheckTransition(command, currentState, currentMode);
             if (temp.Success) temp.AddResult(await controller.SendPackMLCommandAsync(command).ConfigureAwait(true));
-
             return temp;
         }
 
-        private void Controller_MachineEvent(object sender, MachineEventArgs<T> e)
+        private void Controller_MachineEvent(object sender, PmlMachineEventArgs e)
         {
             //Prcesses the event 
             var result = eventStore.ProcessEvent(e.@enum);
@@ -138,15 +134,72 @@ namespace Open.PackML.Prefab
             return currentMode;
         }
 
-        [TagEndUserTerm("OEE.Bad count")]
-        [TagType(TagType.Admin)]
-        public int ProdDefectiveCount { get; protected set; }
-        [TagEndUserTerm("OEE.Bad count")]
-        [TagType(TagType.Admin)]
-        public int ProdProcessedCount { get; protected set; }
+        public virtual ValidationResult UpdatePmlMode(int packMLMode)
+        {
+            if (Enum.IsDefined(typeof(PmlMode), packMLMode))
+            {
+                return UpdatePmlMode((PmlMode)packMLMode);
+            }
+            else
+            {
+                return new ValidationResult(false, $"Invalid {nameof(PmlMode)} value: {packMLMode}");
+            }
+        }
 
-        [TagEndUserTerm("Stop Reason")]
-        public PmlStopReason StopReason { get; protected set; } = new PmlStopReason();
+        public virtual async Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode)
+        {
+            if (Enum.IsDefined(typeof(PmlMode), packMLMode))
+            {
+                return await UpdatePackMLModeAsync((PmlMode)packMLMode);
+            }
+            else
+            {
+                return new ValidationResult(false, $"Invalid {nameof(PmlMode)} value: {packMLMode}");
+            }
+        }
+    }
+
+    public class PmlOemGuardController : PmlGuardController
+    {
+
+        protected new int currentMode = 0;
+        private IPmlOemTransitionCheck oemTransitionCheck;
+
+        public PmlOemGuardController(IPmlController controller, IPmlEventStore eventStore, IPmlOemTransitionCheck pmlOemTransitionCheck) : base(controller, eventStore)
+        {
+            oemTransitionCheck = pmlOemTransitionCheck ?? throw new ArgumentNullException(nameof(pmlOemTransitionCheck));
+        }
+
+        public new ValidationResult UpdatePmlMode(int packMLMode)
+        {
+            var temp = oemTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
+            if (temp.Success) temp.AddResult(controller.UpdatePmlMode(packMLMode));
+
+            return temp;
+        }
+        public new async Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode)
+        {
+            var temp = oemTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
+            if (temp.Success) temp.AddResult(await controller.UpdatePackMLModeAsync(packMLMode).ConfigureAwait(true));
+
+            return temp;
+        }
+
+        public new ValidationResult SendPmlCommand(PmlCommand command)
+        {
+            var temp = oemTransitionCheck.CheckTransition(command, currentState, currentMode);
+            if (temp.Success) temp.AddResult(controller.SendPmlCommand(command));
+
+            return temp;
+        }
+
+        public new async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand command)
+        {
+            var temp = oemTransitionCheck.CheckTransition(command, currentState, currentMode);
+            if (temp.Success) temp.AddResult(await controller.SendPackMLCommandAsync(command).ConfigureAwait(true));
+
+            return temp;
+        }
 
     }
 }

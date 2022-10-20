@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace Open.PackML.Tags
 {
-    public class TagDetail : TagConfig
+    internal class TagDetail : TagConfig
     {
         private int arrayTreeCount;
         private bool[] ArrayType;

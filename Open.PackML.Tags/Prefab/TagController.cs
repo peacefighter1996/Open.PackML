@@ -17,15 +17,15 @@ namespace Open.PackML.Tags.Prefab
     {
         TagTable tagTable;
 
-        public TagController(IEnumerable<TagDetail> tagDetails)
-        {
-            tagTable = TagTableBuilder.BuildTable(tagDetails);
-        }
+        //public TagController(IEnumerable<TagDetail> tagDetails)
+        //{
+        //    tagTable = TagTableBuilder.BuildTable(tagDetails);
+        //}
 
-        public TagController(TagTable tagTable)
-        {
-            this.tagTable = tagTable;
-        }
+        //public TagController(TagTable tagTable)
+        //{
+        //    this.tagTable = tagTable;
+        //}
 
         public TagController(Dictionary<string, object> StoredObjects
             //, System.Timers.Timer timer = null
@@ -89,27 +89,40 @@ namespace Open.PackML.Tags.Prefab
 
 
 
-        public ValidationResult<TagDetail> Browse(string name)
+        public ValidationResult<TagConfig[]> Browse(string name)
         {
-            return tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagDetail tagDetail)
-                ? new ValidationResult<TagDetail>(true, tagDetail)
-                : new ValidationResult<TagDetail>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
+            if (!tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagConfig tagDetail))
+                return new ValidationResult<TagConfig[]>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
+            return new ValidationResult<TagConfig[]>(true, ((TagDetail)tagDetail).ChildTags);
         }
 
-        public ValidationResult<TagDetail> Browse(string name, int Depth = 1)
+        public ValidationResult<TagConfig[]> Browse(string name, int Depth = 1)
         {
-            return tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagDetail tagDetail)
-                ? new ValidationResult<TagDetail>(true, tagDetail)
-                : new ValidationResult<TagDetail>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
+            if (!tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagConfig tagDetail))
+                return new ValidationResult<TagConfig[]>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
+            var result = GetChildren(((TagDetail)tagDetail),Depth);
+
+
+            return new ValidationResult<TagConfig[]>(true, ((TagDetail)tagDetail).ChildTags);
+        }
+        internal static TagConfig[] GetChildren(TagDetail tagDetail, int Depth = 1)
+        {
+            if (Depth == 0) return tagDetail.ChildTags;
+            var childeren = new List<TagConfig>();
+            foreach (var child in tagDetail.ChildTags)
+            {
+                childeren.AddRange(GetChildren(child, Depth - 1));
+            }
+            return childeren.ToArray();
         }
 
         public ValidationResult<object> ExecutePackTagCommand(string name, params object[] args)
         {
-            if (tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagDetail tagDetail))
+            if (tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagConfig tagDetail))
             {
                 var queue = GetTagArrayIndexes(name);
                 if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
-                return tagDetail.Execute(queue.Object, args);
+                return ((TagDetail)tagDetail).Execute(queue.Object, args);
             }
             else
             {
@@ -128,11 +141,11 @@ namespace Open.PackML.Tags.Prefab
         {
             if (tagTable.TryGetValue(
                 TagConfig.TagStringToSearch(name),
-                out TagDetail tagDetails))
+                out TagConfig tagDetails))
             {
                 var queue = GetTagArrayIndexes(name);
                 if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
-                return tagDetails.GetValue(queue.Object);
+                return ((TagDetail)tagDetails).GetValue(queue.Object);
             }
 
             return new ValidationResult<object>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
@@ -147,11 +160,11 @@ namespace Open.PackML.Tags.Prefab
         {
             if (tagTable.TryGetValue(
                 TagConfig.TagStringToSearch(name),
-                out TagDetail tagDetails))
+                out TagConfig tagDetails))
             {
                 var queue = GetTagArrayIndexes(name);
                 if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
-                return tagDetails.SetValue(queue.Object, data);
+                return ((TagDetail)tagDetails).SetValue(queue.Object, data);
             }
             return new ValidationResult<object>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
         }

@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace Open.PackML.Prefab
 {
-    public class PmlEumController<T> : PmlTr88Controller<T> where T : Enum
+    public class PmlEumController : PmlTr88Controller
     {
-        public PmlEumController(IPmlController<T> controller, IPmlEventStore<T> eventStore) : base(controller, eventStore)
+        public PmlEumController(IPmlController controller, IPmlEventStore eventStore) : base(controller, eventStore)
         {
 
         }

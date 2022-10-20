@@ -10,9 +10,10 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Open.PackMLTests")]
 namespace Open.PackML.Tags.Builders
 {
-    public static class TagTreeBuilder
+    internal static class TagTreeBuilder
     {
         /// <summary>
         /// Builds a TagTree from a base object
@@ -24,7 +25,7 @@ namespace Open.PackML.Tags.Builders
         /// <param name="StartTagType"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static TagDetail GetTree(string root, object obj, string description = "", string endUserTerm = "", TagType StartTagType = TagType.Undefined, bool Iec = false)
+        internal static TagDetail GetTree(string root, object obj, string description = "", string endUserTerm = "", TagType StartTagType = TagType.Undefined, bool Iec = false)
         {
             Type type = obj.GetType();
             if ((type.IsArray

@@ -4,16 +4,16 @@ using System.Linq;
 
 namespace Open.PackML.Tags
 {
-    public class TagTable : Dictionary<string, TagDetail>
+    public class TagTable : Dictionary<string, TagConfig>
     {
-        TagDetail[] array;
+        TagConfig[] array;
         private bool generateOnUpdate;
 
         public TagTable() : base()
         {
 
         }
-        public TagTable(TagDetail[] tags) : base()
+        public TagTable(TagConfig[] tags) : base()
         {
             foreach (var tag in tags)
             {
@@ -31,7 +31,7 @@ namespace Open.PackML.Tags
         }
         public void TagNameUpdated(object sender, EventArgs e)
         {
-            if (sender is TagDetail data)
+            if (sender is TagConfig data)
             {
                 Remove(data.SearchString);
                 Add(data.TagName, data);
@@ -48,7 +48,7 @@ namespace Open.PackML.Tags
             }
         }
 
-        public new void Add(string key, TagDetail value)
+        public new void Add(string key, TagConfig value)
         {
             base.Add(key, value);
             value.TagNameUpdate += TagNameUpdated;
@@ -60,6 +60,6 @@ namespace Open.PackML.Tags
             array = this.Select(o => o.Value).ToArray();
         }
 
-        public TagDetail[] GetArray { get => array == null ? Array.Empty<TagDetail>() : array; }
+        public TagConfig[] GetArray { get => array == null ? Array.Empty<TagConfig>() : array; }
     }
 }

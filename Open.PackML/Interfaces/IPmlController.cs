@@ -2,9 +2,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Open.PackML.Interfaces
+namespace Open.PackML
 {
-    public interface IPmlController<T>: IPmlMachineController<T> where T : Enum
+    public interface IPmlController: IPmlMachineController
     {
         //local
         PmlState CurrentPmlState();
@@ -21,7 +21,9 @@ namespace Open.PackML.Interfaces
         //Send PackML Function
         ValidationResult SendPmlCommand(PmlCommand packMLCommand);
         ValidationResult UpdatePmlMode(PmlMode packMLMode);
+        ValidationResult UpdatePmlMode(int packMLMode);
         Task<ValidationResult> SendPackMLCommandAsync(PmlCommand packMLCommand);
         Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode);
+        Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode);
     }
 }

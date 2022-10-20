@@ -14,7 +14,7 @@ using Open.PackMLTests.TestObjects;
 
 namespace Open.PackMLTests
 {
-    public class PackMLGuardControllerTests
+    public class PmlGuardControllerTests
     {
         [Theory]
         [InlineData(PmlState.Aborted, PmlMode.Undefined, PmlMode.Maintenance, true)]
@@ -76,13 +76,13 @@ namespace Open.PackMLTests
                 passedInternal = true;
             };
 
-            var moqController = new Mock<IPmlController<Enum>>();
+            var moqController = new Mock<IPmlController>();
             moqController.Setup(x => x.SendPmlCommand(It.IsAny<PmlCommand>())).Returns(new ValidationResult(true));
             moqController.Setup(x => x.UpdatePmlMode(It.IsAny<PmlMode>())).Callback(catchFunc).Returns(new ValidationResult(true));
             moqController.Setup(x => x.CurrentPmlState()).Returns(state);
             moqController.Setup(x => x.CurrentPmlMode()).Returns(mode);
-            var eventStore = new EventStore();
-            var controller = new PackMLGuardController<Enum>(moqController.Object, eventStore);
+            var eventStore = new PmlEventStore();
+            var controller = new PmlGuardController(moqController.Object, eventStore);
 
             var result = controller.UpdatePmlMode(newMode);
             Assert.Equal(succes, result.Success);
@@ -116,12 +116,12 @@ namespace Open.PackMLTests
             };
 
 
-            var moqController = new Mock<IPmlController<Enum>>();
+            var moqController = new Mock<IPmlController>();
             moqController.Setup(x => x.SendPmlCommand(It.IsAny<PmlCommand>())).Returns(new ValidationResult(true));
             moqController.Setup(x => x.UpdatePmlMode(It.IsAny<PmlMode>())).Callback(catchFunc).Returns(new ValidationResult(true));
 
             moqController.Setup(x => x.CurrentPmlMode()).Returns(mode);
-            var eventStore = new EventStore();
+            var eventStore = new PmlEventStore();
 
             PmlState[] pmlStates = new PmlState[]{
                 PmlState.Undefined ,
@@ -145,7 +145,7 @@ namespace Open.PackMLTests
             {
                 moqController.Setup(x => x.CurrentPmlState()).Returns(pmlStates[i]);
                 passedInternal = false;
-                var controller = new PackMLGuardController<Enum>(moqController.Object, eventStore);
+                var controller = new PmlGuardController(moqController.Object, eventStore);
 
                 var result = controller.UpdatePmlMode(newMode);
                 Assert.False(result.Success);
@@ -164,8 +164,8 @@ namespace Open.PackMLTests
             var testController = new TestPmlController();
             testController.CurrentState = PmlState.Aborted;
             testController.CurrentMode = PmlMode.Manual;
-            var eventStore = new EventStore();
-            var controller = new PackMLGuardController<Enum>(testController, eventStore);
+            var eventStore = new PmlEventStore();
+            var controller = new PmlGuardController(testController, eventStore);
             controller.UpdateCurrentState += Controller_UpdateCurrentState;
 
             //var result = controller.SendPmlCommand(PmlCommand.Abort);
@@ -184,10 +184,10 @@ namespace Open.PackMLTests
             var testController = new TestPmlController();
             testController.CurrentState = PmlState.Aborted;
             testController.CurrentMode = PmlMode.Manual;
-            var eventStore = new EventStore();
-            eventStore.Add(EventHanderEnum1.id1, new PmlEventReaction<Enum>(EventHanderEnum1.id1, PmlState.Stopping));
+            var eventStore = new PmlEventStore();
+            eventStore.Add(EventHanderEnum1.id1, new PmlEventReaction(EventHanderEnum1.id1, PmlState.Stopping));
            
-            var controller = new PackMLGuardController<Enum>(testController, eventStore);
+            var controller = new PmlGuardController(testController, eventStore);
             testController.InvokeEvent(EventHanderEnum1.id1);
             //var result = controller.SendPmlCommand(PmlCommand.Abort);
             //Assert.True(result.Success, result.FailString());

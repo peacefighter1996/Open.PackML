@@ -6,6 +6,7 @@ namespace Open.PackML
 {
     public static class PmlTransitionCheck
     {
+       
         public static ValidationResult CheckTransition(PmlCommand PmlCommand, PmlState currentState, PmlMode currentMode)
         {
             return PmlCommand switch
@@ -19,12 +20,12 @@ namespace Open.PackML
                 PmlCommand.UnHold => UnHold(currentState, currentMode),
                 PmlCommand.Suspend => Suspend(currentState, currentMode),
                 PmlCommand.UnSuspend => UnSuspend(currentState, currentMode),
-                _ => new ValidationResult(false, "Unsupported Command"),
+                _ => new ValidationResult(false, "Unsupported command"),
             };
         }
-        public static ValidationResult Stop(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static ValidationResult Stop(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
-            
+            if (packMLMode == PmlMode.Undefined) return new ValidationResult(false, "Mode is undefined");
             switch (currentPackMLState)
             {
                 case PmlState.Undefined:
@@ -52,7 +53,7 @@ namespace Open.PackML
             }
         }
 
-        public static ValidationResult Abort(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static ValidationResult Abort(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
             if (currentPackMLState == PmlState.Aborted 
                 || currentPackMLState == PmlState.Aborting)
@@ -65,8 +66,9 @@ namespace Open.PackML
             }
         }
 
-        public static ValidationResult Reset(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static ValidationResult Reset(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
+            if (packMLMode == PmlMode.Undefined) return new ValidationResult(false, "Current mode is undefined");
             if (currentPackMLState == PmlState.Stopped
                 || currentPackMLState == PmlState.Completed)
             {
@@ -78,18 +80,20 @@ namespace Open.PackML
             }
         }
 
-        public static ValidationResult Start(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static ValidationResult Start(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
+            if (packMLMode == PmlMode.Undefined) return new ValidationResult(false, "Current mode is undefined");
             return currentPackMLState == PmlState.Idle ? new ValidationResult() : new ValidationResult(false, "Current PackML state not in idle.");
         }
 
-        public static ValidationResult Suspend(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static ValidationResult Suspend(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
             return HeldSuspend(currentPackMLState, packMLMode);
         }
 
         private static ValidationResult HeldSuspend(PmlState currentPackMLState, PmlMode packMLMode)
         {
+            if (packMLMode == PmlMode.Undefined) return new ValidationResult(false, "Current mode is undefined");
             return currentPackMLState == PmlState.Execute
                 ? packMLMode == PmlMode.Production
                     ? new ValidationResult()
@@ -99,27 +103,30 @@ namespace Open.PackML
                     : new ValidationResult(false, "Currently PackML state not in execute and mode not in production.");
         }
 
-        public static ValidationResult Hold(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static ValidationResult Hold(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
             return HeldSuspend(currentPackMLState, packMLMode);
         }
 
-        public static ValidationResult UnHold(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static ValidationResult UnHold(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
+            if (packMLMode == PmlMode.Undefined) return new ValidationResult(false, "Current mode is undefined");
             return currentPackMLState == PmlState.Held
                 ? new ValidationResult() 
                 : new ValidationResult(false, "Current PackML state not in held.");
         }
 
-        public static ValidationResult UnSuspend(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static ValidationResult UnSuspend(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
+            if (packMLMode == PmlMode.Undefined) return new ValidationResult(false, "Current mode is undefined");
             return currentPackMLState == PmlState.Suspended
                 ? new ValidationResult()
                 : new ValidationResult(false, "Current PackML state not in suspended.");
         }
 
-        public static ValidationResult Clear(PmlState currentPackMLState, PackML.PmlMode packMLMode = PmlMode.Production)
+        public static ValidationResult Clear(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
+            if (packMLMode == PmlMode.Undefined) return new ValidationResult(false, "Current mode is undefined");
             return currentPackMLState == PmlState.Aborted
                 ? new ValidationResult()
                 : new ValidationResult(false, "Current PackML state not in aborted.");
@@ -129,7 +136,7 @@ namespace Open.PackML
         {
             if (packMLMode == PmlMode.Undefined)
             {
-                return new ValidationResult(false, "Not allowed to translate to undifined mode");
+                return new ValidationResult(false, "Not allowed to change mode to undefined mode");
             }
             if (currentMode == packMLMode)
             {

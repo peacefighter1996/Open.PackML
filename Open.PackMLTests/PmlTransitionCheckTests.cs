@@ -1,224 +1,243 @@
 ﻿using Xunit;
 using Open.PackML;
+using System;
+using Autabee.Utility;
 
 namespace Open.PackMLTests
 {
+    public enum OemSpecified : int
+    {
+    }
+
+    
     public class PmlTransitionCheckTests
     {
         [Theory]
-        [InlineData(PmlState.Undefined, true)]
-        [InlineData(PmlState.Aborting, false)]
-        [InlineData(PmlState.Aborted, false)]
-        [InlineData(PmlState.Clearing, true)]
-        [InlineData(PmlState.Stopping, true)]
-        [InlineData(PmlState.Stopped, true)]
-        [InlineData(PmlState.Resetting, true)]
-        [InlineData(PmlState.Idle, true)]
-        [InlineData(PmlState.Starting, true)]
-        [InlineData(PmlState.Execute, true)]
-        [InlineData(PmlState.Held, true)]
-        [InlineData(PmlState.Holding, true)]
-        [InlineData(PmlState.UnHolding, true)]
-        [InlineData(PmlState.Suspending, true)]
-        [InlineData(PmlState.Suspended, true)]
-        [InlineData(PmlState.UnSuspending, true)]
-        [InlineData(PmlState.Completing, true)]
-        [InlineData(PmlState.Completed, true)]
-        public void AbortTest(PmlState PmlState, bool expectation)
+        [InlineData(PmlState.Undefined,     true,  true,  true,  true)]
+        [InlineData(PmlState.Aborting,     false, false, false, false)]
+        [InlineData(PmlState.Aborted,      false, false, false, false)]
+        [InlineData(PmlState.Clearing,      true,  true,  true,  true)]
+        [InlineData(PmlState.Stopping,      true,  true,  true,  true)]
+        [InlineData(PmlState.Stopped,       true,  true,  true,  true)]
+        [InlineData(PmlState.Resetting,     true,  true,  true,  true)]
+        [InlineData(PmlState.Idle,          true,  true,  true,  true)]
+        [InlineData(PmlState.Starting,      true,  true,  true,  true)]
+        [InlineData(PmlState.Execute,       true,  true,  true,  true)]
+        [InlineData(PmlState.Held,          true,  true,  true,  true)]
+        [InlineData(PmlState.Holding,       true,  true,  true,  true)]
+        [InlineData(PmlState.UnHolding,     true,  true,  true,  true)]
+        [InlineData(PmlState.Suspending,    true,  true,  true,  true)]
+        [InlineData(PmlState.Suspended,     true,  true,  true,  true)]
+        [InlineData(PmlState.UnSuspending,  true,  true,  true,  true)]
+        [InlineData(PmlState.Completing,    true,  true,  true,  true)]
+        [InlineData(PmlState.Completed,     true,  true,  true,  true)]
+
+
+        public void AbortTest(PmlState state, params bool[] args)
         {
-            Assert.True(expectation == PmlTransitionCheck.Abort(PmlState).Success, $"Check {PmlState} if it accepts {PmlCommand.Abort} PmlCommand");
+            CheckModes(state, args, PmlTransitionCheck.Abort);
+        }
+
+        private static void CheckModes(PmlState state, bool[] args, Func<PmlState, PmlMode, ValidationResult> func)
+        {
+            var collection = new PmlMode[] { PmlMode.Undefined, PmlMode.Production, PmlMode.Maintenance, PmlMode.Manual };
+            for (int i = 0; i < collection.Length; i++)
+            {
+                var test = func(state, collection[i]);
+                Assert.True(args[i] == test.Success, $"Check {state} for {(PmlMode)collection[i]} if it accepts {func.Method.Name} PmlCommand {test.FailString()}");
+            }
         }
 
         [Theory]
-        [InlineData(PmlState.Undefined, false)]
-        [InlineData(PmlState.Aborting, false)]
-        [InlineData(PmlState.Aborted, false)]
-        [InlineData(PmlState.Clearing, false)]
-        [InlineData(PmlState.Stopping, false)]
-        [InlineData(PmlState.Stopped, false)]
-        [InlineData(PmlState.Resetting, true)]
-        [InlineData(PmlState.Idle, true)]
-        [InlineData(PmlState.Starting, true)]
-        [InlineData(PmlState.Execute, true)]
-        [InlineData(PmlState.Held, true)]
-        [InlineData(PmlState.Holding, true)]
-        [InlineData(PmlState.UnHolding, true)]
-        [InlineData(PmlState.Suspending, true)]
-        [InlineData(PmlState.Suspended, true)]
-        [InlineData(PmlState.UnSuspending, true)]
-        [InlineData(PmlState.Completing, true)]
-        [InlineData(PmlState.Completed, true)]
-        public void StopTest(PmlState PmlState, bool expectation)
+        [InlineData(PmlState.Undefined,    false, false, false, false)]
+        [InlineData(PmlState.Aborting,     false, false, false, false)]
+        [InlineData(PmlState.Aborted,      false, false, false, false)]
+        [InlineData(PmlState.Clearing,     false, false, false, false)]
+        [InlineData(PmlState.Stopping,     false, false, false, false)]
+        [InlineData(PmlState.Stopped,      false, false, false, false)]        
+        [InlineData(PmlState.Resetting,    false,  true,  true,  true)]
+        [InlineData(PmlState.Idle,         false,  true,  true,  true)]
+        [InlineData(PmlState.Starting,     false,  true,  true,  true)]
+        [InlineData(PmlState.Execute,      false,  true,  true,  true)]
+        [InlineData(PmlState.Held,         false,  true,  true,  true)]
+        [InlineData(PmlState.Holding,      false,  true,  true,  true)]
+        [InlineData(PmlState.UnHolding,    false,  true,  true,  true)]
+        [InlineData(PmlState.Suspending,   false,  true,  true,  true)]
+        [InlineData(PmlState.Suspended,    false,  true,  true,  true)]
+        [InlineData(PmlState.UnSuspending, false,  true,  true,  true)]
+        [InlineData(PmlState.Completing,   false,  true,  true,  true)]
+        [InlineData(PmlState.Completed,    false,  true,  true,  true)]
+        public void StopTest(PmlState state, params bool[]args)
         {
-            Assert.True(expectation == PmlTransitionCheck.Stop(PmlState).Success, $"Check {PmlState} if it accepts {PmlCommand.Stop} PmlCommand");
+            CheckModes(state, args, PmlTransitionCheck.Stop);
         }
 
         [Theory]
-        [InlineData(PmlState.Undefined, false)]
-        [InlineData(PmlState.Aborting, false)]
-        [InlineData(PmlState.Aborted, false)]
-        [InlineData(PmlState.Clearing, false)]
-        [InlineData(PmlState.Stopping, false)]
-        [InlineData(PmlState.Stopped, true)]
-        [InlineData(PmlState.Resetting, false)]
-        [InlineData(PmlState.Idle, false)]
-        [InlineData(PmlState.Starting, false)]
-        [InlineData(PmlState.Execute, false)]
-        [InlineData(PmlState.Held, false)]
-        [InlineData(PmlState.Holding, false)]
-        [InlineData(PmlState.UnHolding, false)]
-        [InlineData(PmlState.Suspending, false)]
-        [InlineData(PmlState.Suspended, false)]
-        [InlineData(PmlState.UnSuspending, false)]
-        [InlineData(PmlState.Completing, false)]
-        [InlineData(PmlState.Completed, true)]
-        public void ResetTest(PmlState PmlState, bool expectation)
+        [InlineData(PmlState.Undefined,    false,false,false,false)]
+        [InlineData(PmlState.Aborting,     false,false,false,false)]
+        [InlineData(PmlState.Aborted,      false,false,false,false)]
+        [InlineData(PmlState.Clearing,     false,false,false,false)]
+        [InlineData(PmlState.Stopping,     false,false,false,false)]
+        [InlineData(PmlState.Stopped,      false, true, true, true)]
+        [InlineData(PmlState.Resetting,    false,false,false,false)]
+        [InlineData(PmlState.Idle,         false,false,false,false)]
+        [InlineData(PmlState.Starting,     false,false,false,false)]
+        [InlineData(PmlState.Execute,      false,false,false,false)]
+        [InlineData(PmlState.Held,         false,false,false,false)]
+        [InlineData(PmlState.Holding,      false,false,false,false)]
+        [InlineData(PmlState.UnHolding,    false,false,false,false)]
+        [InlineData(PmlState.Suspending,   false,false,false,false)]
+        [InlineData(PmlState.Suspended,    false,false,false,false)]
+        [InlineData(PmlState.UnSuspending, false,false,false,false)]
+        [InlineData(PmlState.Completing,   false,false,false,false)]
+        [InlineData(PmlState.Completed,    false, true, true, true)]
+        public void ResetTest(PmlState state, params bool[] args )
         {
-            Assert.True(expectation == PmlTransitionCheck.Reset(PmlState).Success, $"Check {PmlState} if it accepts {PmlCommand.Reset} PmlCommand");
+            CheckModes(state, args, PmlTransitionCheck.Reset);
         }
 
         [Theory]
-        [InlineData(PmlState.Undefined, false)]
-        [InlineData(PmlState.Aborting, false)]
-        [InlineData(PmlState.Aborted, false)]
-        [InlineData(PmlState.Clearing, false)]
-        [InlineData(PmlState.Stopping, false)]
-        [InlineData(PmlState.Stopped, false)]
-        [InlineData(PmlState.Resetting, false)]
-        [InlineData(PmlState.Idle, true)]
-        [InlineData(PmlState.Starting, false)]
-        [InlineData(PmlState.Execute, false)]
-        [InlineData(PmlState.Held, false)]
-        [InlineData(PmlState.Holding, false)]
-        [InlineData(PmlState.UnHolding, false)]
-        [InlineData(PmlState.Suspending, false)]
-        [InlineData(PmlState.Suspended, false)]
-        [InlineData(PmlState.UnSuspending, false)]
-        [InlineData(PmlState.Completing, false)]
-        [InlineData(PmlState.Completed, false)]
-        public void StartTest(PmlState PmlState, bool expectation)
+        [InlineData(PmlState.Undefined,    false, false, false, false)]
+        [InlineData(PmlState.Aborting,     false, false, false, false)]
+        [InlineData(PmlState.Aborted,      false, false, false, false)]
+        [InlineData(PmlState.Clearing,     false, false, false, false)]
+        [InlineData(PmlState.Stopping,     false, false, false, false)]
+        [InlineData(PmlState.Stopped,      false, false, false, false)]
+        [InlineData(PmlState.Resetting,    false, false, false, false)]
+        [InlineData(PmlState.Idle,         false, true , true , true )]
+        [InlineData(PmlState.Starting,     false, false, false, false)]
+        [InlineData(PmlState.Execute,      false, false, false, false)]
+        [InlineData(PmlState.Held,         false, false, false, false)]
+        [InlineData(PmlState.Holding,      false, false, false, false)]
+        [InlineData(PmlState.UnHolding,    false, false, false, false)]
+        [InlineData(PmlState.Suspending,   false, false, false, false)]
+        [InlineData(PmlState.Suspended,    false, false, false, false)]
+        [InlineData(PmlState.UnSuspending, false, false, false, false)]
+        [InlineData(PmlState.Completing,   false, false, false, false)]
+        [InlineData(PmlState.Completed,    false, false, false, false)]
+        public void StartTest(PmlState state, params bool[] args)
         {
-            Assert.True(expectation == PmlTransitionCheck.Start(PmlState).Success, $"Check {PmlState} if it accepts {PmlCommand.Start} PmlCommand");
+            CheckModes(state, args, PmlTransitionCheck.Start);
         }
 
         [Theory]
-        [InlineData(PmlState.Undefined, false)]
-        [InlineData(PmlState.Aborting, false)]
-        [InlineData(PmlState.Aborted, false)]
-        [InlineData(PmlState.Clearing, false)]
-        [InlineData(PmlState.Stopping, false)]
-        [InlineData(PmlState.Stopped, false)]
-        [InlineData(PmlState.Resetting, false)]
-        [InlineData(PmlState.Idle, false)]
-        [InlineData(PmlState.Starting, false)]
-        [InlineData(PmlState.Execute, true)]
-        [InlineData(PmlState.Held, false)]
-        [InlineData(PmlState.Holding, false)]
-        [InlineData(PmlState.UnHolding, false)]
-        [InlineData(PmlState.Suspending, false)]
-        [InlineData(PmlState.Suspended, false)]
-        [InlineData(PmlState.UnSuspending, false)]
-        [InlineData(PmlState.Completing, false)]
-        [InlineData(PmlState.Completed, false)]
-        public void SuspendTest(PmlState PmlState, bool expectation)
+        [InlineData(PmlState.Undefined,    false, false, false, false)]
+        [InlineData(PmlState.Aborting,     false, false, false, false)]
+        [InlineData(PmlState.Aborted,      false, false, false, false)]
+        [InlineData(PmlState.Clearing,     false, false, false, false)]
+        [InlineData(PmlState.Stopping,     false, false, false, false)]
+        [InlineData(PmlState.Stopped,      false, false, false, false)]
+        [InlineData(PmlState.Resetting,    false, false, false, false)]
+        [InlineData(PmlState.Idle,         false, false, false, false)]
+        [InlineData(PmlState.Starting,     false, false, false, false)]
+        [InlineData(PmlState.Execute,      false, true , false, false)]
+        [InlineData(PmlState.Held,         false, false, false, false)]
+        [InlineData(PmlState.Holding,      false, false, false, false)]
+        [InlineData(PmlState.UnHolding,    false, false, false, false)]
+        [InlineData(PmlState.Suspending,   false, false, false, false)]
+        [InlineData(PmlState.Suspended,    false, false, false, false)]
+        [InlineData(PmlState.UnSuspending, false, false, false, false)]
+        [InlineData(PmlState.Completing,   false, false, false, false)]
+        [InlineData(PmlState.Completed,    false, false, false, false)]
+        public void SuspendTest(PmlState state, params bool[] args)
         {
-            Assert.True(expectation == PmlTransitionCheck.Suspend(PmlState).Success, $"Check {PmlState} if it accepts {PmlCommand.Suspend} PmlCommand");
+            CheckModes(state, args, PmlTransitionCheck.Suspend);
         }
 
         [Theory]
-        [InlineData(PmlState.Undefined, false)]
-        [InlineData(PmlState.Aborting, false)]
-        [InlineData(PmlState.Aborted, false)]
-        [InlineData(PmlState.Clearing, false)]
-        [InlineData(PmlState.Stopping, false)]
-        [InlineData(PmlState.Stopped, false)]
-        [InlineData(PmlState.Resetting, false)]
-        [InlineData(PmlState.Idle, false)]
-        [InlineData(PmlState.Starting, false)]
-        [InlineData(PmlState.Execute, true)]
-        [InlineData(PmlState.Held, false)]
-        [InlineData(PmlState.Holding, false)]
-        [InlineData(PmlState.UnHolding, false)]
-        [InlineData(PmlState.Suspending, false)]
-        [InlineData(PmlState.Suspended, false)]
-        [InlineData(PmlState.UnSuspending, false)]
-        [InlineData(PmlState.Completing, false)]
-        [InlineData(PmlState.Completed, false)]
-        public void HoldTest(PmlState PmlState, bool expectation)
+        [InlineData(PmlState.Undefined,    false, false, false, false)]
+        [InlineData(PmlState.Aborting,     false, false, false, false)]
+        [InlineData(PmlState.Aborted,      false, false, false, false)]
+        [InlineData(PmlState.Clearing,     false, false, false, false)]
+        [InlineData(PmlState.Stopping,     false, false, false, false)]
+        [InlineData(PmlState.Stopped,      false, false, false, false)]
+        [InlineData(PmlState.Resetting,    false, false, false, false)]
+        [InlineData(PmlState.Idle,         false, false, false, false)]
+        [InlineData(PmlState.Starting,     false, false, false, false)]
+        [InlineData(PmlState.Execute,      false,  true, false, false)]
+        [InlineData(PmlState.Held,         false, false, false, false)]
+        [InlineData(PmlState.Holding,      false, false, false, false)]
+        [InlineData(PmlState.UnHolding,    false, false, false, false)]
+        [InlineData(PmlState.Suspending,   false, false, false, false)]
+        [InlineData(PmlState.Suspended,    false, false, false, false)]
+        [InlineData(PmlState.UnSuspending, false, false, false, false)]
+        [InlineData(PmlState.Completing,   false, false, false, false)]
+        [InlineData(PmlState.Completed,    false, false, false, false)]
+        public void HoldTest(PmlState state, params bool[] args)
         {
-            Assert.True(expectation == PmlTransitionCheck.Hold(PmlState).Success, $"Check {PmlState} if it accepts {PmlCommand.Hold} PmlCommand");
+            CheckModes(state, args, PmlTransitionCheck.Hold);
         }
 
         [Theory]
-        [InlineData(PmlState.Undefined, false)]
-        [InlineData(PmlState.Aborting, false)]
-        [InlineData(PmlState.Aborted, false)]
-        [InlineData(PmlState.Clearing, false)]
-        [InlineData(PmlState.Stopping, false)]
-        [InlineData(PmlState.Stopped, false)]
-        [InlineData(PmlState.Resetting, false)]
-        [InlineData(PmlState.Idle, false)]
-        [InlineData(PmlState.Starting, false)]
-        [InlineData(PmlState.Execute, false)]
-        [InlineData(PmlState.Held, true)]
-        [InlineData(PmlState.Holding, false)]
-        [InlineData(PmlState.UnHolding, false)]
-        [InlineData(PmlState.Suspending, false)]
-        [InlineData(PmlState.Suspended, false)]
-        [InlineData(PmlState.UnSuspending, false)]
-        [InlineData(PmlState.Completing, false)]
-        [InlineData(PmlState.Completed, false)]
-        public void UnHoldTest(PmlState PmlState, bool expectation)
+        [InlineData(PmlState.Undefined,    false, false, false, false)]
+        [InlineData(PmlState.Aborting,     false, false, false, false)]
+        [InlineData(PmlState.Aborted,      false, false, false, false)]
+        [InlineData(PmlState.Clearing,     false, false, false, false)]
+        [InlineData(PmlState.Stopping,     false, false, false, false)]
+        [InlineData(PmlState.Stopped,      false, false, false, false)]
+        [InlineData(PmlState.Resetting,    false, false, false, false)]
+        [InlineData(PmlState.Idle,         false, false, false, false)]
+        [InlineData(PmlState.Starting,     false, false, false, false)]
+        [InlineData(PmlState.Execute,      false, false, false, false)]
+        [InlineData(PmlState.Held,         false, true , true , true )]
+        [InlineData(PmlState.Holding,      false, false, false, false)]
+        [InlineData(PmlState.UnHolding,    false, false, false, false)]
+        [InlineData(PmlState.Suspending,   false, false, false, false)]
+        [InlineData(PmlState.Suspended,    false, false, false, false)]
+        [InlineData(PmlState.UnSuspending, false, false, false, false)]
+        [InlineData(PmlState.Completing,   false, false, false, false)]
+        [InlineData(PmlState.Completed,    false, false, false, false)]
+        public void UnHoldTest(PmlState state, params bool[] args)
         {
-            Assert.True(expectation == PmlTransitionCheck.UnHold(PmlState).Success, $"Check {PmlState} if it accepts {PmlCommand.UnHold} PmlCommand");
+            CheckModes(state, args, PmlTransitionCheck.UnHold);
         }
 
         [Theory]
-        [InlineData(PmlState.Undefined, false)]
-        [InlineData(PmlState.Aborting, false)]
-        [InlineData(PmlState.Aborted, false)]
-        [InlineData(PmlState.Clearing, false)]
-        [InlineData(PmlState.Stopping, false)]
-        [InlineData(PmlState.Stopped, false)]
-        [InlineData(PmlState.Resetting, false)]
-        [InlineData(PmlState.Idle, false)]
-        [InlineData(PmlState.Starting, false)]
-        [InlineData(PmlState.Execute, false)]
-        [InlineData(PmlState.Held, false)]
-        [InlineData(PmlState.Holding, false)]
-        [InlineData(PmlState.UnHolding, false)]
-        [InlineData(PmlState.Suspending, false)]
-        [InlineData(PmlState.Suspended, true)]
-        [InlineData(PmlState.UnSuspending, false)]
-        [InlineData(PmlState.Completing, false)]
-        [InlineData(PmlState.Completed, false)]
-        public void UnSuspendTest(PmlState PmlState, bool expectation)
+        [InlineData(PmlState.Undefined,    false, false, false, false)]
+        [InlineData(PmlState.Aborting,     false, false, false, false)]
+        [InlineData(PmlState.Aborted,      false, false, false, false)]
+        [InlineData(PmlState.Clearing,     false, false, false, false)]
+        [InlineData(PmlState.Stopping,     false, false, false, false)]
+        [InlineData(PmlState.Stopped,      false, false, false, false)]
+        [InlineData(PmlState.Resetting,    false, false, false, false)]
+        [InlineData(PmlState.Idle,         false, false, false, false)]
+        [InlineData(PmlState.Starting,     false, false, false, false)]
+        [InlineData(PmlState.Execute,      false, false, false, false)]
+        [InlineData(PmlState.Held,         false, false, false, false)]
+        [InlineData(PmlState.Holding,      false, false, false, false)]
+        [InlineData(PmlState.UnHolding,    false, false, false, false)]
+        [InlineData(PmlState.Suspending,   false, false, false, false)]
+        [InlineData(PmlState.Suspended,    false, true , true , true )]
+        [InlineData(PmlState.UnSuspending, false, false, false, false)]
+        [InlineData(PmlState.Completing,   false, false, false, false)]
+        [InlineData(PmlState.Completed,    false, false, false, false)]
+        public void UnSuspendTest(PmlState state, params bool[] args)
         {
-            Assert.True(expectation == PmlTransitionCheck.UnSuspend(PmlState).Success, $"Check {PmlState} if it accepts {PmlCommand.UnSuspend} PmlCommand");
+            CheckModes(state, args, PmlTransitionCheck.UnSuspend);
         }
 
         [Theory]
-        [InlineData(PmlState.Undefined, false)]
-        [InlineData(PmlState.Aborting, false)]
-        [InlineData(PmlState.Aborted, true)]
-        [InlineData(PmlState.Clearing, false)]
-        [InlineData(PmlState.Stopping, false)]
-        [InlineData(PmlState.Stopped, false)]
-        [InlineData(PmlState.Resetting, false)]
-        [InlineData(PmlState.Idle, false)]
-        [InlineData(PmlState.Starting, false)]
-        [InlineData(PmlState.Execute, false)]
-        [InlineData(PmlState.Held, false)]
-        [InlineData(PmlState.Holding, false)]
-        [InlineData(PmlState.UnHolding, false)]
-        [InlineData(PmlState.Suspending, false)]
-        [InlineData(PmlState.Suspended, false)]
-        [InlineData(PmlState.UnSuspending, false)]
-        [InlineData(PmlState.Completing, false)]
-        [InlineData(PmlState.Completed, false)]
-        public void ClearTest(PmlState PmlState, bool expectation)
+        [InlineData(PmlState.Undefined,    false, false, false, false)]
+        [InlineData(PmlState.Aborting,     false, false, false, false)]
+        [InlineData(PmlState.Aborted,      false,  true, true, true)]
+        [InlineData(PmlState.Clearing,     false, false, false, false)]
+        [InlineData(PmlState.Stopping,     false, false, false, false)]
+        [InlineData(PmlState.Stopped,      false, false, false, false)]
+        [InlineData(PmlState.Resetting,    false, false, false, false)]
+        [InlineData(PmlState.Idle,         false, false, false, false)]
+        [InlineData(PmlState.Starting,     false, false, false, false)]
+        [InlineData(PmlState.Execute,      false, false, false, false)]
+        [InlineData(PmlState.Held,         false, false, false, false)]
+        [InlineData(PmlState.Holding,      false, false, false, false)]
+        [InlineData(PmlState.UnHolding,    false, false, false, false)]
+        [InlineData(PmlState.Suspending,   false, false, false, false)]
+        [InlineData(PmlState.Suspended,    false, false, false, false)]
+        [InlineData(PmlState.UnSuspending, false, false, false, false)]
+        [InlineData(PmlState.Completing,   false, false, false, false)]
+        [InlineData(PmlState.Completed,    false, false, false, false)]
+        public void ClearTest(PmlState state, params bool[] args)
         {
-            Assert.True(expectation == PmlTransitionCheck.Clear(PmlState).Success, $"Check {PmlState} if it accepts {PmlCommand.Clear} PmlCommand");
+            CheckModes(state, args, PmlTransitionCheck.Clear);
         }
     }
 }
