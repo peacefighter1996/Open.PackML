@@ -4,7 +4,7 @@ namespace Autabee.Utility.IEC61131TypeConversion
 {
     public static class IECType
     {
-        private static string[] defaultTypes =
+        private static string[] DefaultTypes { get; } =
         {
             "BOOL",
             "BYTE",
@@ -53,6 +53,8 @@ namespace Autabee.Utility.IEC61131TypeConversion
         public static string DATE { get => "DATE"; }
         public static string LTIME { get => "LTIME"; }
 
-        public static bool ContainsType(string type) { return defaultTypes.Contains(type); }
+        public static string ArrayOf(string type) => $"{type}[]";
+
+        public static bool ContainsType(string type) { return DefaultTypes.Contains(type); }
     }
 }
