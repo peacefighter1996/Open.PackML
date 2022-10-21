@@ -17,7 +17,7 @@ namespace Open.PackML.Tags
         {
             foreach (var tag in tags)
             {
-                Add(tag.TagName, tag);
+                Add(tag.Name, tag);
             }
         }
         public string GetTagTablePrint(bool filterUndifined = false)
@@ -34,7 +34,7 @@ namespace Open.PackML.Tags
             if (sender is TagConfig data)
             {
                 Remove(data.SearchString);
-                Add(data.TagName, data);
+                Add(data.Name, data);
             }
         }
 
@@ -60,6 +60,6 @@ namespace Open.PackML.Tags
             array = this.Select(o => o.Value).ToArray();
         }
 
-        public TagConfig[] GetArray { get => array == null ? Array.Empty<TagConfig>() : array; }
+        public TagConfig[] GetTags { get => array == null ? Array.Empty<TagConfig>() : array; }
     }
 }

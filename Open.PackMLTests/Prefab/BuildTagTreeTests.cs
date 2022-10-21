@@ -54,7 +54,7 @@ namespace Open.PackMLTests.Prefab
         {
             var moqController = new Mock<IPmlController>();
             var eventStore = new PmlEventStore();
-            var temp = TagTreeBuilder.GetTree("", new PmlTr88Controller(moqController.Object, eventStore));
+            var temp = TagTreeBuilder.GetTree("", new PmlTr88Controller(moqController.Object, eventStore, new PmlOemTransitionCheck()));
             logger.WriteLine(temp.BuildTable().GetTagTablePrint());
         }
         [Fact]
@@ -62,7 +62,7 @@ namespace Open.PackMLTests.Prefab
         {
             var moqController = new Mock<IPmlController>();
             var eventStore = new PmlEventStore();
-            var temp = TagTreeBuilder.GetTree("", new PmlTr88Controller(moqController.Object, eventStore));
+            var temp = TagTreeBuilder.GetTree("", new PmlTr88Controller(moqController.Object, eventStore, new PmlOemTransitionCheck()));
             logger.WriteLine(temp.BuildTable().GetTagTablePrint(true));
         }
 
@@ -71,7 +71,7 @@ namespace Open.PackMLTests.Prefab
         {
             var moqController = new Mock<IPmlController>();
             var eventStore = new PmlEventStore();
-            var temp = TagTreeBuilder.GetTree("", new PmlTr88Controller(moqController.Object, eventStore));
+            var temp = TagTreeBuilder.GetTree("", new PmlEumController(moqController.Object, eventStore, new PmlOemTransitionCheck()));
             logger.WriteLine(temp.BuildTable().GetTagTablePrint(true));
         }
 

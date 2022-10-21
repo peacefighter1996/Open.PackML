@@ -9,7 +9,7 @@ namespace Open.PackML.Prefab
 {
     public class PmlEumController : PmlTr88Controller
     {
-        public PmlEumController(IPmlController controller, IPmlEventStore eventStore) : base(controller, eventStore)
+        public PmlEumController(IPmlController controller, IPmlEventStore eventStore, IPmlOemTransitionCheck oemTransitionCheck) : base(controller, eventStore, oemTransitionCheck)
         {
 
         }

@@ -55,6 +55,6 @@ namespace Autabee.Utility.IEC61131TypeConversion
 
         public static string ArrayOf(string type) => $"{type}[]";
 
-        public static bool ContainsType(string type) { return DefaultTypes.Contains(type); }
+        public static bool ContainsType(string type) { return DefaultTypes.Contains(type) || type.StartsWith("UDT_"); }
     }
 }

@@ -83,7 +83,7 @@ namespace Autabee.Utility.IEC61131TypeConversion
 
         }
 
-        public static Type GetCsharpType<T>(string typeString)
+        public static Type GetCsharpType(string typeString)
         {
             switch (typeString)
             {
@@ -103,15 +103,33 @@ namespace Autabee.Utility.IEC61131TypeConversion
                     return typeof(uint);
                 case "ULINT":
                     return typeof(ulong);
-
+                case "SINT":
+                    return typeof(sbyte);
+                case "INT":
+                    return typeof(short);
+                case "DINT":
+                    return typeof(int);
+                case "LINT":
+                    return typeof(long);
+                case "REAL":
+                    return typeof(float);
+                case "LREAL":
+                    return typeof(double);
+                case "LTIME":
+                    return typeof(TimeSpan);
+                case "DATE":
+                    return typeof(DateTime);
+                case "CHAR":
+                    return typeof(char);
                 default:
+                    
                     if (typeString.StartsWith("UDT"))
                     {
                         return Assembly.GetEntryAssembly().GetType(typeString.Substring(4).Replace('_', '.'));
                     }
                     else
                     {
-                        throw new ArgumentException("Unable to convert to c# type");
+                        throw new ArgumentException($"Unable to convert {typeString} to c# type");
                     }
             }
         }

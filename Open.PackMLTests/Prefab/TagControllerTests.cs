@@ -22,7 +22,7 @@ namespace Open.PackMLTests.Prefab
         {
             var moqController = new Mock<IPmlController>();
             var eventStore = new PmlEventStore();
-            var eumController = new PmlEumController(moqController.Object, eventStore);
+            var eumController = new PmlEumController(moqController.Object, eventStore, new PmlOemTransitionCheck());
             eumController.GetType().GetProperty("ProdDefectiveCount").SetValue(eumController, 45);
             eumController.GetType().GetProperty("ProdProcessedCount").SetValue(eumController, 163);
 
@@ -234,7 +234,7 @@ namespace Open.PackMLTests.Prefab
         {
             var moqController = new Mock<IPmlController>();
             var eventStore = new PmlEventStore();
-            var eumController = new PmlEumController(moqController.Object, eventStore);
+            var eumController = new PmlEumController(moqController.Object, eventStore, new PmlOemTransitionCheck());
             var controller = new TagController(new Dictionary<string, object>() { { "", eumController } });
             return controller;
         }
