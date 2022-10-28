@@ -7,7 +7,7 @@
     <RepositoryUrl>https://github.com/peacefighter1996/Open.PackML</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.3.3-Beta</Version>
+    <Version>0.4.0-Beta</Version>
     
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
