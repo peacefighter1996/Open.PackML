@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Moq;
 using Open.PackML.Prefab;
-using Open.PackML.Interfaces;
+using Open.PackML;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using Open.PackML.Tags;
 using Open.PackMLTests.TestObjects;
@@ -20,9 +20,9 @@ namespace Open.PackMLTests.Prefab
         [Fact()]
         public void GetTagDataTest()
         {
-            var moqController = new Mock<IPmlController<Enum>>();
-            var eventStore = new EventStore();
-            var eumController = new PmlEumController<Enum>(moqController.Object, eventStore);
+            var moqController = new Mock<IPmlController>();
+            var eventStore = new PmlEventStore();
+            var eumController = new PmlEumController(moqController.Object, eventStore, new PmlOemTransitionCheck());
             eumController.GetType().GetProperty("ProdDefectiveCount").SetValue(eumController, 45);
             eumController.GetType().GetProperty("ProdProcessedCount").SetValue(eumController, 163);
 
@@ -232,9 +232,9 @@ namespace Open.PackMLTests.Prefab
 
         private static TagController GetDefaultcontroller()
         {
-            var moqController = new Mock<IPmlController<Enum>>();
-            var eventStore = new EventStore();
-            var eumController = new PmlEumController<Enum>(moqController.Object, eventStore);
+            var moqController = new Mock<IPmlController>();
+            var eventStore = new PmlEventStore();
+            var eumController = new PmlEumController(moqController.Object, eventStore, new PmlOemTransitionCheck());
             var controller = new TagController(new Dictionary<string, object>() { { "", eumController } });
             return controller;
         }

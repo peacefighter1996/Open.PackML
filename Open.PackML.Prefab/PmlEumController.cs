@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace Open.PackML.Prefab
 {
-    public class PmlEumController<T> : PmlTr88Controller<T> where T : Enum
+    public class PmlEumController : PmlTr88Controller
     {
-        public PmlEumController(IPmlController<T> controller, IPmlEventStore<T> eventStore) : base(controller, eventStore)
+        public PmlEumController(IPmlController controller, IPmlEventStore eventStore, IPmlOemTransitionCheck oemTransitionCheck) : base(controller, eventStore, oemTransitionCheck)
         {
 
         }
@@ -19,12 +19,12 @@ namespace Open.PackML.Prefab
         public List<PmlWarning> Warning { get; protected set; } = new List<PmlWarning>();
 
 
-        [TagEndUserTerm("Parameter")]
-        [TagType(TagType.Status)]
-        public List<PmlWarning> Parameter { get; protected set; } = new List<PmlWarning>();
+        [TagEndUserTerm("Machine data/parameter")]
+        [TagType(TagType.Status | TagType.Command)]
+        public List<PmlParameter> Parameter { get; protected set; } = new List<PmlParameter>();
 
         [TagEndUserTerm("Parameter")]
-        [TagType(TagType.Status)]
+        [TagType(TagType.Status | TagType.Command)]
         public PmlRemoteInterface RemoteInterface { get; protected set; }
     }
 }

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -22,14 +25,25 @@ namespace Autabee.Utility.IEC61131TypeConversion
             if (type.IsArray)
             {
                 var result = GetIecTypeString(type.GetElementType()) + "[]";
-                if (string.Equals( result, "USINT[]"))
+                if (string.Equals(result, "CHAR[]"))
                 {
-                    return IECType.STRING;
+                    return IECType.STRING + "[]";
                 }
                 else
                 {
                     return result;
                 }
+            }
+            else if (type.GetInterfaces().Contains(typeof(IEnumerable)) 
+                && type != typeof(string) 
+                && type != typeof(BitArray))
+            {
+                var result = GetIecTypeString(type.GenericTypeArguments[0]) + "[]";
+
+                return result;
+
+
+
             }
             else
             {
@@ -82,10 +96,13 @@ namespace Autabee.Utility.IEC61131TypeConversion
             }
 
         }
-
-        public static Type GetCsharpType<T>(string typeString)
+        public static Type GetCsharpType(string typeString, Type collectionType, Assembly executingAssembly)
         {
-            switch (typeString)
+            return GetCsharpType(typeString, collectionType, new Assembly[] { executingAssembly });
+        }
+        public static Type GetCsharpType(string typeString, Type collectionType, Assembly[] executingAssembly)
+        {
+            switch (typeString.ToUpper())
             {
                 case "BOOL":
                     return typeof(bool);
@@ -103,15 +120,63 @@ namespace Autabee.Utility.IEC61131TypeConversion
                     return typeof(uint);
                 case "ULINT":
                     return typeof(ulong);
-
+                case "SINT":
+                    return typeof(sbyte);
+                case "INT":
+                    return typeof(short);
+                case "DINT":
+                    return typeof(int);
+                case "LINT":
+                    return typeof(long);
+                case "REAL":
+                    return typeof(float);
+                case "LREAL":
+                    return typeof(double);
+                case "LTIME":
+                    return typeof(TimeSpan);
+                case "DATE":
+                    return typeof(DateTime);
+                case "CHAR":
+                    return typeof(char);
+                case "STRING":
+                    return typeof(string);
+                case "STRING[]":
+                    return typeof(char[]);
+                case "OBJECT":
+                    return typeof(object);
                 default:
                     if (typeString.StartsWith("UDT"))
                     {
-                        return Assembly.GetEntryAssembly().GetType(typeString.Substring(4).Replace('_', '.'));
+                        if (typeString.Contains("["))
+                        {
+                            var elementType = GetCsharpType(typeString.Replace("[]", ""), null, executingAssembly);
+                            if (collectionType.IsGenericType)
+                            {
+                                collectionType = collectionType.MakeGenericType(elementType);
+                                return collectionType;
+                            }
+                            else
+                            {
+                                var arrayType = elementType.MakeArrayType();
+                                return arrayType;
+                            }
+                        }
+                        else
+                        {
+                            var typeName = typeString.Substring(4).Replace('_', '.');
+                            var assemby = executingAssembly.FirstOrDefault(o => o.GetType(typeName) != null);
+                            if (assemby == null) throw new Exception("Unkown or Forbidden UDT");
+
+                            return assemby.GetType(typeName);
+                        }
+                    }
+                    if (typeString.StartsWith("STRING["))
+                    {
+                        return typeof(char[]);
                     }
                     else
                     {
-                        throw new ArgumentException("Unable to convert to c# type");
+                        throw new ArgumentException($"Unable to convert {typeString} to c# type");
                     }
             }
         }

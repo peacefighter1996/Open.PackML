@@ -4,37 +4,35 @@ using System.Linq;
 
 namespace Open.PackML.Tags
 {
-    public class TagTable : Dictionary<string, TagDetail>
+    public class TagTable : Dictionary<string, TagConfig>
     {
-        TagDetail[] array;
+        TagConfig[] array;
         private bool generateOnUpdate;
 
         public TagTable() : base()
         {
 
         }
-        public TagTable(TagDetail[] tags) : base()
+        public TagTable(TagConfig[] tags) : base()
         {
             foreach (var tag in tags)
             {
-                Add(tag.TagName, tag);
+                Add(tag.Name, tag);
             }
         }
-        public string GetTagTablePrint(bool filterUndifined = false)
+        public string GetTagTablePrint(bool filterUndifined = false, bool Iec = false)
         {
-            if(filterUndifined)
+            IEnumerable<TagConfig> temp = array;
+            if (filterUndifined) temp = temp.Where(o => o.TagType != TagType.Undefined);
             return array
-                .Where(o => o.TagType != TagType.Undefined)
-                .Aggregate("", (accumulator, item) => accumulator += item.ToString() + Environment.NewLine);
-            return array
-                .Aggregate("", (accumulator, item) => accumulator += item.ToString() + Environment.NewLine);
+                .Aggregate("", (accumulator, item) => accumulator += (Iec ? item.ToIecString() : item.ToString()) + Environment.NewLine);
         }
         public void TagNameUpdated(object sender, EventArgs e)
         {
-            if (sender is TagDetail data)
+            if (sender is TagConfig data)
             {
                 Remove(data.SearchString);
-                Add(data.TagName, data);
+                Add(data.Name, data);
             }
         }
 
@@ -48,7 +46,7 @@ namespace Open.PackML.Tags
             }
         }
 
-        public new void Add(string key, TagDetail value)
+        public new void Add(string key, TagConfig value)
         {
             base.Add(key, value);
             value.TagNameUpdate += TagNameUpdated;
@@ -60,6 +58,6 @@ namespace Open.PackML.Tags
             array = this.Select(o => o.Value).ToArray();
         }
 
-        public TagDetail[] GetArray { get => array == null ? Array.Empty<TagDetail>() : array; }
+        public TagConfig[] GetTags { get => array == null ? Array.Empty<TagConfig>() : array; }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using Open.PackML.EventArguments;
 using System;
 
-namespace Open.PackML.Interfaces
+namespace Open.PackML
 {
-    public interface IPmlMachineController<T> where T : Enum
+    public interface IPmlMachineController
     {
         //Events 
         event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
-        event EventHandler<MachineEventArgs<T>> MachineEvent;
+        event EventHandler<PmlMachineEventArgs> MachineEvent;
     }
 }

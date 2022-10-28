@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace Open.PackML.Tags
 {
-    public class TagDetail : TagConfig
+    internal class TagDetail : TagConfig
     {
         private int arrayTreeCount;
         private bool[] ArrayType;
@@ -30,7 +30,6 @@ namespace Open.PackML.Tags
             {
                 throw new ArgumentNullException(nameof(baseObject));
             }
-            DataType = config.DataType;
             this.baseObject = baseObject;
             if (childTags != null) ChildTags = childTags;
             else ChildTags = new TagDetail[0];
@@ -53,7 +52,7 @@ namespace Open.PackML.Tags
             }
             ArrayType = arrayType;
 
-            arrayTreeCount = TagName.Count(o => o == '[');
+            arrayTreeCount = Name.Count(o => o == '[');
         }
 
         private bool IsMethod { get => last is MethodInfo; }
@@ -87,7 +86,7 @@ namespace Open.PackML.Tags
             try
             {
                 result = ((MethodInfo)last).Invoke(result, args);
-                if (DataType != typeof(void) && result == null) return ObjectNotFound(TagName);
+                if (DataType != typeof(void) && result == null) return ObjectNotFound(Name);
             }
             catch (Exception e)
             {
@@ -191,7 +190,7 @@ namespace Open.PackML.Tags
         public ValidationResult SetValue(Queue<int> queue, object obj)
         {
             Type type = obj.GetType();
-            if (!Writable && !DataType.IsArray) return ObjectNotWritable(TagName);
+            if (!Writable && !DataType.IsArray) return ObjectNotWritable(Name);
             if (!IsProperty) return new ValidationResult(false, "Tag not a property");
             if ((type.IsArray && base.DataType.IsArray && base.DataType != type)
                 || (!type.IsArray && base.DataType.IsArray && base.DataType.GetElementType() != type)
@@ -218,7 +217,7 @@ namespace Open.PackML.Tags
                             return new ValidationResult(false, "Failed To write Array");
                     };
                 }
-                else if (!Writable) return ObjectNotWritable(TagName);
+                else if (!Writable) return ObjectNotWritable(Name);
                 else
                     (info).SetValue(validation.Object, obj);
             }

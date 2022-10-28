@@ -45,7 +45,7 @@ namespace Autabee.Utility.IEC61131TypeConversionTests
         [Fact()]
         public void GetIecByteArrayTest()
         {
-            Assert.Equal("STRING", IecTypeConvertor.GetIecTypeString(new byte[3]));
+            Assert.Equal("STRING[]", IecTypeConvertor.GetIecTypeString(new char[3]));
 
         }
 

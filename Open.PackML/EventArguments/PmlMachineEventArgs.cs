@@ -2,9 +2,9 @@
 
 namespace Open.PackML.EventArguments
 {
-    public class MachineEventArgs<T>: EventArgs where T : Enum
+    public class PmlMachineEventArgs
     {
-        public T @enum { get; set; }
+        public Enum @enum { get; set; }
         public DateTime DateTime { get; set; } = DateTime.UtcNow;
     }
 }
