@@ -1,14 +1,15 @@
 ﻿using Autabee.Utility;
-using Open.PackML.Interfaces;
+using Open.PackML;
 using System;
 using System.Collections.Generic;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Open.PackML.Prefab
 {
-    public class EventStore: Dictionary<Enum, PmlEventReaction<Enum>>, IPmlEventStore<Enum>
+    public class PmlEventStore: Dictionary<Enum, PmlEventReaction>, IPmlEventStore
     {
-        public EventStore() { }
-        public EventStore(List<PmlEventReaction<Enum>> eventReactions)
+        public PmlEventStore() { }
+        public PmlEventStore(List<PmlEventReaction> eventReactions)
         {
             foreach (var reaction in eventReactions)
             {
@@ -29,9 +30,9 @@ namespace Open.PackML.Prefab
             }
         }
 
-        public PmlEventReaction<Enum> GetMachineEvent(Enum @event)
+        public PmlEventReaction GetMachineEvent(Enum @event)
         {
-            if (this.TryGetValue(@event, out PmlEventReaction<Enum> value))
+            if (this.TryGetValue(@event, out PmlEventReaction value))
             {
                 return value;
             }
@@ -39,6 +40,10 @@ namespace Open.PackML.Prefab
             {
                 return null;
             }
+        }
+        public void Add(PmlEventReaction pmlEventReaction)
+        {
+            this.Add(pmlEventReaction.MachineEventId, pmlEventReaction);
         }
 
     }

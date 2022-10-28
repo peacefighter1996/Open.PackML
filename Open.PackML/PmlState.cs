@@ -1,7 +1,7 @@
 ﻿namespace Open.PackML
 {
     // Based on [1] 
-    public enum PmlState
+    public enum PmlState : int
     {
         Undefined = 0,
         Clearing = 1,

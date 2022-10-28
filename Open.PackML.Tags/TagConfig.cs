@@ -9,12 +9,12 @@ namespace Open.PackML.Tags
     {
         string tagName;
         public event EventHandler TagNameUpdate;
-        public string TagName
+        public string Name
         {
             get => tagName; set
             {
-                if (value != string.Empty && string.IsNullOrWhiteSpace(value)) TagName = string.Empty;
-                if (tagName == value) return;
+                if (value != string.Empty && string.IsNullOrWhiteSpace(value)) Name = string.Empty;
+                if (value.Equals(Name)) return;
                 if (value == string.Empty)
                 {
                     tagName = value;
@@ -51,23 +51,23 @@ namespace Open.PackML.Tags
 
         public TagConfig(string name, string endUserTerm, string description, TagType tagType, Type dataType)
         {
-            TagName = name;
+            Name = name;
             EndUserTerm = endUserTerm;
             Description = description;
             TagType = tagType;
             DataType = dataType;
         }
 
-        public TagConfig(TagConfig tagConfig) : this(tagConfig.TagName, tagConfig.EndUserTerm, tagConfig.Description, tagConfig.TagType, tagConfig.DataType)
+        public TagConfig(TagConfig tagConfig) : this(tagConfig.Name, tagConfig.EndUserTerm, tagConfig.Description, tagConfig.TagType, tagConfig.DataType)
         {
         }
         public string ToIecString()
         {
-            return string.Format("{0},{1},{2},{3},{4}", TagType.ToString(), TagName, EndUserTerm, Description, DataType.GetIecTypeString());
+            return string.Format("{0},{1},{2},{3},{4}", TagType.ToString(), Name, EndUserTerm, Description, DataType.GetIecTypeString());
         }
         public override string ToString()
         {
-            return string.Format("{0},{1},{2},{3},{4}", TagType.ToString(), TagName, EndUserTerm, Description, DataType.ToString());
+            return string.Format("{0},{1},{2},{3},{4}", TagType.ToString(), Name, EndUserTerm, Description, DataType.ToString());
         }
         public static string TagStringToSearch(string name)
         {

@@ -1,6 +1,5 @@
 ﻿using Xunit;
 using Open.PackML.Prefab;
-using Open.PackMLTests.Prefab;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,96 +10,11 @@ using Open.PackML.EventArguments;
 using Autabee.Utility;
 using Moq;
 using Open.PackML;
+using Open.PackMLTests.TestObjects;
 
 namespace Open.PackMLTests
 {
-    public class TestPmlController : IPmlController<Enum>
-    {
-        public PmlMode CurrentMode = PmlMode.Undefined;
-        public PmlState CurrentState = PmlState.Undefined;
-        public event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
-        public event EventHandler<MachineEventArgs<Enum>> MachineEvent;
-
-        public PmlMode CurrentPmlMode()
-        {
-            return CurrentMode;
-        }
-
-        public PmlState CurrentPmlState()
-        {
-            return CurrentState;
-        }
-
-        public PmlMode RetrieveCurrentPackMLMode()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PmlMode> RetrieveCurrentPackMLModeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void InvokeEvent(Enum @enum)
-        {
-
-            MachineEvent?.Invoke(this, new MachineEventArgs<Enum>() { @enum = @enum });
-
-        }
-
-        public PmlState RetrieveCurrentPackMLState()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PmlState> RetrieveCurrentPackMLStateAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand packMLCommand) => SendPmlCommand(packMLCommand);
-
-        public ValidationResult SendPmlCommand(PmlCommand packMLCommand)
-        {
-            if (packMLCommand == PmlCommand.Clear)
-            {
-                CurrentState = PmlState.Clearing;
-                UpdateCurrentState.Invoke(this, new PmlStateChangeEventArg()
-                {
-                    CurrentMode = CurrentMode,
-                    CurrentState = CurrentState,
-                    DateTime = DateTime.UtcNow
-                });
-
-                Task.Delay(20);
-                CurrentState = PmlState.Stopped;
-                UpdateCurrentState.Invoke(this, new PmlStateChangeEventArg()
-                {
-                    CurrentMode = CurrentMode,
-                    CurrentState = CurrentState,
-                    DateTime = DateTime.UtcNow
-                });
-                return new ValidationResult(true);
-            }
-            else
-            {
-                return new ValidationResult(false);
-            }
-
-        }
-
-        public async Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode) => UpdatePmlMode(packMLMode);
-
-        public ValidationResult UpdatePmlMode(PmlMode packMLMode)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
-
-
-    public class PackMLGuardControllerTests
+    public class PmlGuardControllerTests
     {
         [Theory]
         [InlineData(PmlState.Aborted, PmlMode.Undefined, PmlMode.Maintenance, true)]
@@ -162,13 +76,13 @@ namespace Open.PackMLTests
                 passedInternal = true;
             };
 
-            var moqController = new Mock<IPmlController<Enum>>();
+            var moqController = new Mock<IPmlController>();
             moqController.Setup(x => x.SendPmlCommand(It.IsAny<PmlCommand>())).Returns(new ValidationResult(true));
             moqController.Setup(x => x.UpdatePmlMode(It.IsAny<PmlMode>())).Callback(catchFunc).Returns(new ValidationResult(true));
             moqController.Setup(x => x.CurrentPmlState()).Returns(state);
             moqController.Setup(x => x.CurrentPmlMode()).Returns(mode);
-            var eventStore = new EventStore();
-            var controller = new PackMLGuardController<Enum>(moqController.Object, eventStore);
+            var eventStore = new PmlEventStore();
+            var controller = new PmlGuardController(moqController.Object, eventStore);
 
             var result = controller.UpdatePmlMode(newMode);
             Assert.Equal(succes, result.Success);
@@ -202,12 +116,12 @@ namespace Open.PackMLTests
             };
 
 
-            var moqController = new Mock<IPmlController<Enum>>();
+            var moqController = new Mock<IPmlController>();
             moqController.Setup(x => x.SendPmlCommand(It.IsAny<PmlCommand>())).Returns(new ValidationResult(true));
             moqController.Setup(x => x.UpdatePmlMode(It.IsAny<PmlMode>())).Callback(catchFunc).Returns(new ValidationResult(true));
 
             moqController.Setup(x => x.CurrentPmlMode()).Returns(mode);
-            var eventStore = new EventStore();
+            var eventStore = new PmlEventStore();
 
             PmlState[] pmlStates = new PmlState[]{
                 PmlState.Undefined ,
@@ -231,7 +145,7 @@ namespace Open.PackMLTests
             {
                 moqController.Setup(x => x.CurrentPmlState()).Returns(pmlStates[i]);
                 passedInternal = false;
-                var controller = new PackMLGuardController<Enum>(moqController.Object, eventStore);
+                var controller = new PmlGuardController(moqController.Object, eventStore);
 
                 var result = controller.UpdatePmlMode(newMode);
                 Assert.False(result.Success);
@@ -250,8 +164,8 @@ namespace Open.PackMLTests
             var testController = new TestPmlController();
             testController.CurrentState = PmlState.Aborted;
             testController.CurrentMode = PmlMode.Manual;
-            var eventStore = new EventStore();
-            var controller = new PackMLGuardController<Enum>(testController, eventStore);
+            var eventStore = new PmlEventStore();
+            var controller = new PmlGuardController(testController, eventStore);
             controller.UpdateCurrentState += Controller_UpdateCurrentState;
 
             //var result = controller.SendPmlCommand(PmlCommand.Abort);
@@ -270,10 +184,10 @@ namespace Open.PackMLTests
             var testController = new TestPmlController();
             testController.CurrentState = PmlState.Aborted;
             testController.CurrentMode = PmlMode.Manual;
-            var eventStore = new EventStore();
-            eventStore.Add(EventHanderEnum1.id1, new PmlEventReaction<Enum>(EventHanderEnum1.id1, PmlState.Stopping));
+            var eventStore = new PmlEventStore();
+            eventStore.Add(EventHanderEnum1.id1, new PmlEventReaction(EventHanderEnum1.id1, PmlState.Stopping));
            
-            var controller = new PackMLGuardController<Enum>(testController, eventStore);
+            var controller = new PmlGuardController(testController, eventStore);
             testController.InvokeEvent(EventHanderEnum1.id1);
             //var result = controller.SendPmlCommand(PmlCommand.Abort);
             //Assert.True(result.Success, result.FailString());
