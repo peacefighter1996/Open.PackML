@@ -82,9 +82,18 @@ namespace Open.PackML.Tags.Builders
                     int lenght = -1;
                     string arrayRoot = string.IsNullOrWhiteSpace(root.Name) ? root.Name : root.Name + '.';
                     var fixedSizeAttribute = property.GetCustomAttribute(typeof(TagFixedSizeAttribute)) as TagFixedSizeAttribute;
-                    if (fixedSizeAttribute != null && fixedSizeAttribute.Size >= 0)
+                    if (config.DataType != typeof(char[]) 
+                        && fixedSizeAttribute != null 
+                        && fixedSizeAttribute.Size >= 0 ) 
                     {
                         config.Name = arrayRoot + property.Name + $"[0..{fixedSizeAttribute.Size}]";
+                        lenght = fixedSizeAttribute.Size;
+                    }
+                    if (config.DataType == typeof(char[]) 
+                        && fixedSizeAttribute != null
+                        && fixedSizeAttribute.Size >= 0)
+                    {
+                        config.Name = arrayRoot + property.Name;
                         lenght = fixedSizeAttribute.Size;
                     }
                     else
@@ -149,7 +158,7 @@ namespace Open.PackML.Tags.Builders
                 arraytree.Add(false);
                 if (method.GetCustomAttribute(typeof(TagTypeAttribute)) is TagTypeAttribute attribute)
                 {
-                    var config = GetPropertyTagConfig(method, root.Name, attribute.TagType, Iec);
+                    var config = GetMethodeTagConfig(method, root.Name, attribute.TagType, Iec);
                     propertyChain.Add(method);
                     Children.Add(new TagDetail(config, baseObject, new TagDetail[0], propertyChain.ToArray(), arraytree.ToArray()));
                     propertyChain.Remove(method);
@@ -179,7 +188,7 @@ namespace Open.PackML.Tags.Builders
             return config;
         }
 
-        private static TagConfig GetPropertyTagConfig(MethodInfo property, string root, TagType TagCarry, bool Iec)
+        private static TagConfig GetMethodeTagConfig(MethodInfo property, string root, TagType TagCarry, bool Iec)
         {
             var paramters = property.GetParameters().Aggregate("", (accumulator, item) => 
                 accumulator += (Iec?item.ParameterType.GetIecTypeString(): item.ParameterType.ToString())

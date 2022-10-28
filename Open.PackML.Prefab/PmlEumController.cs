@@ -19,12 +19,12 @@ namespace Open.PackML.Prefab
         public List<PmlWarning> Warning { get; protected set; } = new List<PmlWarning>();
 
 
-        [TagEndUserTerm("Parameter")]
-        [TagType(TagType.Status)]
-        public List<PmlWarning> Parameter { get; protected set; } = new List<PmlWarning>();
+        [TagEndUserTerm("Machine data/parameter")]
+        [TagType(TagType.Status | TagType.Command)]
+        public List<PmlParameter> Parameter { get; protected set; } = new List<PmlParameter>();
 
         [TagEndUserTerm("Parameter")]
-        [TagType(TagType.Status)]
+        [TagType(TagType.Status | TagType.Command)]
         public PmlRemoteInterface RemoteInterface { get; protected set; }
     }
 }

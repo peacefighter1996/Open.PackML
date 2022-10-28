@@ -30,7 +30,6 @@ namespace Open.PackML.Tags
             {
                 throw new ArgumentNullException(nameof(baseObject));
             }
-            DataType = config.DataType;
             this.baseObject = baseObject;
             if (childTags != null) ChildTags = childTags;
             else ChildTags = new TagDetail[0];

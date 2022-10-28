@@ -20,14 +20,12 @@ namespace Open.PackML.Tags
                 Add(tag.Name, tag);
             }
         }
-        public string GetTagTablePrint(bool filterUndifined = false)
+        public string GetTagTablePrint(bool filterUndifined = false, bool Iec = false)
         {
-            if(filterUndifined)
+            IEnumerable<TagConfig> temp = array;
+            if (filterUndifined) temp = temp.Where(o => o.TagType != TagType.Undefined);
             return array
-                .Where(o => o.TagType != TagType.Undefined)
-                .Aggregate("", (accumulator, item) => accumulator += item.ToString() + Environment.NewLine);
-            return array
-                .Aggregate("", (accumulator, item) => accumulator += item.ToString() + Environment.NewLine);
+                .Aggregate("", (accumulator, item) => accumulator += (Iec ? item.ToIecString() : item.ToString()) + Environment.NewLine);
         }
         public void TagNameUpdated(object sender, EventArgs e)
         {

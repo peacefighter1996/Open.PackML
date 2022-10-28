@@ -1,4 +1,5 @@
-﻿using Autabee.Utility.IEC61131TypeConversion;
+﻿using Autabee.Utility;
+using Autabee.Utility.IEC61131TypeConversion;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using Moq;
 using Open.PackML;
@@ -8,6 +9,7 @@ using Open.PackML.Tags.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -37,21 +39,27 @@ namespace Open.PackMLTests.Prefab
                 {
                     continue;
                 }
-                tagConfig.TagType = Enum.Parse<TagType>(tagArray[0]);
+                string tagtypestring = string.Join(", ",tagArray[0].Split('/'));
+                tagConfig.TagType = Enum.Parse<TagType>(tagtypestring);
                 tagConfig.Name = tagArray[1];
                 tagConfig.EndUserTerm = tagArray[2];
 
                 Assert.True(IECType.ContainsType(tagArray[3]), $"Dataset Incorrect, unkown type: {tagArray[3]}");
 
-
-                tagConfig.DataType = IecTypeConvertor.GetCsharpType(tagArray[3]);
+                var lastPart = tagArray[1].Split('.').Last();
+                Type collectiontype = null;
+                if (lastPart.Contains("[") && lastPart.Contains("]"))
+                {
+                    var number = lastPart.Split('[')[1].Split(']')[0];
+                    collectiontype = number == "#" ? typeof(List<>) : typeof(Array);
+                }
+                
+                tagConfig.DataType = IecTypeConvertor.GetCsharpType(tagArray[3],collectiontype, Assembly.GetAssembly(typeof(PmlTr88Controller)));
                 tagConfigList.Add(tagConfig);
             }
             return tagConfigList.ToArray();
         }
-
-
-
+        
         //Test if when a tagcontroller uses the Tr88 controller, has all the tags specified by PackML Implementation Guide
         [Fact()]
         public void TestTr88Tags()
@@ -85,6 +93,39 @@ namespace Open.PackMLTests.Prefab
                 }
                 
             }
+        }
+
+        [Fact()]
+        public void TestEumTags()
+        {
+            var moqController = new Mock<IPmlController>();
+            var table = TagTreeBuilder.GetTree("", new PmlEumController(moqController.Object, new PmlEventStore(), new PmlOemTransitionCheck()), Iec: true).BuildTable();
+            //var tags = table.GetTags;
+            logger.WriteLine(table.GetTagTablePrint(Iec: true));
+            var result = new ValidationResult();
+            foreach (var tag in GetTagConfigList(false))
+            {
+                if (table.TryGetValue(tag.SearchString, out TagConfig data))
+                {
+                    if ((tag.Name.Equals(data.Name))
+                        && (tag.EndUserTerm.Equals(data.EndUserTerm))
+                        && (tag.TagType.Equals(data.TagType))
+                        && (tag.DataType.Equals(data.DataType)))
+                    {
+
+                        continue;
+                    }
+                    else
+                    {
+                        result.AddResult(false,$"tag does not match: [{tag.Name}]==[{data.Name}], [{tag.EndUserTerm}]==[{data.EndUserTerm}], [{tag.TagType}]==[{data.TagType}], [{tag.DataType}]==[{data.DataType}]");
+                    }
+                }
+                else
+                {
+                    result.AddResult(false, $"Tag [{tag.Name}] does not Exist");
+                }
+            }
+            Assert.True(result.Success, result.FailString());
         }
     }
 }

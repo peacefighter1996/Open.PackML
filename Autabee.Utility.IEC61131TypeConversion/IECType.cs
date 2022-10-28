@@ -25,6 +25,7 @@ namespace Autabee.Utility.IEC61131TypeConversion
             "LREAL",
             "DATE",
             "LTIME",
+            "OBJECT"
         };
 
         public static string BOOL { get => "BOOL"; }
@@ -52,9 +53,16 @@ namespace Autabee.Utility.IEC61131TypeConversion
 
         public static string DATE { get => "DATE"; }
         public static string LTIME { get => "LTIME"; }
+        public static string OBJECT { get => "OBJECT"; }
 
         public static string ArrayOf(string type) => $"{type}[]";
 
-        public static bool ContainsType(string type) { return DefaultTypes.Contains(type) || type.StartsWith("UDT_"); }
+        public static bool ContainsType(string type) {
+            type = type.ToUpper();
+            
+            if (DefaultTypes.Contains(type) || type.StartsWith("UDT_")) return true;
+            if (type.EndsWith("]")) return ContainsType(type.Substring(0, type.IndexOf('[')));
+            return false;
+        }
     }
 }

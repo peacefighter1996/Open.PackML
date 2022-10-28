@@ -4,17 +4,7 @@ Status,MachSpeed,Nominal Speed,REAL,X,X
 Status,CurMachSpeed,Current Speed,REAL,X,X
 Status,EquipmentInterlock.Blocker,Blockage,BOOL,X,X
 Status,EquipmentInterlock.Starve,Starvation,BOOL,X,X
-Status,Parameter [#],Machine data/parameter,Parameter,,X
-Status,Parameter[#].ID,Parameter ID,DINT,,X
-Status,Parameter[#].Name,Name of parameter,STRING,,X
-Status,Parameter[#].Uni,Unit of measure,STRING[5],,X
-Status,Parameter[#].Value,Value of parameter,User Defined,,X
-Status,Remotelnterface.Parameter[#],Additional production data,Structure,,x
-Status,Remotelnterface.Parameter[#].ID,Parameter ID,DINT,,x
-Status,Remotelnterface.Parameter[#].Name,Name of parameter,STRING,,X
-Status,Remotelnterface.Parameter[#].Unit,Unit of measure,STRING[5],,X
-Status,Remotelnterface.Parameter[#].Value,Value of parameter,REAL,,X
-Admin,Warning[#],Warning,Array Structure,,X
+Admin,Warning[#],Warning,UDT_Open_PackML_Prefab_PmlWarning[],,X
 Admin,Warning[#].Trigger,Trigger,Bool,,X
 Admin,Warning[#].ID,ID,DINT,,
 Admin,Warning[#].Value,Value,DINT,,X
@@ -23,17 +13,17 @@ Admin,ProdProcessedCount,DEE.Total count,DINT,X,
 Admin,StopReason.ID,Event and stop reason,DINT,X,
 Admin,StopReason.Value,Detailed Error Information,DINT,,
 Command,CntrlCmd,Command,DINT,X,X
-Command,Parameter [#],Machine data/parameter,Array Structure,,
-Command,Parameter[#].ID,Parameter ID,DINT,,X
-Command,Parameter[#].Name,Name of parameter,STRING,,X
-Command,Parameter[#].Unit,Unit of measure,STRING[5],,X
-Command,Parameter[#].Value,Value of parameter,User Defined,,X
-Command,Remotelnterface.Parameter ],Additional Production data,Array Structure,,X
-Command,Remotelnterface.Parameter[#].ID,Parameter ID,DINT,,x
-Command,Remoteinterface.Parameter[#].Name,Name of parameter,STRING,,x
-Command,Remotelnterface.Parameter[#].Unit,Unit of measure,STRING[5],,x
-Command,Remotelnterface.Parameter[#].Value,Value of parameter,REAL,,x
 Command,UnitMode,Mode,DINT,X,X
 Command,UnitModeChangeRequest,Change mode,BOOL,X,X
 Command,SetMachSpeed,Mach Speed,REAL,X,X
 Command,CmdChangeRequest,Change command,BOOL,X,X
+Status/Command,Parameter[#],Machine data/parameter,UDT_Open_PackML_Prefab_PmlParameter[],,X
+Status/Command,Parameter[#].ID,Parameter ID,DINT,,X
+Status/Command,Parameter[#].Name,Name of parameter,STRING,,X
+Status/Command,Parameter[#].Unit,Unit of measure,STRING[5],,X
+Status/Command,Parameter[#].Value,Value of parameter,OBJECT,,X
+Status/Command,RemoteInterface.Parameter[#],Additional production data,UDT_Open_PackML_Prefab_PmlParameter[],,x
+Status/Command,RemoteInterface.Parameter[#].ID,Parameter ID,DINT,,x
+Status/Command,RemoteInterface.Parameter[#].Name,Name of parameter,STRING,,X
+Status/Command,RemoteInterface.Parameter[#].Unit,Unit of measure,STRING[5],,X
+Status/Command,RemoteInterface.Parameter[#].Value,Value of parameter,OBJECT,,X
