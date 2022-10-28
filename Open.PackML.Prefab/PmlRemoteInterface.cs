@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Open.PackML.Tags.Attributes;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Open.PackML.Prefab
 {
     public class PmlRemoteInterface
     {
-        public PmlParameter[] Parameter { get; protected set; } = new PmlParameter[10];
+        [TagEndUserTerm("Additional production data")]
+        public List<PmlParameter> Parameter { get; protected set; } = new List<PmlParameter>();
     }
 }

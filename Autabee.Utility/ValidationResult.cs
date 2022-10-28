@@ -4,7 +4,11 @@ using System.Linq;
 
 namespace Autabee.Utility
 {
+#if(NET6_0_OR_GREATER)   
+    public record ValidationResult
+#else
     public class ValidationResult
+#endif
     {
         public ValidationResult(bool success = true, string unSuccessfulText = "", params object[] formatObjects)
         {

@@ -9,13 +9,13 @@ namespace Open.PackML.Prefab
         [TagEndUserTerm("Parameter ID")]
         public int ID { get; set; }
         [TagEndUserTerm("Name of parameter")]
-        public int Name { get; set; }
+        public string Name { get; set; }
 
-        [TagEndUserTerm("Detailed Error Information")]
-        public int Value { get; set; }
+        [TagEndUserTerm("Value of parameter")]
+        public object Value { get; set; }
 
         [TagEndUserTerm("Unit of measure")]
         [TagFixedSize(5)]
-        public byte[] Unit { get; set; }
+        public char[] Unit { get; set; }
     }
 }

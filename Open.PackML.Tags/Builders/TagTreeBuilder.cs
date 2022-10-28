@@ -10,9 +10,10 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Open.PackMLTests")]
 namespace Open.PackML.Tags.Builders
 {
-    public static class TagTreeBuilder
+    internal static class TagTreeBuilder
     {
         /// <summary>
         /// Builds a TagTree from a base object
@@ -24,7 +25,7 @@ namespace Open.PackML.Tags.Builders
         /// <param name="StartTagType"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static TagDetail GetTree(string root, object obj, string description = "", string endUserTerm = "", TagType StartTagType = TagType.Undefined, bool Iec = false)
+        internal static TagDetail GetTree(string root, object obj, string description = "", string endUserTerm = "", TagType StartTagType = TagType.Undefined, bool Iec = false)
         {
             Type type = obj.GetType();
             if ((type.IsArray
@@ -33,7 +34,7 @@ namespace Open.PackML.Tags.Builders
 
             TagConfig conf = new TagConfig()
             {
-                TagName = root,
+                Name = root,
                 DataType = type,
                 TagType = TagType.Undefined,
                 Description = description,
@@ -59,7 +60,7 @@ namespace Open.PackML.Tags.Builders
 
                 if (!(property.CanRead || property.CanWrite)) continue;
 
-                var config = GetPropertyTagConfig(property, root.TagName, TagTypeCarry);
+                var config = GetPropertyTagConfig(property, root.Name, TagTypeCarry);
                 propertyChain.Add(property);
                 if ((config.DataType.IsArray
                     || config.DataType.GetInterfaces().Contains(typeof(IEnumerable)))
@@ -79,16 +80,25 @@ namespace Open.PackML.Tags.Builders
                     }
 
                     int lenght = -1;
-                    string arrayRoot = string.IsNullOrWhiteSpace(root.TagName) ? root.TagName : root.TagName + '.';
+                    string arrayRoot = string.IsNullOrWhiteSpace(root.Name) ? root.Name : root.Name + '.';
                     var fixedSizeAttribute = property.GetCustomAttribute(typeof(TagFixedSizeAttribute)) as TagFixedSizeAttribute;
-                    if (fixedSizeAttribute != null && fixedSizeAttribute.Size >= 0)
+                    if (config.DataType != typeof(char[]) 
+                        && fixedSizeAttribute != null 
+                        && fixedSizeAttribute.Size >= 0 ) 
                     {
-                        config.TagName = arrayRoot + property.Name + $"[0..{fixedSizeAttribute.Size}]";
+                        config.Name = arrayRoot + property.Name + $"[0..{fixedSizeAttribute.Size}]";
+                        lenght = fixedSizeAttribute.Size;
+                    }
+                    if (config.DataType == typeof(char[]) 
+                        && fixedSizeAttribute != null
+                        && fixedSizeAttribute.Size >= 0)
+                    {
+                        config.Name = arrayRoot + property.Name;
                         lenght = fixedSizeAttribute.Size;
                     }
                     else
                     {
-                        config.TagName = arrayRoot + property.Name + $"[#]";
+                        config.Name = arrayRoot + property.Name + $"[#]";
                     }
                     types.Add(config.DataType);
                     arraytree.Add(true);
@@ -148,7 +158,7 @@ namespace Open.PackML.Tags.Builders
                 arraytree.Add(false);
                 if (method.GetCustomAttribute(typeof(TagTypeAttribute)) is TagTypeAttribute attribute)
                 {
-                    var config = GetPropertyTagConfig(method, root.TagName, attribute.TagType, Iec);
+                    var config = GetMethodeTagConfig(method, root.Name, attribute.TagType, Iec);
                     propertyChain.Add(method);
                     Children.Add(new TagDetail(config, baseObject, new TagDetail[0], propertyChain.ToArray(), arraytree.ToArray()));
                     propertyChain.Remove(method);
@@ -165,7 +175,7 @@ namespace Open.PackML.Tags.Builders
             TagConfig config = new TagConfig()
             {
                 DataType = property.PropertyType,
-                TagName = string.IsNullOrWhiteSpace(root) ? property.Name : root + '.' + property.Name,
+                Name = string.IsNullOrWhiteSpace(root) ? property.Name : root + '.' + property.Name,
                 EndUserTerm = property.GetCustomAttribute<TagEndUserTermAttribute>() is TagEndUserTermAttribute e ? e.EndUserTerm : string.Empty,
 
                 TagType = property.GetCustomAttribute<TagTypeAttribute>() is TagTypeAttribute p ? p.TagType : TagCarry,
@@ -178,7 +188,7 @@ namespace Open.PackML.Tags.Builders
             return config;
         }
 
-        private static TagConfig GetPropertyTagConfig(MethodInfo property, string root, TagType TagCarry, bool Iec)
+        private static TagConfig GetMethodeTagConfig(MethodInfo property, string root, TagType TagCarry, bool Iec)
         {
             var paramters = property.GetParameters().Aggregate("", (accumulator, item) => 
                 accumulator += (Iec?item.ParameterType.GetIecTypeString(): item.ParameterType.ToString())
@@ -186,7 +196,7 @@ namespace Open.PackML.Tags.Builders
             TagConfig config = new TagConfig()
             {
                 DataType = property.ReturnType,
-                TagName = (string.IsNullOrWhiteSpace(root) ? property.Name : root + '.' + property.Name) + "(" + paramters + ")",
+                Name = (string.IsNullOrWhiteSpace(root) ? property.Name : root + '.' + property.Name) + "(" + paramters + ")",
                 EndUserTerm = property.GetCustomAttribute<TagEndUserTermAttribute>() is TagEndUserTermAttribute e ? e.EndUserTerm : string.Empty,
 
                 TagType = property.GetCustomAttribute<TagTypeAttribute>() is TagTypeAttribute p ? p.TagType : TagCarry,

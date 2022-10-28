@@ -4,9 +4,9 @@ using System.Reflection;
 
 namespace Open.PackML.Tags
 {
-    public class ArrayTagDetail : TagDetail
+    internal class ArrayTagDetail : TagDetail
     {
-        public ArrayTagDetail(
+        internal ArrayTagDetail(
             TagConfig config,
             object baseObject,
             TagDetail[] childTags,

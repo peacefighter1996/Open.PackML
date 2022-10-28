@@ -2,15 +2,15 @@
 
 namespace Open.PackML
 {
-    public class PmlEventReaction<T> where T : Enum
+    public class PmlEventReaction
     {
-        public PmlEventReaction(T machineEventId, PmlState stateChangeId)
+        public PmlEventReaction(Enum machineEventId, PmlState stateChangeId)
         {
             MachineEventId = machineEventId;
             StateChangeId = stateChangeId;
         }
 
-        public T MachineEventId { get; }
+        public Enum MachineEventId { get; }
         public PmlState StateChangeId { get; }
 
     }

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Open.PackMLTests.TestObjects
 {
-    public class TestPmlController : IPmlController<Enum>
+    public class TestPmlController : IPmlController
     {
         public PmlMode CurrentMode = PmlMode.Undefined;
         public PmlState CurrentState = PmlState.Undefined;
         public event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
-        public event EventHandler<MachineEventArgs<Enum>> MachineEvent;
+        public event EventHandler<PmlMachineEventArgs> MachineEvent;
 
         public PmlMode CurrentPmlMode()
         {
@@ -38,7 +38,7 @@ namespace Open.PackMLTests.TestObjects
         public void InvokeEvent(Enum @enum)
         {
 
-            MachineEvent?.Invoke(this, new MachineEventArgs<Enum>() { @enum = @enum });
+            MachineEvent?.Invoke(this, new PmlMachineEventArgs() { @enum = @enum });
 
         }
 
@@ -86,6 +86,16 @@ namespace Open.PackMLTests.TestObjects
         public async Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode) => UpdatePmlMode(packMLMode);
 
         public ValidationResult UpdatePmlMode(PmlMode packMLMode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ValidationResult UpdatePmlMode(int packMLMode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode)
         {
             throw new NotImplementedException();
         }

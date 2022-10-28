@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Open.PackML.Tags.Builders
 {
+    
     public static class TagTableBuilder
     {
         public static TagTable BuildTagTable(Dictionary<string,object> collection)
@@ -17,8 +18,8 @@ namespace Open.PackML.Tags.Builders
             table.GenerateOnUpdate = true;
             return table;
         }
-
-        public static TagTable BuildTable(IEnumerable<TagDetail> tagDetails)
+        
+        internal static TagTable BuildTable(IEnumerable<TagDetail> tagDetails)
         {
             var table = new TagTable();
             foreach (var tagDetail in tagDetails)
@@ -29,7 +30,8 @@ namespace Open.PackML.Tags.Builders
             table.GenerateOnUpdate = true;
             return table;
         }
-        public static TagTable BuildTable(this TagDetail tagDetails)
+        [assembly: InternalVisibleTo("Open.PackMLTests")]
+        internal static TagTable BuildTable(this TagDetail tagDetails)
         {
             var table = new TagTable();
             tagDetails.BuildTable(table);
@@ -37,8 +39,8 @@ namespace Open.PackML.Tags.Builders
             table.GenerateOnUpdate = true;
             return table;
         }
-
-        public static void BuildTable(this TagDetail tagDetails, TagTable table)
+        [assembly: InternalVisibleTo("Open.PackMLTests")]
+        internal static void BuildTable(this TagDetail tagDetails, TagTable table)
         {
             table.Add(tagDetails.SearchString, tagDetails);
             //tagDetails.TagNameUpdate += table.TagUpdated;
