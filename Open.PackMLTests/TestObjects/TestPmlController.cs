@@ -4,6 +4,7 @@ using Open.PackML.EventArguments;
 using Open.PackML.Interfaces;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Open.PackMLTests.TestObjects
@@ -30,7 +31,7 @@ namespace Open.PackMLTests.TestObjects
             throw new NotImplementedException();
         }
 
-        public Task<PmlMode> RetrieveCurrentPackMLModeAsync()
+        public Task<PmlMode> RetrieveCurrentPackMLModeAsync(CancellationToken token)
         {
             throw new NotImplementedException();
         }
@@ -47,12 +48,12 @@ namespace Open.PackMLTests.TestObjects
             throw new NotImplementedException();
         }
 
-        public Task<PmlState> RetrieveCurrentPackMLStateAsync()
+        public Task<PmlState> RetrieveCurrentPackMLStateAsync(CancellationToken token)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand packMLCommand) => SendPmlCommand(packMLCommand);
+        public async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand packMLCommand, CancellationToken token) => SendPmlCommand(packMLCommand);
 
         public ValidationResult SendPmlCommand(PmlCommand packMLCommand)
         {
@@ -83,7 +84,7 @@ namespace Open.PackMLTests.TestObjects
 
         }
 
-        public async Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode) => UpdatePmlMode(packMLMode);
+        public async Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode, CancellationToken token) => UpdatePmlMode(packMLMode);
 
         public ValidationResult UpdatePmlMode(PmlMode packMLMode)
         {
@@ -95,7 +96,7 @@ namespace Open.PackMLTests.TestObjects
             throw new NotImplementedException();
         }
 
-        public Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode)
+        public Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode, CancellationToken token)
         {
             throw new NotImplementedException();
         }
