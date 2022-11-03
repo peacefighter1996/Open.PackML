@@ -16,6 +16,13 @@ namespace Autabee.Utility
             FailInfo = new List<(string, object[])>();
             if (!string.IsNullOrWhiteSpace(unSuccessfulText))
             {
+                for (int i = 0; i < formatObjects.Length; i++)
+                {
+                    if (!formatObjects[i].GetType().IsPrimitive)
+                    {
+                        formatObjects[i] = formatObjects[i].ToString();
+                    }
+                }
                 FailInfo.Add((unSuccessfulText, formatObjects));
             }
         }
