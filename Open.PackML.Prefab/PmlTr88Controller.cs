@@ -4,9 +4,6 @@ using Open.PackML.Interfaces;
 using Open.PackML.Tags;
 using Open.PackML.Tags.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Open.PackML.Prefab
 {
@@ -77,13 +74,5 @@ namespace Open.PackML.Prefab
             }
         }
 
-    }
-    public class PmlEquipmentInterlock
-    {
-        [TagEndUserTerm("Blockage")]
-        public bool Blocker { get; set; }
-
-        [TagEndUserTerm("Starvation")]
-        public bool Starve { get; set; }
     }
 }
