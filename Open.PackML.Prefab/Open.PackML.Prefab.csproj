@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\OpenPackMLPrefab.props"/>
+  <Import Project="..\Deploy\OpenPackMLPrefab.props" />
   <PropertyGroup>
 	  <TargetFrameworks>netstandard2.0;net6.0;net48</TargetFrameworks>
   </PropertyGroup>
@@ -10,7 +10,7 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Open.PackML.Tags\Open.PackML.Tags.csproj" />
     <ProjectReference Include="..\Open.PackML\Open.PackML.csproj" />
