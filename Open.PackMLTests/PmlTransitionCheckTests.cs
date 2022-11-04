@@ -4,12 +4,7 @@ using System;
 using Autabee.Utility;
 
 namespace Open.PackMLTests
-{
-    public enum OemSpecified : int
-    {
-    }
-
-    
+{    
     public class PmlTransitionCheckTests
     {
         [Theory]

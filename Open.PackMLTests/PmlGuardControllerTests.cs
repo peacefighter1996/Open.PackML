@@ -71,7 +71,7 @@ namespace Open.PackMLTests
         public void UpdatePackMLModeTest(PmlState state, PmlMode mode, PmlMode newMode, bool succes)
         {
             var passedInternal = false;
-            var catchFunc = delegate ()
+            Action catchFunc = delegate ()
             {
                 passedInternal = true;
             };
@@ -110,7 +110,7 @@ namespace Open.PackMLTests
         public void UpdatePackMLModeTestFail(PmlMode mode, PmlMode newMode)
         {
             bool passedInternal;
-            var catchFunc = delegate ()
+            Action catchFunc = delegate ()
             {
                 passedInternal = true;
             };

@@ -5,9 +5,6 @@ using System.Text;
 using System.Collections;
 using System.Linq;
 using Xunit.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
-using System.Net.Sockets;
-using System.Windows.Markup;
 using Autabee.Utility.IEC61131TypeConversion;
 using Autabee.Utility.IEC61131TypeConversionTests.TestObjects;
 

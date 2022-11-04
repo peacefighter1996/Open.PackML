@@ -1,21 +1,23 @@
 ﻿using Xunit;
 using Open.PackML.Tags.Prefab;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Moq;
 using Open.PackML.Prefab;
 using Open.PackML;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using Open.PackML.Tags;
 using Open.PackMLTests.TestObjects;
+using Xunit.Abstractions;
 
 namespace Open.PackMLTests.Prefab
 {
     public class TagControllerTests
     {
+        readonly ITestOutputHelper logger;
+        public TagControllerTests(ITestOutputHelper output)
+        {
+            this.logger = output;
+        }
 
         [Fact()]
         public void GetTagDataTest()
@@ -166,15 +168,15 @@ namespace Open.PackMLTests.Prefab
         public void GetSetBatch()
         {
             var calls = new List<(string, object)>() {
-                new ("Machine1.IntegerArray2[0]", 45),
-                new ("Machine1.IntegerArray1[0]", 45),
-                new ("Machine1.IntegerArray2[1]", 125)
+                ("Machine1.IntegerArray2[0]", 45),
+                ("Machine1.IntegerArray1[0]", 45),
+                ("Machine1.IntegerArray2[1]", 125)
             };
 
             var calls2 = new List<string>() {
-                new ("Machine1.IntegerArray2[0]"),
-                new ("Machine1.IntegerArray1[0]"),
-                new ("Machine1.IntegerArray2[1]")
+                "Machine1.IntegerArray2[0]",
+                "Machine1.IntegerArray1[0]",
+                "Machine1.IntegerArray2[1]"
             };
 
             TagController controller = GetTestController();
@@ -229,6 +231,51 @@ namespace Open.PackMLTests.Prefab
             Assert.Equal(451, result[3].Object);
         }
 
+
+        [Fact()]
+        public void BrowseTagDepth1Function()
+        {
+            TagController controller = GetTestController();
+
+            var temp = controller.Browse("Machine1",1);
+            string tmp;
+            foreach (var item in temp.Object)
+            {
+                tmp = item.ToIecString();
+                logger.WriteLine(tmp);
+                Assert.NotEqual(tmp, "Undefined,Machine1.ObjectArray[#].ExecuteObjects[#],,,UDT_Open_PackMLTests_Prefab_ExecuteObject[]");
+            }
+        }
+        [Fact()]
+        public void BrowseTagDepthFunction()
+        {
+            TagController controller = GetTestController();
+
+            var temp = controller.Browse("Machine1");
+            string tmp;
+            foreach (var item in temp.Object)
+            {
+                tmp = item.ToIecString();
+                logger.WriteLine(tmp);
+                Assert.NotEqual(tmp, "Undefined,Machine1.ObjectArray[#].ExecuteObjects[#],,,UDT_Open_PackMLTests_Prefab_ExecuteObject[]");
+            }
+        }
+
+
+        [Fact()]
+        public void BrowseTagDepth2Function()
+        {
+            TagController controller = GetTestController();
+
+            var temp = controller.Browse("Machine1", 2);
+            string tmp;
+            foreach (var item in temp.Object)
+            {
+                tmp = item.ToIecString();
+                logger.WriteLine(tmp);
+                Assert.NotEqual(tmp, "Undefined,Machine1.ObjectArray[#].ExecuteObjects[#].Integer1,,,DINT");
+            }
+        }
 
         private static TagController GetDefaultcontroller()
         {

@@ -10,6 +10,9 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="System.Linq" Version="4.3.0" />
+	</ItemGroup>
 	
 	<ItemGroup>
 	  <ProjectReference Include="..\Autabee.Utility.IEC61131TypeConversion\Autabee.Utility.IEC61131TypeConversion.csproj" />

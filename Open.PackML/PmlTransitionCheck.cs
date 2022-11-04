@@ -140,7 +140,7 @@ namespace Open.PackML
             }
             if (currentMode == packMLMode)
             {
-                return new ValidationResult(false, string.Format("PmlState already {0}", packMLMode));
+                return new ValidationResult(false, "PmlState already {0}", packMLMode);
             }
             if (currentState == PmlState.Aborted
                 || currentState == PmlState.Idle
