@@ -96,24 +96,28 @@ namespace Open.PackML.Tags.Prefab
             return new ValidationResult<TagConfig[]>(true, ((TagDetail)tagDetail).ChildTags);
         }
 
-        public ValidationResult<TagConfig[]> Browse(string name, int Depth = 1)
+        public ValidationResult<TagConfig[]> Browse(string name, uint Depth = 1)
         {
             if (!tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagConfig tagDetail))
                 return new ValidationResult<TagConfig[]>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
-            var result = GetChildren(((TagDetail)tagDetail),Depth);
+            var result = GetChildren(((TagDetail)tagDetail),Depth).ToArray();
 
 
-            return new ValidationResult<TagConfig[]>(true, ((TagDetail)tagDetail).ChildTags);
+            return new ValidationResult<TagConfig[]>(true, result);
         }
-        internal static TagConfig[] GetChildren(TagDetail tagDetail, int Depth = 1)
+        internal static IEnumerable<TagConfig> GetChildren(TagDetail tagDetail, uint Depth)
         {
-            if (Depth == 0) return tagDetail.ChildTags;
+            if (Depth <= 1) 
+                return tagDetail.ChildTags;
+            
             var childeren = new List<TagConfig>();
             foreach (var child in tagDetail.ChildTags)
             {
                 childeren.AddRange(GetChildren(child, Depth - 1));
+                
             }
-            return childeren.ToArray();
+            childeren.AddRange(tagDetail.ChildTags);
+            return childeren;
         }
 
         public ValidationResult<object> ExecutePackTagCommand(string name, params object[] args)

@@ -1,5 +1,6 @@
 ﻿using Autabee.Utility;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Open.PackML
@@ -11,19 +12,19 @@ namespace Open.PackML
         PmlMode CurrentPmlMode();
 
         //Deep Synced
-        PmlState RetrieveCurrentPackMLState();
-        PmlMode RetrieveCurrentPackMLMode();
+        PmlState RetrieveCurrentPmlState();
+        PmlMode RetrieveCurrentPmlMode();
 
         //Deep Async
-        Task<PmlState> RetrieveCurrentPackMLStateAsync();
-        Task<PmlMode> RetrieveCurrentPackMLModeAsync();
+        Task<PmlState> RetrieveCurrentPmlStateAsync(CancellationToken cancellationToken);
+        Task<PmlMode> RetrieveCurrentPmlModeAsync(CancellationToken cancellationToken);
 
         //Send PackML Function
         ValidationResult SendPmlCommand(PmlCommand packMLCommand);
         ValidationResult UpdatePmlMode(PmlMode packMLMode);
         ValidationResult UpdatePmlMode(int packMLMode);
-        Task<ValidationResult> SendPackMLCommandAsync(PmlCommand packMLCommand);
-        Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode);
-        Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode);
+        Task<ValidationResult> SendPmlCommandAsync(PmlCommand packMLCommand, CancellationToken cancellationToken);
+        Task<ValidationResult> UpdatePmlModeAsync(PmlMode packMLMode, CancellationToken cancellationToken);
+        Task<ValidationResult> UpdatePmlModeAsync(int packMLMode, CancellationToken cancellationToken);
     }
 }

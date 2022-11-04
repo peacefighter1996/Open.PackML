@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\OpenPackMLTags.props" />
+	<Import Project="..\Deploy\OpenPackMLTags.props" />
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0;net48</TargetFrameworks>
+		<TargetFrameworks>net6.0;net48</TargetFrameworks>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 	</PropertyGroup>
 	<ItemGroup>
@@ -9,6 +9,9 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="System.Linq" Version="4.3.0" />
 	</ItemGroup>
 	
 	<ItemGroup>

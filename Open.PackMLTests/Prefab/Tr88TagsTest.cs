@@ -35,12 +35,12 @@ namespace Open.PackMLTests.Prefab
             {
                 var tagConfig = new TagConfig();
                 var tagArray = tag.Split(',');
-                if (tagArray[4] != "X" && tr88)
+                if (string.Compare(tagArray[4], "X", StringComparison.Ordinal) != 0 && tr88)
                 {
                     continue;
                 }
                 string tagtypestring = string.Join(", ",tagArray[0].Split('/'));
-                tagConfig.TagType = Enum.Parse<TagType>(tagtypestring);
+                tagConfig.TagType = (TagType)Enum.Parse(typeof(TagType),tagtypestring);
                 tagConfig.Name = tagArray[1];
                 tagConfig.EndUserTerm = tagArray[2];
 
@@ -51,7 +51,7 @@ namespace Open.PackMLTests.Prefab
                 if (lastPart.Contains("[") && lastPart.Contains("]"))
                 {
                     var number = lastPart.Split('[')[1].Split(']')[0];
-                    collectiontype = number == "#" ? typeof(List<>) : typeof(Array);
+                    collectiontype = string.Compare(number, "#", StringComparison.Ordinal) == 0 ? typeof(List<>) : typeof(Array);
                 }
                 
                 tagConfig.DataType = IecTypeConvertor.GetCsharpType(tagArray[3],collectiontype, Assembly.GetAssembly(typeof(PmlTr88Controller)));
