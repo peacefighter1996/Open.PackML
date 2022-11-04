@@ -71,15 +71,12 @@ namespace Open.PackML.Prefab
         public async Task<ValidationResult> UpdatePmlModeAsync(PmlMode packMLMode, CancellationToken cancellationToken)
         {
             var temp = PmlTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
-            return await TrySendPmlMode(packMLMode, temp, cancellationToken);
-        }
-
-        private async Task<ValidationResult> TrySendPmlMode(PmlMode packMLMode, ValidationResult temp, CancellationToken cancellationToken)
-        {
             if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
-            if (temp.Success) temp.AddResult(await controller.UpdatePmlModeAsync(packMLMode, cancellationToken).ConfigureAwait(true));
+            if (temp.Success) return await controller.UpdatePmlModeAsync(packMLMode, cancellationToken).ConfigureAwait(true);
             return temp;
         }
+
+        
 
         public virtual ValidationResult SendPmlCommand(PmlCommand command)
         {
@@ -91,13 +88,8 @@ namespace Open.PackML.Prefab
         public virtual async Task<ValidationResult> SendPmlCommandAsync(PmlCommand command, CancellationToken cancellationToken)
         {
             var temp = PmlTransitionCheck.CheckTransition(command, currentState, currentMode);
-            return await TrySendCommandAsync(command, temp, cancellationToken);
-        }
-
-        internal async Task<ValidationResult> TrySendCommandAsync(PmlCommand command, ValidationResult temp, CancellationToken cancellationToken)
-        {
             if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
-            if (temp.Success) temp.AddResult(await controller.SendPmlCommandAsync(command, cancellationToken).ConfigureAwait(true));
+            if (temp.Success) return await controller.SendPmlCommandAsync(command, cancellationToken).ConfigureAwait(true);
             return temp;
         }
 
