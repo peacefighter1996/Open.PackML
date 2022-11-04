@@ -26,12 +26,12 @@ namespace Open.PackMLTests.TestObjects
             return CurrentState;
         }
 
-        public PmlMode RetrieveCurrentPackMLMode()
+        public PmlMode RetrieveCurrentPmlMode()
         {
             throw new NotImplementedException();
         }
 
-        public Task<PmlMode> RetrieveCurrentPackMLModeAsync(CancellationToken token)
+        public Task<PmlMode> RetrieveCurrentPmlModeAsync(CancellationToken token)
         {
             throw new NotImplementedException();
         }
@@ -43,17 +43,17 @@ namespace Open.PackMLTests.TestObjects
 
         }
 
-        public PmlState RetrieveCurrentPackMLState()
+        public PmlState RetrieveCurrentPmlState()
         {
             throw new NotImplementedException();
         }
 
-        public Task<PmlState> RetrieveCurrentPackMLStateAsync(CancellationToken token)
+        public Task<PmlState> RetrieveCurrentPmlStateAsync(CancellationToken token)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand packMLCommand, CancellationToken token) => SendPmlCommand(packMLCommand);
+        public async Task<ValidationResult> SendPmlCommandAsync(PmlCommand packMLCommand, CancellationToken token) => SendPmlCommand(packMLCommand);
 
         public ValidationResult SendPmlCommand(PmlCommand packMLCommand)
         {
@@ -84,7 +84,7 @@ namespace Open.PackMLTests.TestObjects
 
         }
 
-        public async Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode, CancellationToken token) => UpdatePmlMode(packMLMode);
+        public async Task<ValidationResult> UpdatePmlModeAsync(PmlMode packMLMode, CancellationToken token) => UpdatePmlMode(packMLMode);
 
         public ValidationResult UpdatePmlMode(PmlMode packMLMode)
         {
@@ -96,7 +96,7 @@ namespace Open.PackMLTests.TestObjects
             throw new NotImplementedException();
         }
 
-        public Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode, CancellationToken token)
+        public Task<ValidationResult> UpdatePmlModeAsync(int packMLMode, CancellationToken token)
         {
             throw new NotImplementedException();
         }

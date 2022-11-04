@@ -68,11 +68,16 @@ namespace Open.PackML.Prefab
             if (temp.Success) temp.AddResult(controller.UpdatePmlMode(packMLMode));
             return temp;
         }
-        public async Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode, CancellationToken cancellationToken)
+        public async Task<ValidationResult> UpdatePmlModeAsync(PmlMode packMLMode, CancellationToken cancellationToken)
         {
             var temp = PmlTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
+            return await TrySendPmlMode(packMLMode, temp, cancellationToken);
+        }
+
+        private async Task<ValidationResult> TrySendPmlMode(PmlMode packMLMode, ValidationResult temp, CancellationToken cancellationToken)
+        {
             if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
-            if (temp.Success) temp.AddResult(await controller.UpdatePackMLModeAsync(packMLMode, cancellationToken).ConfigureAwait(true));
+            if (temp.Success) temp.AddResult(await controller.UpdatePmlModeAsync(packMLMode, cancellationToken).ConfigureAwait(true));
             return temp;
         }
 
@@ -83,11 +88,16 @@ namespace Open.PackML.Prefab
             return temp;
         }
 
-        public virtual async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand command, CancellationToken cancellationToken)
+        public virtual async Task<ValidationResult> SendPmlCommandAsync(PmlCommand command, CancellationToken cancellationToken)
         {
             var temp = PmlTransitionCheck.CheckTransition(command, currentState, currentMode);
+            return await TrySendCommandAsync(command, temp, cancellationToken);
+        }
+
+        internal async Task<ValidationResult> TrySendCommandAsync(PmlCommand command, ValidationResult temp, CancellationToken cancellationToken)
+        {
             if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
-            if (temp.Success) temp.AddResult(await controller.SendPackMLCommandAsync(command, cancellationToken).ConfigureAwait(true));
+            if (temp.Success) temp.AddResult(await controller.SendPmlCommandAsync(command, cancellationToken).ConfigureAwait(true));
             return temp;
         }
 
@@ -115,25 +125,25 @@ namespace Open.PackML.Prefab
 
         public PmlState CurrentPmlState() => currentState;
         public PmlMode CurrentPmlMode() => currentMode;
-        public PmlState RetrieveCurrentPackMLState()
+        public PmlState RetrieveCurrentPmlState()
         {
-            currentState = controller.RetrieveCurrentPackMLState();
+            currentState = controller.RetrieveCurrentPmlState();
             return currentState;
         }
-        public PmlMode RetrieveCurrentPackMLMode()
+        public PmlMode RetrieveCurrentPmlMode()
         {
-            currentMode = controller.RetrieveCurrentPackMLMode();
+            currentMode = controller.RetrieveCurrentPmlMode();
             return currentMode;
         }
-        public async Task<PmlState> RetrieveCurrentPackMLStateAsync(CancellationToken cancellationToken)
+        public async Task<PmlState> RetrieveCurrentPmlStateAsync(CancellationToken cancellationToken)
         {
-            currentState = await controller.RetrieveCurrentPackMLStateAsync(cancellationToken).ConfigureAwait(true);
+            currentState = await controller.RetrieveCurrentPmlStateAsync(cancellationToken).ConfigureAwait(true);
             return currentState;
         }
 
-        public async Task<PmlMode> RetrieveCurrentPackMLModeAsync(CancellationToken cancellationToken)
+        public async Task<PmlMode> RetrieveCurrentPmlModeAsync(CancellationToken cancellationToken)
         {
-            currentMode = await controller.RetrieveCurrentPackMLModeAsync(cancellationToken).ConfigureAwait(true);
+            currentMode = await controller.RetrieveCurrentPmlModeAsync(cancellationToken).ConfigureAwait(true);
             return currentMode;
         }
 
@@ -149,12 +159,12 @@ namespace Open.PackML.Prefab
             }
         }
 
-        public virtual async Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode, CancellationToken cancellationToken)
+        public virtual async Task<ValidationResult> UpdatePmlModeAsync(int packMLMode, CancellationToken cancellationToken)
         {
             if (Enum.IsDefined(typeof(PmlMode), packMLMode))
             {
                 if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
-                return await UpdatePackMLModeAsync((PmlMode)packMLMode, cancellationToken).ConfigureAwait(true);
+                return await UpdatePmlModeAsync((PmlMode)packMLMode, cancellationToken).ConfigureAwait(true);
             }
             else
             {

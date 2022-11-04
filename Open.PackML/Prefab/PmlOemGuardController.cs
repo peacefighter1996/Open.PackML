@@ -27,7 +27,7 @@ namespace Open.PackML.Prefab
         {
             var temp = oemTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
             if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
-            if (temp.Success) temp.AddResult(await controller.UpdatePackMLModeAsync(packMLMode, cancellationToken).ConfigureAwait(true));
+            if (temp.Success) temp.AddResult(await controller.UpdatePmlModeAsync(packMLMode, cancellationToken).ConfigureAwait(true));
 
             return temp;
         }
@@ -36,17 +36,13 @@ namespace Open.PackML.Prefab
         {
             var temp = oemTransitionCheck.CheckTransition(command, currentState, currentMode);
             if (temp.Success) temp.AddResult(controller.SendPmlCommand(command));
-
             return temp;
         }
 
         public new async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand command, CancellationToken cancellationToken)
         {
             var temp = oemTransitionCheck.CheckTransition(command, currentState, currentMode);
-            if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
-            if (temp.Success) temp.AddResult(await controller.SendPackMLCommandAsync(command, cancellationToken).ConfigureAwait(true));
-
-            return temp;
+            return await TrySendCommandAsync(command, temp, cancellationToken);
         }
 
     }
