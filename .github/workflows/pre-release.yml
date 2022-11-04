@@ -1,4 +1,4 @@
-name: .NET
+name: pre-release check
 
 on:
   push:
