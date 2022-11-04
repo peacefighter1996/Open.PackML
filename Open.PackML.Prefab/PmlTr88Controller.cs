@@ -43,7 +43,7 @@ namespace Open.PackML.Prefab
         public PmlStopReason StopReason { get; protected set; } = new PmlStopReason();
 
         [TagType(TagType.Status)]
-        public PmlEquipmentInterlock EquipmentInterlock { get; }
+        public PmlEquipmentInterlock EquipmentInterlock { get; protected set; } = new PmlEquipmentInterlock();
 
         [TagType(TagType.Command)]
         [TagEndUserTerm("Command")]
