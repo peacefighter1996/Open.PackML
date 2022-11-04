@@ -1,5 +1,4 @@
-﻿using Open.PackML.Tags;
-using Xunit;
+﻿using Xunit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +13,7 @@ using Open.PackML;
 using Open.PackML.Prefab;
 using Open.PackMLTests.TestObjects;
 using Open.PackML.Tags.Prefab;
+using Open.PackML.Tags;
 
 namespace Open.PackMLTests.Prefab
 {

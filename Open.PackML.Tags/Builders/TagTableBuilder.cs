@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Open.PackML.Tags.Builders
 {
-    
+
     public static class TagTableBuilder
     {
         public static TagTable BuildTagTable(Dictionary<string,object> collection)

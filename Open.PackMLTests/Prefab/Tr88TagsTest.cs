@@ -17,7 +17,7 @@ using Xunit.Abstractions;
 
 namespace Open.PackMLTests.Prefab
 {
-    
+
     public class Tr88TagsTest
     {
         ITestOutputHelper logger;
@@ -39,8 +39,8 @@ namespace Open.PackMLTests.Prefab
                 {
                     continue;
                 }
-                string tagtypestring = string.Join(", ",tagArray[0].Split('/'));
-                tagConfig.TagType = (TagType)Enum.Parse(typeof(TagType),tagtypestring);
+                string tagtypestring = string.Join(", ", tagArray[0].Split('/'));
+                tagConfig.TagType = (TagType)Enum.Parse(typeof(TagType), tagtypestring);
                 tagConfig.Name = tagArray[1];
                 tagConfig.EndUserTerm = tagArray[2];
 
@@ -53,13 +53,13 @@ namespace Open.PackMLTests.Prefab
                     var number = lastPart.Split('[')[1].Split(']')[0];
                     collectiontype = string.Compare(number, "#", StringComparison.Ordinal) == 0 ? typeof(List<>) : typeof(Array);
                 }
-                
-                tagConfig.DataType = IecTypeConvertor.GetCsharpType(tagArray[3],collectiontype, Assembly.GetAssembly(typeof(PmlTr88Controller)));
+
+                tagConfig.DataType = IecTypeConvertor.GetCsharpType(tagArray[3], collectiontype, Assembly.GetAssembly(typeof(PmlTr88Controller)));
                 tagConfigList.Add(tagConfig);
             }
             return tagConfigList.ToArray();
         }
-        
+
         //Test if when a tagcontroller uses the Tr88 controller, has all the tags specified by PackML Implementation Guide
         [Fact()]
         public void TestTr88Tags()
@@ -72,12 +72,12 @@ namespace Open.PackMLTests.Prefab
             {
                 if (table.TryGetValue(tag.Name, out TagConfig data))
                 {
-                    if((tag.Name.Equals(data.Name))
+                    if ((tag.Name.Equals(data.Name))
                         && (tag.EndUserTerm.Equals(data.EndUserTerm))
                         && (tag.TagType.Equals(data.TagType))
                         && (tag.DataType.Equals(data.DataType)))
                     {
-                        
+
                         Assert.True(true);
                     }
                     else
@@ -91,7 +91,7 @@ namespace Open.PackMLTests.Prefab
 
 
                 }
-                
+
             }
         }
 
@@ -117,7 +117,7 @@ namespace Open.PackMLTests.Prefab
                     }
                     else
                     {
-                        result.AddResult(false,$"tag does not match: [{tag.Name}]==[{data.Name}], [{tag.EndUserTerm}]==[{data.EndUserTerm}], [{tag.TagType}]==[{data.TagType}], [{tag.DataType}]==[{data.DataType}]");
+                        result.AddResult(false, $"tag does not match: [{tag.Name}]==[{data.Name}], [{tag.EndUserTerm}]==[{data.EndUserTerm}], [{tag.TagType}]==[{data.TagType}], [{tag.DataType}]==[{data.DataType}]");
                     }
                 }
                 else

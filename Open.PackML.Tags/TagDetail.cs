@@ -1,4 +1,16 @@
 ﻿using Autabee.Utility;
+
+/* Unmerged change from project 'Open.PackML.Tags (net6.0)'
+Before:
+using Open.PackML.Tags.Builders;
+After:
+using Open;
+using Open.PackML;
+using Open.PackML.Tags;
+using Open.PackML.PackML.Tags.Builders;
+*/
+
+using Open.PackML.Tags.Builders;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,18 +36,18 @@ namespace Open.PackML.Tags
         private ParameterInfo[] parameters;
         private MethodInfo setMethod;
 
-        public TagDetail(TagConfig config, object baseObject, TagDetail[] childTags, MemberInfo[] memberInfos, bool[] arrayType) : base(config)
+        internal TagDetail(TagConfig config, TagTreeBuilderProcessData tagBuilder, TagDetail[] childTags, int length =-1) : base(config)
         {
-            if (baseObject == null)
+            if (tagBuilder.baseObject == null)
             {
-                throw new ArgumentNullException(nameof(baseObject));
+                throw new ArgumentNullException(nameof(tagBuilder.baseObject));
             }
-            this.baseObject = baseObject;
+            baseObject = tagBuilder.baseObject;
             if (childTags != null) ChildTags = childTags;
             else ChildTags = new TagDetail[0];
 
-            memberInfo = memberInfos;
-            if (memberInfos.Length >= 1)
+            memberInfo = tagBuilder.PropertyChain.ToArray();
+            if (memberInfo.Length >= 1)
             {
                 last = memberInfo[memberInfo.Length - 1];
                 if (last is PropertyInfo propertyInfo)
@@ -50,15 +62,18 @@ namespace Open.PackML.Tags
                     parameters = methodInfo.GetParameters();
                 }
             }
-            ArrayType = arrayType;
+            ArrayType = tagBuilder.ArrayChain.ToArray();
 
             arrayTreeCount = Name.Count(o => o == '[');
+            Length = length;
         }
-
         private bool IsMethod { get => last is MethodInfo; }
         private bool IsProperty { get => last is PropertyInfo; }
-        private bool Readable { get => (getMethod != null && getMethod.IsPublic); }
-        private bool Writable { get => (setMethod != null && setMethod.IsPublic); }
+        private bool Readable { get => getMethod != null && getMethod.IsPublic; }
+        private bool Writable { get => setMethod != null && setMethod.IsPublic; }
+
+        private bool IsArray { get => DataType.IsArray; }
+        public int Length { get; private set; }
 
         public ValidationResult<object> Execute(Queue<int> queue, object[] args)
         {
@@ -68,15 +83,7 @@ namespace Open.PackML.Tags
             if (args == null) args = Array.Empty<object>();
             if (args.Length != parameters.Length) validation.AddResult(false, "tyring to call a function with {0} parmeters with {1}", formatObjects: new object[] { parameters.Length, args.Length });
             if (!validation.Success) return validation;
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                var parType = parameters[i].ParameterType;
-                if (args == null && parType.IsClass) continue;
-                else if (args[i].GetType() == parType) continue;
-                else if (args[i].GetType().GetNestedTypes().Contains(parType)) continue;
-                else if (args[i].GetType().GetInterfaces().Contains(parType)) continue;
-                validation.AddResult(false, "Parameter {0} is not of type {1}", i, parType.Name);
-            }
+            CheckPameters(args, validation);
             if (!validation.Success) return validation;
 
             validation = MoveToLastBase(queue);
@@ -95,13 +102,26 @@ namespace Open.PackML.Tags
             return new ValidationResult<object>(Object: result);
         }
 
+        private void CheckPameters(object[] args, ValidationResult<object> validation)
+        {
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                var parType = parameters[i].ParameterType;
+                if (args == null && parType.IsClass) continue;
+                else if (args[i].GetType() == parType) continue;
+                else if (args[i].GetType().GetNestedTypes().Contains(parType)) continue;
+                else if (args[i].GetType().GetInterfaces().Contains(parType)) continue;
+                validation.AddResult(false, "Parameter {0} is not of type {1}", i, parType.Name);
+            }
+        }
+
         private ValidationResult<object> MoveToLastBase(Queue<int> queue)
         {
             object result = baseObject;
             for (int i = 0; i < memberInfo.Length - 1; i++)
             {
                 result = GetNextObject(ArrayType[i], (PropertyInfo)memberInfo[i], result, queue);
-                if (result == null) return ObjectNotFound(TagAddress,i);
+                if (result == null) return ObjectNotFound(TagAddress, i);
             }
             return new ValidationResult<object>(Object: result);
         }
@@ -111,7 +131,7 @@ namespace Open.PackML.Tags
 
             if (arraytype)
             {
-                switch ((info).GetValue(obj))
+                switch (info.GetValue(obj))
                 {
                     case Array a:
                         return a.GetValue(queue.Dequeue());
@@ -122,6 +142,27 @@ namespace Open.PackML.Tags
                 }
             }
             return info.GetValue(obj);
+        }
+
+        private static bool SetValue(bool arraytype, PropertyInfo info, object baseObj, object value, Queue<int> queue)
+        {
+            if (arraytype)
+            {
+                switch (info.GetValue(baseObj))
+                {
+                    case Array a:
+                        a.SetValue(value, queue.Dequeue());
+                        break;
+                    case IList b:
+                        b[queue.Dequeue()] = value;
+                        break;
+                    default:
+                        return false;
+                };
+            }
+            else
+                info.SetValue(baseObj, value);
+            return true;
         }
 
         private static ValidationResult<object> ObjectNotFound(string tagName)
@@ -141,28 +182,14 @@ namespace Open.PackML.Tags
 
         public ValidationResult<object> GetValue(Queue<int> queue)
         {
-            var validation = new ValidationResult<object>();
-            if (!Readable)validation.AddResult(false, null, "Object not readable");
-            if (!IsProperty) validation.AddResult(false, null, "Tag not a property");
+            if (!Readable) return TagNotReadable();
+            if (!IsProperty) return TagNotAProperty();
+
+            var validation = MoveToLastBase(queue);
             if (!validation.Success) return validation;
-
-            validation = MoveToLastBase(queue);
-            if (!validation.Success) return validation;;
-
             PropertyInfo info = (PropertyInfo)last;
-
-            if (info.PropertyType.IsArray && queue.Count == 1)
-                switch (info.GetValue(validation.Object))
-                {
-                    case Array a:
-                        return new ValidationResult<object>(Object: a.GetValue(queue.Dequeue()));
-                    case IList b:
-                        return new ValidationResult<object>(Object: b[queue.Dequeue()]);
-                    default:
-                        return null;
-                }
-            else
-                return new ValidationResult<object>(Object: info.GetValue(validation.Object));
+            return new ValidationResult<object>(Object: GetNextObject(
+                info.PropertyType.IsArray && queue.Count == 1, info, validation.Object, queue));
 
         }
 
@@ -190,47 +217,47 @@ namespace Open.PackML.Tags
         public ValidationResult SetValue(Queue<int> queue, object obj)
         {
             Type type = obj.GetType();
-            if (!Writable && !DataType.IsArray) return ObjectNotWritable(Name);
-            if (!IsProperty) return new ValidationResult(false, "Tag not a property");
-            if ((type.IsArray && base.DataType.IsArray && base.DataType != type)
-                || (!type.IsArray && base.DataType.IsArray && base.DataType.GetElementType() != type)
-                || (!base.DataType.IsArray && base.DataType != type))
-                return ObjectTypeMisMatch(base.DataType, type);
-
+            var InsertElement = arrayTreeCount == queue.Count;
+            if (!IsProperty)
+                return TagNotAProperty();
+            if (!Writable && (!IsArray || !InsertElement))
+                return ObjectNotWritable(Name);
+            if (CheckTyping(type, InsertElement))
+                return ObjectTypeMisMatch(DataType, type);
+            
 
             var validation = MoveToLastBase(queue);
             if (!validation.Success) return validation;
-            
-            if (last is PropertyInfo info)
-            {
-                if (info.PropertyType.IsArray && queue.Count == 1)
-                {
-                    switch (info.GetValue(validation.Object))
-                    {
-                        case Array a:
-                            a.SetValue(obj, queue.Dequeue());
-                            break;
-                        case IList b:
-                            b[queue.Dequeue()] = obj;
-                            break;
-                        default:
-                            return new ValidationResult(false, "Failed To write Array");
-                    };
-                }
-                else if (!Writable) return ObjectNotWritable(Name);
-                else
-                    (info).SetValue(validation.Object, obj);
-            }
+
+            PropertyInfo info = (PropertyInfo)last;
+            SetValue(info.PropertyType.IsArray && queue.Count == 1, info, validation.Object, obj, queue);
+
             return new ValidationResult();
 
         }
 
-        private static ValidationResult ObjectNotWritable(string TagName)
+        
+
+        private bool CheckTyping(Type type, bool InsertElement)
         {
-            return new ValidationResult(false, "{0} not writable", TagName);
+            return IsArray && (!InsertElement && DataType != type
+                            || InsertElement && DataType.GetElementType() != type
+                            ) || !IsArray && DataType != type;
+
+        }
+        private ValidationResult<object> TagNotReadable() {
+           return new ValidationResult<object>(false, null, "Object not readable");
+                }
+        private ValidationResult<object> TagNotAProperty()
+        {
+            return new ValidationResult<object>(false,null, "Tag {0} is not a property", Name);
+        }
+        private static ValidationResult<object> ObjectNotWritable(string TagName)
+        {
+            return new ValidationResult<object>(false, "{0} not writable", TagName);
         }
 
-        private static ValidationResult ObjectTypeMisMatch(Type expected, Type actually) => new ValidationResult(false, "Object type mismatch. Expected {0} but got {1}", expected.Name, actually.Name);
+        private static ValidationResult<object> ObjectTypeMisMatch(Type expected, Type actually) => new ValidationResult<object>(false, "Object type mismatch. Expected {0} but got {1}", expected.Name, actually.Name);
 
         public TagDetail[] ChildTags { get; }
     }

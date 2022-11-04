@@ -8,6 +8,7 @@ using Open.PackML;
 using Open.PackML.Tags;
 using Open.PackMLTests.TestObjects;
 using Xunit.Abstractions;
+using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 
 namespace Open.PackMLTests.Prefab
 {
@@ -277,7 +278,7 @@ namespace Open.PackMLTests.Prefab
             }
         }
 
-        private static TagController GetDefaultcontroller()
+        private TagController GetDefaultcontroller()
         {
             var moqController = new Mock<IPmlController>();
             var eventStore = new PmlEventStore();
