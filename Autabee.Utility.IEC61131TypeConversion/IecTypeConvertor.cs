@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Xml;
-using System.Xml.Linq;
 
 namespace Autabee.Utility.IEC61131TypeConversion
 {
+    /// <summary>
+    /// Converter switching between IEC61131 types and C# types
+    /// </summary>
     public static class IecTypeConvertor
     {
         // source https://www.plcnext.help/te/Programming/Csharp/Csharp_programming/Csharp_Supported_data_types.htm
@@ -18,7 +16,6 @@ namespace Autabee.Utility.IEC61131TypeConversion
         {
             Type type = value.GetType();
             return GetIecTypeString(type);
-
         }
         public static string GetIecTypeString(this Type type)
         {
@@ -34,8 +31,8 @@ namespace Autabee.Utility.IEC61131TypeConversion
                     return result;
                 }
             }
-            else if (type.GetInterfaces().Contains(typeof(IEnumerable)) 
-                && type != typeof(string) 
+            else if (type.GetInterfaces().Contains(typeof(IEnumerable))
+                && type != typeof(string)
                 && type != typeof(BitArray))
             {
                 var result = GetIecTypeString(type.GenericTypeArguments[0]) + "[]";
@@ -149,7 +146,7 @@ namespace Autabee.Utility.IEC61131TypeConversion
                     {
                         if (typeString.Contains("["))
                         {
-                            var elementType = GetCsharpType(typeString.Replace("[]", ""), null, executingAssembly);
+                            var elementType = GetCsharpType(typeString.Replace("[]", string.Empty), null, executingAssembly);
                             if (collectionType.IsGenericType)
                             {
                                 collectionType = collectionType.MakeGenericType(elementType);

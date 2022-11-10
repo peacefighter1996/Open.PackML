@@ -2,13 +2,8 @@
 using Open.PackML.Interfaces;
 using Open.PackML.Tags.Builders;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using System.Xml.Linq;
 
 namespace Open.PackML.Tags.Prefab
 {
@@ -87,8 +82,14 @@ namespace Open.PackML.Tags.Prefab
         //    else return new ValidationResult<object>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
         //}
 
-
-
+        public ValidationResult<TagConfig[]> BrowseAll()
+        {
+            return new ValidationResult<TagConfig[]>(true, tagTable.GetTags);
+        }
+        public ValidationResult<TagConfig[]> BrowseRoot()
+        {
+            return new ValidationResult<TagConfig[]>(true, tagTable.GetRoots);
+        }
         public ValidationResult<TagConfig[]> Browse(string name)
         {
             if (!tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagConfig tagDetail))
@@ -100,21 +101,21 @@ namespace Open.PackML.Tags.Prefab
         {
             if (!tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagConfig tagDetail))
                 return new ValidationResult<TagConfig[]>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);
-            var result = GetChildren(((TagDetail)tagDetail),Depth).ToArray();
+            var result = GetChildren(((TagDetail)tagDetail), Depth).ToArray();
 
 
             return new ValidationResult<TagConfig[]>(true, result);
         }
         internal static IEnumerable<TagConfig> GetChildren(TagDetail tagDetail, uint Depth)
         {
-            if (Depth <= 1) 
+            if (Depth <= 1)
                 return tagDetail.ChildTags;
-            
+
             var childeren = new List<TagConfig>();
             foreach (var child in tagDetail.ChildTags)
             {
                 childeren.AddRange(GetChildren(child, Depth - 1));
-                
+
             }
             childeren.AddRange(tagDetail.ChildTags);
             return childeren;

@@ -1,12 +1,10 @@
-﻿using Xunit;
+﻿using Autabee.Utility.IEC61131TypeConversion;
+using Autabee.Utility.IEC61131TypeConversionTests.TestObjects;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections;
 using System.Linq;
+using Xunit;
 using Xunit.Abstractions;
-using Autabee.Utility.IEC61131TypeConversion;
-using Autabee.Utility.IEC61131TypeConversionTests.TestObjects;
 
 namespace Autabee.Utility.IEC61131TypeConversionTests
 {

@@ -1,14 +1,13 @@
-﻿using Xunit;
+﻿using Moq;
+using Open.PackML;
+using Open.PackML.Prefab;
+using Open.PackML.Tags;
 using Open.PackML.Tags.Prefab;
+using Open.PackMLTests.TestObjects;
 using System.Collections.Generic;
 using System.Linq;
-using Moq;
-using Open.PackML.Prefab;
-using Open.PackML;
-using Open.PackML.Tags;
-using Open.PackMLTests.TestObjects;
+using Xunit;
 using Xunit.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 
 namespace Open.PackMLTests.Prefab
 {
@@ -31,7 +30,7 @@ namespace Open.PackMLTests.Prefab
 
 
             var controller = new TagController(new Dictionary<string, object>()
-            {{"", eumController }});
+            {{ string.Empty, eumController }});
 
             var value = controller.GetTagData<int>("ProdDefectiveCount");
 
@@ -238,7 +237,7 @@ namespace Open.PackMLTests.Prefab
         {
             TagController controller = GetTestController();
 
-            var temp = controller.Browse("Machine1",1);
+            var temp = controller.Browse("Machine1", 1);
             string tmp;
             foreach (var item in temp.Object)
             {
@@ -283,7 +282,7 @@ namespace Open.PackMLTests.Prefab
             var moqController = new Mock<IPmlController>();
             var eventStore = new PmlEventStore();
             var eumController = new PmlEumController(moqController.Object, eventStore, new PmlOemTransitionCheck());
-            var controller = new TagController(new Dictionary<string, object>() { { "", eumController } });
+            var controller = new TagController(new Dictionary<string, object>() { { string.Empty, eumController } });
             return controller;
         }
 

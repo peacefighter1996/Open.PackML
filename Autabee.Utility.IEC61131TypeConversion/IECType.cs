@@ -2,6 +2,9 @@
 
 namespace Autabee.Utility.IEC61131TypeConversion
 {
+    /// <summary>
+    /// IEC61131 Type strings
+    /// </summary>
     public static class IECType
     {
         private static string[] DefaultTypes { get; } =
@@ -57,9 +60,10 @@ namespace Autabee.Utility.IEC61131TypeConversion
 
         public static string ArrayOf(string type) => $"{type}[]";
 
-        public static bool ContainsType(string type) {
+        public static bool ContainsType(string type)
+        {
             type = type.ToUpper();
-            
+
             if (DefaultTypes.Contains(type) || type.StartsWith("UDT_")) return true;
             if (type.EndsWith("]")) return ContainsType(type.Substring(0, type.IndexOf('[')));
             return false;

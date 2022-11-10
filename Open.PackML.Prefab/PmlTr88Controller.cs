@@ -1,7 +1,4 @@
-﻿using Autabee.Utility;
-using Open.PackML.EventArguments;
-using Open.PackML.Interfaces;
-using Open.PackML.Tags;
+﻿using Open.PackML.Tags;
 using Open.PackML.Tags.Attributes;
 using System;
 
@@ -21,7 +18,7 @@ namespace Open.PackML.Prefab
 
         [TagEndUserTerm("Mode")]
         [TagType(TagType.Status)]
-        public int UnitModeCurrent { get => (int)currentMode; }
+        public int UnitModeCurrent { get => currentMode; }
 
 
         [TagEndUserTerm("Nominal Speed")]
@@ -66,7 +63,7 @@ namespace Open.PackML.Prefab
         [TagEndUserTerm("Change command")]
         public bool CmdChangeRequest
         {
-            get => false; 
+            get => false;
             set
             {
                 if (Enum.IsDefined(typeof(PmlCommand), CntrlCmd))

@@ -12,7 +12,7 @@ namespace Autabee.Utility
     {
         public ValidationResult(bool success = true, string unSuccessfulText = "", params object[] formatObjects)
         {
-            this.Success = success;
+            Success = success;
             FailInfo = new List<(string, object[])>();
             if (!string.IsNullOrWhiteSpace(unSuccessfulText))
             {
@@ -28,8 +28,8 @@ namespace Autabee.Utility
         }
         public ValidationResult(bool success = true, List<(string, object[])> failInfo = default)
         {
-            this.Success = success;
-            this.FailInfo = failInfo ?? new List<(string, object[])>();
+            Success = success;
+            FailInfo = failInfo ?? new List<(string, object[])>();
         }
 
         public void AddResult(ValidationResult validationResult)
@@ -50,7 +50,7 @@ namespace Autabee.Utility
         }
         public string FailString()
         {
-            string failString = FailInfo.Aggregate("", (accumulator, fail) => accumulator += string.Format(fail.Item1, fail.Item2) + Environment.NewLine);
+            string failString = FailInfo.Aggregate(string.Empty, (accumulator, fail) => accumulator += string.Format(fail.Item1, fail.Item2) + Environment.NewLine);
             return failString;
         }
 

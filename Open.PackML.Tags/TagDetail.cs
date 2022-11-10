@@ -1,25 +1,10 @@
 ﻿using Autabee.Utility;
-
-/* Unmerged change from project 'Open.PackML.Tags (net6.0)'
-Before:
-using Open.PackML.Tags.Builders;
-After:
-using Open;
-using Open.PackML;
-using Open.PackML.Tags;
-using Open.PackML.PackML.Tags.Builders;
-*/
-
 using Open.PackML.Tags.Builders;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace Open.PackML.Tags
 {
@@ -36,7 +21,7 @@ namespace Open.PackML.Tags
         private ParameterInfo[] parameters;
         private MethodInfo setMethod;
 
-        internal TagDetail(TagConfig config, TagTreeBuilderProcessData tagBuilder, TagDetail[] childTags, int length =-1) : base(config)
+        internal TagDetail(TagConfig config, TagTreeBuilderProcessData tagBuilder, TagDetail[] childTags, int length = -1) : base(config)
         {
             if (tagBuilder.baseObject == null)
             {
@@ -224,7 +209,7 @@ namespace Open.PackML.Tags
                 return ObjectNotWritable(Name);
             if (CheckTyping(type, InsertElement))
                 return ObjectTypeMisMatch(DataType, type);
-            
+
 
             var validation = MoveToLastBase(queue);
             if (!validation.Success) return validation;
@@ -236,7 +221,7 @@ namespace Open.PackML.Tags
 
         }
 
-        
+
 
         private bool CheckTyping(Type type, bool InsertElement)
         {
@@ -245,12 +230,13 @@ namespace Open.PackML.Tags
                             ) || !IsArray && DataType != type;
 
         }
-        private ValidationResult<object> TagNotReadable() {
-           return new ValidationResult<object>(false, null, "Object not readable");
-                }
+        private ValidationResult<object> TagNotReadable()
+        {
+            return new ValidationResult<object>(false, null, "Object not readable");
+        }
         private ValidationResult<object> TagNotAProperty()
         {
-            return new ValidationResult<object>(false,null, "Tag {0} is not a property", Name);
+            return new ValidationResult<object>(false, null, "Tag {0} is not a property", Name);
         }
         private static ValidationResult<object> ObjectNotWritable(string TagName)
         {

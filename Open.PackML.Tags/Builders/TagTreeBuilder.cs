@@ -18,19 +18,18 @@ namespace Open.PackML.Tags.Builders
         /// Builds a TagTree from a base object
         /// </summary>
         /// <param name="root">Root object name</param>
-        /// <param name="obj">Object for which the tree needs to be build</param>
-        /// <param name="description"></param>
-        /// <param name="endUserTerm"></param>
-        /// <param name="StartTagType"></param>
+        /// <param name="obj">Object for which the tree needs to be build from</param>
+        /// <param name="description">Description of the obj</param>
+        /// <param name="endUserTerm">Simplyfied term for enduser</param>
+        /// <param name="StartTagType">Type of tag that is used to set the typing of the propeties that are being scanned</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentException">Does not allow a collection to be used as base object.</exception>
         internal static TagDetail GetTree(string root, object obj, string description = "", string endUserTerm = "", TagType StartTagType = TagType.Undefined, bool Iec = false)
         {
             Type type = obj.GetType();
-            if ((type.IsArray
-                    || type.GetInterfaces().Contains(typeof(IEnumerable))))
+            if (type.IsArray
+                || type.GetInterfaces().Contains(typeof(IEnumerable)))
                 throw new ArgumentException("Cannot create a tag tree from an array or IEnumerable");
-
             TagConfig conf = new TagConfig()
             {
                 Name = root,
@@ -57,22 +56,22 @@ namespace Open.PackML.Tags.Builders
             {
                 if (method.GetCustomAttribute(typeof(TagTypeAttribute)) is TagTypeAttribute attribute)
                 {
-                    Children.Add(ProcessMethode(root, tagBuilder, Children, method, attribute));
+                    Children.Add(ProcessMethode(root, tagBuilder, method, attribute));
                 }
-
             }
+
             return new TagDetail(root, tagBuilder, Children.ToArray());
         }
 
-        private static TagDetail ProcessMethode(TagConfig root, TagTreeBuilderProcessData tagBuilder, List<TagDetail> Children, MethodInfo method, TagTypeAttribute attribute)
+        private static TagDetail ProcessMethode(TagConfig root, TagTreeBuilderProcessData tagBuilder, MethodInfo method, TagTypeAttribute attribute)
         {
             var config = GetMethodeTagConfig(method, root.Name, attribute.TagType, tagBuilder.iec);
             tagBuilder.ArrayChain.Add(false);
             tagBuilder.PropertyChain.Add(method);
-            var tmp = new TagDetail(config, tagBuilder, new TagDetail[0]);
+            var result = new TagDetail(config, tagBuilder, new TagDetail[0]);
             tagBuilder.PropertyChain.RemoveLast();
             tagBuilder.ArrayChain.RemoveLast();
-            return tmp;
+            return result;
         }
 
         private static TagDetail ProcessProperty(TagConfig root, TagTreeBuilderProcessData tagBuilder, TagType TagTypeCarry, PropertyInfo property)
@@ -103,21 +102,21 @@ namespace Open.PackML.Tags.Builders
         private static TagDetail ProcessValue(TagTreeBuilderProcessData tagBuilder, TagConfig config)
         {
             tagBuilder.ArrayChain.Add(false);
-            var tmp = new TagDetail(config, tagBuilder, new TagDetail[0]);
+            var result = new TagDetail(config, tagBuilder, new TagDetail[0]);
             tagBuilder.ArrayChain.RemoveLast();
-            return tmp;
+            return result;
         }
 
         private static TagDetail ProcessObject(TagTreeBuilderProcessData tagBuilder, PropertyInfo property, TagConfig config)
         {
             tagBuilder.PrepareDive(config, false);
-            var tmp = GetTree(config,
+            var result = GetTree(config,
                 property.PropertyType,
                 tagBuilder,
                 config.TagType
                 );
             tagBuilder.Surface();
-            return tmp;
+            return result;
         }
 
         private static TagDetail ProcessCollection(TagConfig root, TagTreeBuilderProcessData tagBuilder, PropertyInfo property, TagConfig config)
@@ -186,7 +185,7 @@ namespace Open.PackML.Tags.Builders
 
         private static TagConfig GetMethodeTagConfig(MethodInfo property, string root, TagType TagCarry, bool Iec)
         {
-            var paramters = property.GetParameters().Aggregate("", (accumulator, item) =>
+            var paramters = property.GetParameters().Aggregate(string.Empty, (accumulator, item) =>
                 accumulator += (Iec ? item.ParameterType.GetIecTypeString() : item.ParameterType.ToString())
                     + " " + item.Name + ",").TrimEnd(',');
             TagConfig config = new TagConfig()
@@ -233,26 +232,34 @@ namespace Open.PackML.Tags.Builders
 
             return (length, name);
         }
-
         private static bool IsObject(this TagConfig config, IEnumerable<Type> types)
         {
-            return (config.DataType.IsInterface
-                            || config.DataType.IsClass
-                            || config.DataType.IsValueType)
-                            && !config.DataType.IsPrimitive
-                            && config.DataType != typeof(string)
-                            && config.DataType != typeof(DateTime)
-                            && config.DataType != typeof(TimeSpan)
-                            && !config.DataType.IsEnum
-                            && !types.Contains(config.DataType);
+            return config.DataType.IsObject(types);
+        }
+        private static bool IsObject(this Type type, IEnumerable<Type> types)
+        {
+            return (type.IsInterface
+                    || type.IsClass
+                    || type.IsValueType)
+                    && !type.IsPrimitive
+                    && type != typeof(string)
+                    && type != typeof(DateTime)
+                    && type != typeof(TimeSpan)
+                    && !type.IsEnum
+                    && !types.Contains(type);
         }
 
         private static bool IsCollection(this TagConfig config, IEnumerable<Type> types)
         {
-            return (config.DataType.IsArray
-                                || config.DataType.GetInterfaces().Contains(typeof(IEnumerable)))
-                                && config.DataType != typeof(string)
-                                && !types.Contains(config.DataType);
+            return config.DataType.IsCollection(types);
+        }
+
+        private static bool IsCollection(this Type type, IEnumerable<Type> types)
+        {
+            return (type.IsArray
+                    || type.GetInterfaces().Contains(typeof(IEnumerable)))
+                    && type != typeof(string)
+                    && !types.Contains(type);
         }
 
     }

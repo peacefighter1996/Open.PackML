@@ -1,7 +1,7 @@
 ﻿using Autabee.Utility;
 using System;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Open.PackML.Prefab
 {
@@ -23,7 +23,7 @@ namespace Open.PackML.Prefab
 
             return temp;
         }
-        public new async Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode, CancellationToken cancellationToken)
+        public async Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode, CancellationToken cancellationToken)
         {
             var temp = oemTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
             if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
@@ -38,7 +38,7 @@ namespace Open.PackML.Prefab
             return temp;
         }
 
-        public new async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand command, CancellationToken cancellationToken)
+        public async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand command, CancellationToken cancellationToken)
         {
             var temp = oemTransitionCheck.CheckTransition(command, currentState, currentMode);
             if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");

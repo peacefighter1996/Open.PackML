@@ -1,10 +1,14 @@
 ﻿using Autabee.Utility.IEC61131TypeConversion;
 using System;
 using System.Linq;
+#if (NET6_0_OR_GREATER)
+using System.Text.Json.Serialization;
+#endif
 using System.Xml.Serialization;
 
 namespace Open.PackML.Tags
 {
+    [Serializable]
     public class TagConfig
     {
         string tagName;
@@ -13,28 +17,40 @@ namespace Open.PackML.Tags
         {
             get => tagName; set
             {
-                if (value != string.Empty && string.IsNullOrWhiteSpace(value)) Name = string.Empty;
-                if (value.Equals(Name)) return;
-                if (value == string.Empty)
-                {
-                    tagName = value;
-                    SearchString = value;
-                    TagTail = value;
-                    TagAddress = new string[1] { value };
-                    //SearchHash = 0;
-                }
-                else
-                {
 
-                    tagName = value;
-                    SearchString = TagStringToSearch(value);
-                    //SearchHash = SearchString.GetHashCode();
-                    TagAddress = SearchString.Split('.');
-                    TagTail = TagAddress.Last();
+                if (value == null)
+                {
+                    UpdateTagName(string.Empty);
+                    return;
                 }
-                TagNameUpdate?.Invoke(this, EventArgs.Empty);
+                value = value.Trim();
+                if (value.Equals(Name)) return;
+                UpdateTagName(value);
             }
         }
+
+        private void UpdateTagName(string value)
+        {
+            if (value == string.Empty)
+            {
+                tagName = value;
+                SearchString = value;
+                TagTail = value;
+                TagAddress = new string[1] { value };
+                //SearchHash = 0;
+            }
+            else
+            {
+
+                tagName = value;
+                SearchString = TagStringToSearch(value);
+                //SearchHash = SearchString.GetHashCode();
+                TagAddress = SearchString.Split('.');
+                TagTail = TagAddress.Last();
+            }
+            TagNameUpdate?.Invoke(this, EventArgs.Empty);
+        }
+
         [XmlIgnore]
         public string TagTail { get; private set; }
         [XmlIgnore]
@@ -43,7 +59,9 @@ namespace Open.PackML.Tags
         public string Description { get; set; }
         public virtual TagType TagType { get; set; }
         public virtual Type DataType { get; set; }
-        
+#if (NET6_0_OR_GREATER)
+        [JsonIgnore]
+#endif
         [XmlIgnore]
         public string[] TagAddress { get; private set; }
 

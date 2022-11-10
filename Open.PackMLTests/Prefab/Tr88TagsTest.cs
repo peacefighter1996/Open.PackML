@@ -1,6 +1,5 @@
 ﻿using Autabee.Utility;
 using Autabee.Utility.IEC61131TypeConversion;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using Moq;
 using Open.PackML;
 using Open.PackML.Prefab;
@@ -10,8 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -65,7 +62,7 @@ namespace Open.PackMLTests.Prefab
         public void TestTr88Tags()
         {
             var moqController = new Mock<IPmlController>();
-            var table = TagTreeBuilder.GetTree("", new PmlTr88Controller(moqController.Object, new PmlEventStore(), new PmlOemTransitionCheck())).BuildTable();
+            var table = TagTreeBuilder.GetTree(string.Empty, new PmlTr88Controller(moqController.Object, new PmlEventStore(), new PmlOemTransitionCheck())).BuildTable();
             //var tags = table.GetTags;
             logger.WriteLine(table.GetTagTablePrint());
             foreach (var tag in GetTagConfigList(true))
@@ -99,7 +96,7 @@ namespace Open.PackMLTests.Prefab
         public void TestEumTags()
         {
             var moqController = new Mock<IPmlController>();
-            var table = TagTreeBuilder.GetTree("", new PmlEumController(moqController.Object, new PmlEventStore(), new PmlOemTransitionCheck()), Iec: true).BuildTable();
+            var table = TagTreeBuilder.GetTree(string.Empty, new PmlEumController(moqController.Object, new PmlEventStore(), new PmlOemTransitionCheck()), Iec: true).BuildTable();
             //var tags = table.GetTags;
             logger.WriteLine(table.GetTagTablePrint(Iec: true));
             var result = new ValidationResult();

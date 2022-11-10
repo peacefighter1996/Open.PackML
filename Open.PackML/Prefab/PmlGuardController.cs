@@ -1,16 +1,14 @@
 ﻿using Autabee.Utility;
 using Open.PackML.EventArguments;
-using Open.PackML;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Open.PackML.Prefab
 {
-    public class PmlGuardController : IPmlController 
+    public class PmlGuardController : IPmlController
     {
 
         protected PmlState currentState = PmlState.Undefined;
@@ -23,6 +21,12 @@ namespace Open.PackML.Prefab
         public event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
         public event EventHandler<PmlMachineEventArgs> MachineEvent;
 
+        /// <summary>
+        /// Creates a new instance of the PmlGuardController
+        /// </summary>
+        /// <param name="controller">Internal machine</param>
+        /// <param name="eventStore">Events connected with this machine</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public PmlGuardController(IPmlController controller, IPmlEventStore eventStore)
         {
             //Guard Check null
@@ -76,7 +80,7 @@ namespace Open.PackML.Prefab
             return temp;
         }
 
-        
+
 
         public virtual ValidationResult SendPmlCommand(PmlCommand command)
         {
@@ -96,7 +100,7 @@ namespace Open.PackML.Prefab
         private void Controller_MachineEvent(object sender, PmlMachineEventArgs e)
         {
             //Prcesses the event 
-            var result = eventStore.ProcessEvent(e.@enum);
+            var result = eventStore.GetMachineEvent(e.@enum);
 
             if (result.Success && (lastTransition < e.DateTime))
             {

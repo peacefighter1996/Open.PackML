@@ -7,6 +7,9 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Open.PackMLTests")]
 namespace Open.PackML.Tags.Builders
 {
+    /// <summary>
+    /// Proccess data for the TagTreeBuilder
+    /// </summary>
     internal class TagTreeBuilderProcessData
     {
         internal readonly object baseObject;
