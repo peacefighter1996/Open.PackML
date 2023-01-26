@@ -1,5 +1,5 @@
 ﻿
-using Autabee.Utility.IEC61131TypeConversion;
+using Autabee.Utility.IEC61131StringTypeConversion;
 using Open.PackML.Tags.Attributes;
 using System;
 using System.Collections;
@@ -15,14 +15,14 @@ namespace Open.PackML.Tags.Builders
     internal static class TagTreeBuilder
     {
         /// <summary>
-        /// Builds a TagTree from a base object
+        /// This function builds a tree of tags for a given object.
         /// </summary>
         /// <param name="root">Root object name</param>
         /// <param name="obj">Object for which the tree needs to be build from</param>
         /// <param name="description">Description of the obj</param>
-        /// <param name="endUserTerm">Simplyfied term for enduser</param>
+        /// <param name="endUserTerm">Simplyfied term for enduser for the root tag</param>
         /// <param name="StartTagType">Type of tag that is used to set the typing of the propeties that are being scanned</param>
-        /// <returns></returns>
+        /// <returns>TagDetail</returns>
         /// <exception cref="ArgumentException">Does not allow a collection to be used as base object.</exception>
         internal static TagDetail GetTree(string root, object obj, string description = "", string endUserTerm = "", TagType StartTagType = TagType.Undefined, bool Iec = false)
         {
@@ -61,7 +61,7 @@ namespace Open.PackML.Tags.Builders
             }
 
             return new TagDetail(root, tagBuilder, Children.ToArray());
-        }
+        }        
 
         private static TagDetail ProcessMethode(TagConfig root, TagTreeBuilderProcessData tagBuilder, MethodInfo method, TagTypeAttribute attribute)
         {

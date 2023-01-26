@@ -8,17 +8,27 @@ namespace Open.PackML.Tags
     /// </summary>
     public class TagCall
     {
+        /// <summary>
+        /// Creates a new tag call
+        /// </summary>
         public TagCall()
         {
-
+            Data = null;
+            TagCallType = TagCallType.None;
+            TagName = string.Empty;
         }
+        /// <summary>
+        /// Creates a new tag call
+        /// </summary>
+        /// <param name="tagCallType">The type of tag call.</param>
+        /// <param name="tagName">Name of the tag being called</param>
+        /// <param name="data">Data as input or set value data</param>
         public TagCall(TagCallType tagCallType, string tagName, object data = null)
         {
             TagCallType = tagCallType;
             TagName = tagName;
             Data = data;
         }
-
         /// <summary>
         /// Data as input or set value data
         /// </summary>
@@ -33,27 +43,4 @@ namespace Open.PackML.Tags
         /// </summary>
         public string TagName { get; set; }
     }
-
-
-
-    //public class BatchTagCall: Dictionary<uint,List<TagCall>>
-    //{
-    //    public bool allowAsyncCalls;
-    //}
-    //
-    //public static class TagCallBuilder
-    //{
-    //    public static TagCall MethodCall(string tagName, object[] inputArguments)
-    //    {
-    //        return new TagCall(TagCallType.Execute, tagName, inputArguments);
-    //    }
-    //    public static TagCall GetCall(string tagName)
-    //    {
-    //        return new TagCall(TagCallType.Get, tagName);
-    //    }
-    //    public static TagCall SetCall(string tagName)
-    //    {
-    //        return new TagCall(TagCallType.Set, tagName);
-    //    }
-    //}
 }

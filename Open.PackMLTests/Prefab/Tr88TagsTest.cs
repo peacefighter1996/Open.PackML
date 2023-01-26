@@ -1,5 +1,5 @@
 ﻿using Autabee.Utility;
-using Autabee.Utility.IEC61131TypeConversion;
+using Autabee.Utility.IEC61131StringTypeConversion;
 using Moq;
 using Open.PackML;
 using Open.PackML.Prefab;
@@ -122,7 +122,7 @@ namespace Open.PackMLTests.Prefab
                     result.AddResult(false, $"Tag [{tag.Name}] does not Exist");
                 }
             }
-            Assert.True(result.Success, result.FailString());
+            Assert.True(result.Success, result.ToString());
         }
     }
 }

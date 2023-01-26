@@ -5,10 +5,13 @@ using System.Linq;
 namespace Open.PackML.Tags.Builders
 {
     /// <summary>
-    /// Build a TagTable from a given object
+    /// This class builds a table of tags for a given object.
     /// </summary>
     public static class TagTableBuilder
     {
+        // Generates a TagTable for a given object
+        // TagName: base name of the tag
+        // obj: Object to generate the TagTable for
         public static TagTable BuildTagTable(string TagName, object obj)
         {
             var table = new TagTable();
@@ -19,6 +22,11 @@ namespace Open.PackML.Tags.Builders
             table.GenerateOnUpdate = true;
             return table;
         }
+        /// <summary>
+        /// This code creates a new tag table for a given collection. using the key as the
+        /// tag table base name. This is used for the PackML state machine.
+        /// </summary>
+        /// <param name="collection">collection of (tag base name, object)</param>
         public static TagTable BuildTagTable(Dictionary<string, object> collection)
         {
             var table = new TagTable();

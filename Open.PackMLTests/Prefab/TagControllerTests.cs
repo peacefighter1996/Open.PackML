@@ -46,7 +46,7 @@ namespace Open.PackMLTests.Prefab
         {
             TagController controller = GetDefaultcontroller();
             var result = controller.SetTagData("StopReason.ID", 45);
-            Assert.True(result.Success, result.FailString());
+            Assert.True(result.Success, result.ToString());
             var value = controller.GetTagData<int>("StopReason.ID");
             Assert.Equal(45, value.Object);
         }
@@ -57,7 +57,7 @@ namespace Open.PackMLTests.Prefab
         {
             TagController controller = GetDefaultcontroller();
             var result = controller.SetTagData("StopReason", new PmlStopReason(45, 100));
-            Assert.False(result.Success, result.FailString());
+            Assert.False(result.Success, result.ToString());
         }
 
         [Theory]
@@ -68,9 +68,9 @@ namespace Open.PackMLTests.Prefab
         {
             TagController controller = GetTestController();
             var result = controller.SetTagData(tagName, tagValue);
-            Assert.True(result.Success, result.FailString());
+            Assert.True(result.Success, result.ToString());
             var value = controller.GetTagData<T>(tagName);
-            Assert.True(value.Success, value.FailString());
+            Assert.True(value.Success, value.ToString());
             Assert.Equal(tagValue, value.Object);
         }
 
@@ -81,16 +81,16 @@ namespace Open.PackMLTests.Prefab
         {
             TagController controller = GetTestController();
             var result = controller.SetTagData("Machine1.IntegerArray1", new int[] { 112, 25564 });
-            Assert.False(result.Success, result.FailString());
+            Assert.False(result.Success, result.ToString());
         }
         [Fact()]
         public void SetArrayTagDataTest2()
         {
             TagController controller = GetTestController();
             var result = controller.SetTagData("Machine1.IntegerArray2", new int[] { 112, 25564 });
-            Assert.True(result.Success, result.FailString());
+            Assert.True(result.Success, result.ToString());
             var value = controller.GetTagData<int[]>("Machine1.IntegerArray2");
-            Assert.True(value.Success, value.FailString());
+            Assert.True(value.Success, value.ToString());
             Assert.Equal(new int[] { 112, 25564 }, value.Object);
         }
 
@@ -101,9 +101,9 @@ namespace Open.PackMLTests.Prefab
         {
             TagController controller = GetTestController();
             var result = controller.ExecutePackTagCommand("Machine1.SetValue(DINT value1)", 45);
-            Assert.True(result.Success, result.FailString());
+            Assert.True(result.Success, result.ToString());
             var value = controller.GetTagData<int>("Machine1.Integer1");
-            Assert.True(value.Success, value.FailString());
+            Assert.True(value.Success, value.ToString());
             Assert.Equal(45, value.Object);
         }
 
@@ -115,9 +115,9 @@ namespace Open.PackMLTests.Prefab
             for (int i = 0; i < 4; i++)
             {
                 var result = controller.ExecutePackTagCommand($"Machine1.ExecuteObjects[{i}].SetValue(DINT value1)", 45);
-                Assert.True(result.Success, result.FailString());
+                Assert.True(result.Success, result.ToString());
                 var value = controller.GetTagData<int>($"Machine1.ExecuteObjects[{i}].Integer1");
-                Assert.True(value.Success, value.FailString());
+                Assert.True(value.Success, value.ToString());
                 Assert.Equal(45, value.Object);
             }
 
@@ -131,7 +131,7 @@ namespace Open.PackMLTests.Prefab
             for (int i = 0; i < 4; i++)
             {
                 var result = controller.ExecutePackTagCommand($"Machine1.ExecuteObjects[{i}].PlusOne(DINT value1)", 45);
-                Assert.True(result.Success, result.FailString());
+                Assert.True(result.Success, result.ToString());
                 Assert.Equal(result.Object, 46);
             }
         }
@@ -144,9 +144,9 @@ namespace Open.PackMLTests.Prefab
             for (int i = 0; i < 3; i++)
             {
                 var result = controller.ExecutePackTagCommand($"Machine2.ExecuteObjects[{i}].SetValue(DINT value1)", 45);
-                Assert.True(result.Success, result.FailString());
+                Assert.True(result.Success, result.ToString());
                 var value = controller.GetTagData<int>($"Machine2.ExecuteObjects[{i}].Integer1");
-                Assert.True(value.Success, value.FailString());
+                Assert.True(value.Success, value.ToString());
                 Assert.Equal(45, value.Object);
             }
         }
@@ -159,7 +159,7 @@ namespace Open.PackMLTests.Prefab
             for (int i = 0; i < 3; i++)
             {
                 var result = controller.ExecutePackTagCommand($"Machine2.ExecuteObjects[{i}].PlusOne(DINT value1)", 45);
-                Assert.True(result.Success, result.FailString());
+                Assert.True(result.Success, result.ToString());
                 Assert.Equal(result.Object, 46);
             }
         }
@@ -219,14 +219,14 @@ namespace Open.PackMLTests.Prefab
                     new TagCall(TagCallType.Get, "Machine1.IntegerArray1[1]")
                 });
 
-            Assert.True(result[0].Success, result[0].FailString());
+            Assert.True(result[0].Success, result[0].ToString());
             Assert.Equal(result[0].Object, 46);
 
-            Assert.True(result[1].Success, result[1].FailString());
+            Assert.True(result[1].Success, result[1].ToString());
             Assert.Null(result[1].Object);
 
-            Assert.True(result[2].Success, result[2].FailString());
-            Assert.True(result[3].Success, result[3].FailString());
+            Assert.True(result[2].Success, result[2].ToString());
+            Assert.True(result[3].Success, result[3].ToString());
 
             Assert.Equal(451, result[3].Object);
         }

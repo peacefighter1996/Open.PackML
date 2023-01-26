@@ -10,8 +10,8 @@ namespace Open.PackML.Prefab
         {
 
         }
-
-
+        
+        
         [TagEndUserTerm("State")]
         [TagType(TagType.Status)]
         public int StateCurrent { get => (int)currentState; }

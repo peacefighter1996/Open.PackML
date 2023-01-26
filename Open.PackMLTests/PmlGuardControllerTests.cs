@@ -166,11 +166,11 @@ namespace Open.PackMLTests
             controller.UpdateCurrentState += Controller_UpdateCurrentState;
 
             //var result = controller.SendPmlCommand(PmlCommand.Abort);
-            //Assert.True(result.Success, result.FailString());
+            //Assert.True(result.Success, result.ToString());
             //controller.UpdatePmlMode(PmlMode.Production);
             var result = controller.SendPmlCommand(PmlCommand.Clear);
 
-            Assert.True(result.Success, result.FailString());
+            Assert.True(result.Success, result.ToString());
             Assert.Equal(PmlState.Clearing, catchStates[0]);
             Assert.Equal(PmlState.Stopped, catchStates[1]);
         }
@@ -187,7 +187,7 @@ namespace Open.PackMLTests
             var controller = new PmlGuardController(testController, eventStore);
             testController.InvokeEvent(EventHanderEnum1.id1);
             //var result = controller.SendPmlCommand(PmlCommand.Abort);
-            //Assert.True(result.Success, result.FailString());
+            //Assert.True(result.Success, result.ToString());
             //controller.UpdatePmlMode(PmlMode.Production);
 
             Assert.Equal(PmlState.Stopping, controller.CurrentPmlState());

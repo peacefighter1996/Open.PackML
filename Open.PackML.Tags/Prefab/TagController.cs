@@ -1,4 +1,5 @@
 ﻿using Autabee.Utility;
+using Autabee.Utility.Messaging.Validation;
 using Open.PackML.Interfaces;
 using Open.PackML.Tags.Builders;
 using System;
@@ -126,7 +127,7 @@ namespace Open.PackML.Tags.Prefab
             if (tagTable.TryGetValue(TagConfig.TagStringToSearch(name), out TagConfig tagDetail))
             {
                 var queue = GetTagArrayIndexes(name);
-                if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
+                if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailInfo);
                 return ((TagDetail)tagDetail).Execute(queue.Object, args);
             }
             else
@@ -149,7 +150,7 @@ namespace Open.PackML.Tags.Prefab
                 out TagConfig tagDetails))
             {
                 var queue = GetTagArrayIndexes(name);
-                if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
+                if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailInfo);
                 return ((TagDetail)tagDetails).GetValue(queue.Object);
             }
 
@@ -168,7 +169,7 @@ namespace Open.PackML.Tags.Prefab
                 out TagConfig tagDetails))
             {
                 var queue = GetTagArrayIndexes(name);
-                if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailString());
+                if (!queue.Success) return new ValidationResult<object>(false, unSuccesfullText: "Array number parsing failure: {0}", formatObjects: queue.FailInfo);
                 return ((TagDetail)tagDetails).SetValue(queue.Object, data);
             }
             return new ValidationResult<object>(false, unSuccesfullText: "Tag {0} not found", formatObjects: name);

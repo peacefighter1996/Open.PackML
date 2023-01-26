@@ -39,7 +39,7 @@ namespace Open.PackMLTests
             for (int i = 0; i < collection.Length; i++)
             {
                 var test = func(state, collection[i]);
-                Assert.True(args[i] == test.Success, $"Check {state} for {collection[i]} if it accepts {func.Method.Name} PmlCommand {test.FailString()}");
+                Assert.True(args[i] == test.Success, $"Check {state} for {collection[i]} if it accepts {func.Method.Name} PmlCommand {test}");
             }
         }
 
