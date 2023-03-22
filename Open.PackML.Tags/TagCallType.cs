@@ -5,6 +5,7 @@ namespace Open.PackML.Tags
 {
     public enum TagCallType
     {
+        None,
         Get,
         Set,
         Execute

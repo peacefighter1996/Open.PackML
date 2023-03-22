@@ -7,17 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackML", "Open.PackML\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackMLTests", "Open.PackMLTests\Open.PackMLTests.csproj", "{A6FE6E93-42AF-4E36-8A05-E1108E8FBC07}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autabee.Utility.IEC61131TypeConversion", "Autabee.Utility.IEC61131TypeConversion\Autabee.Utility.IEC61131TypeConversion.csproj", "{D96C5069-1885-4B22-A01E-B4F372119AA8}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autabee.Utility.IEC61131TypeConversionTests", "Autabee.Automation.Utility.IEC61131TypeConversionTests\Autabee.Utility.IEC61131TypeConversionTests.csproj", "{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackML.Tags", "Open.PackML.Tags\Open.PackML.Tags.csproj", "{862C1E05-87A4-4E50-81D0-9185DD4C5B5A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autabee.Utility", "Autabee.Utility\Autabee.Utility.csproj", "{8C6B09BA-47F1-4952-A7EF-7862F181D979}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.PackML.Prefab", "Open.PackML.Prefab\Open.PackML.Prefab.csproj", "{45C563AA-FCE6-45B1-9CFD-E9210D844ED7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutabeeDependencies", "AutabeeDependencies", "{6A4D79EC-04BD-46B7-A5FE-C8C9103F518E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,22 +25,10 @@ Global
 		{A6FE6E93-42AF-4E36-8A05-E1108E8FBC07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6FE6E93-42AF-4E36-8A05-E1108E8FBC07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6FE6E93-42AF-4E36-8A05-E1108E8FBC07}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D96C5069-1885-4B22-A01E-B4F372119AA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D96C5069-1885-4B22-A01E-B4F372119AA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D96C5069-1885-4B22-A01E-B4F372119AA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D96C5069-1885-4B22-A01E-B4F372119AA8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689}.Release|Any CPU.Build.0 = Release|Any CPU
 		{862C1E05-87A4-4E50-81D0-9185DD4C5B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{862C1E05-87A4-4E50-81D0-9185DD4C5B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{862C1E05-87A4-4E50-81D0-9185DD4C5B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{862C1E05-87A4-4E50-81D0-9185DD4C5B5A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8C6B09BA-47F1-4952-A7EF-7862F181D979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C6B09BA-47F1-4952-A7EF-7862F181D979}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8C6B09BA-47F1-4952-A7EF-7862F181D979}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C6B09BA-47F1-4952-A7EF-7862F181D979}.Release|Any CPU.Build.0 = Release|Any CPU
 		{45C563AA-FCE6-45B1-9CFD-E9210D844ED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{45C563AA-FCE6-45B1-9CFD-E9210D844ED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45C563AA-FCE6-45B1-9CFD-E9210D844ED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,11 +36,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{D96C5069-1885-4B22-A01E-B4F372119AA8} = {6A4D79EC-04BD-46B7-A5FE-C8C9103F518E}
-		{0EEC3E68-F3A9-4B59-BB1E-21E3BCD6C689} = {6A4D79EC-04BD-46B7-A5FE-C8C9103F518E}
-		{8C6B09BA-47F1-4952-A7EF-7862F181D979} = {6A4D79EC-04BD-46B7-A5FE-C8C9103F518E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1B2671C5-EE40-498F-AD8B-7B795BA54B9E}

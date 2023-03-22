@@ -1,12 +1,14 @@
 ﻿using Autabee.Utility;
-using Open.PackML;
+using Autabee.Utility.Messaging.Validation;
 using System;
 using System.Collections.Generic;
-using static System.Collections.Specialized.BitVector32;
 
 namespace Open.PackML.Prefab
 {
-    public class PmlEventStore: Dictionary<Enum, PmlEventReaction>, IPmlEventStore
+    /// <summary>
+    /// Collections of machine events to update the state machine
+    /// </summary>
+    public class PmlEventStore : Dictionary<Enum, PmlEventReaction>, IPmlEventStore
     {
         public PmlEventStore() { }
         public PmlEventStore(List<PmlEventReaction> eventReactions)
@@ -17,12 +19,16 @@ namespace Open.PackML.Prefab
             }
         }
 
-
-        public ValidationResult<PmlState> ProcessEvent(Enum @event)
+        /// <summary>
+        /// trys to get the event reaction for the given event id
+        /// </summary>
+        /// <param name="event"></param>
+        /// <returns></returns>
+        public ValidationResult<PmlState> GetMachineEvent(Enum @event)
         {
-            if (ContainsKey(@event))
+            if (this.TryGetValue(@event, out var value))
             {
-                return new ValidationResult<PmlState>(true, this[@event].StateChangeId);
+                return new ValidationResult<PmlState>(true, value.StateChangeId);
             }
             else
             {
@@ -30,17 +36,6 @@ namespace Open.PackML.Prefab
             }
         }
 
-        public PmlEventReaction GetMachineEvent(Enum @event)
-        {
-            if (this.TryGetValue(@event, out PmlEventReaction value))
-            {
-                return value;
-            }
-            else
-            {
-                return null;
-            }
-        }
         public void Add(PmlEventReaction pmlEventReaction)
         {
             this.Add(pmlEventReaction.MachineEventId, pmlEventReaction);

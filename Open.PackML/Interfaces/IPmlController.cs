@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Open.PackML
 {
-    public interface IPmlController: IPmlMachineController
+    public interface IPmlController : IPmlMachineController
     {
         //local
         PmlState CurrentPmlState();

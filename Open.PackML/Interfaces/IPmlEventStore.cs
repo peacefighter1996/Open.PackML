@@ -1,12 +1,10 @@
-﻿using Autabee.Utility;
+﻿using Autabee.Utility.Messaging.Validation;
 using System;
-using System.Collections.Generic;
 
 namespace Open.PackML
 {
     public interface IPmlEventStore
     {
-        ValidationResult<PmlState> ProcessEvent(Enum MachineEventId);
-        PmlEventReaction GetMachineEvent(Enum @event);
+        ValidationResult<PmlState> GetMachineEvent(Enum MachineEventId);
     }
 }
