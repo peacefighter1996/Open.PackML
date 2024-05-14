@@ -1,16 +1,14 @@
 ﻿using Autabee.Utility;
 using Open.PackML.EventArguments;
-using Open.PackML;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Open.PackML.Prefab
 {
-    public class PmlGuardController : IPmlController 
+    public class PmlGuardController : IPmlController
     {
 
         protected PmlState currentState = PmlState.Undefined;
@@ -23,6 +21,12 @@ namespace Open.PackML.Prefab
         public event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
         public event EventHandler<PmlMachineEventArgs> MachineEvent;
 
+        /// <summary>
+        /// Creates a new instance of the PmlGuardController
+        /// </summary>
+        /// <param name="controller">Internal machine</param>
+        /// <param name="eventStore">Events connected with this machine</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public PmlGuardController(IPmlController controller, IPmlEventStore eventStore)
         {
             //Guard Check null
@@ -71,15 +75,12 @@ namespace Open.PackML.Prefab
         public async Task<ValidationResult> UpdatePmlModeAsync(PmlMode packMLMode, CancellationToken cancellationToken)
         {
             var temp = PmlTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
-            return await TrySendPmlMode(packMLMode, temp, cancellationToken);
-        }
-
-        private async Task<ValidationResult> TrySendPmlMode(PmlMode packMLMode, ValidationResult temp, CancellationToken cancellationToken)
-        {
             if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
-            if (temp.Success) temp.AddResult(await controller.UpdatePmlModeAsync(packMLMode, cancellationToken).ConfigureAwait(true));
+            if (temp.Success) return await controller.UpdatePmlModeAsync(packMLMode, cancellationToken).ConfigureAwait(true);
             return temp;
         }
+
+
 
         public virtual ValidationResult SendPmlCommand(PmlCommand command)
         {
@@ -91,20 +92,15 @@ namespace Open.PackML.Prefab
         public virtual async Task<ValidationResult> SendPmlCommandAsync(PmlCommand command, CancellationToken cancellationToken)
         {
             var temp = PmlTransitionCheck.CheckTransition(command, currentState, currentMode);
-            return await TrySendCommandAsync(command, temp, cancellationToken);
-        }
-
-        internal async Task<ValidationResult> TrySendCommandAsync(PmlCommand command, ValidationResult temp, CancellationToken cancellationToken)
-        {
             if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
-            if (temp.Success) temp.AddResult(await controller.SendPmlCommandAsync(command, cancellationToken).ConfigureAwait(true));
+            if (temp.Success) return await controller.SendPmlCommandAsync(command, cancellationToken).ConfigureAwait(true);
             return temp;
         }
 
         private void Controller_MachineEvent(object sender, PmlMachineEventArgs e)
         {
             //Prcesses the event 
-            var result = eventStore.ProcessEvent(e.@enum);
+            var result = eventStore.GetMachineEvent(e.@enum);
 
             if (result.Success && (lastTransition < e.DateTime))
             {

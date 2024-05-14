@@ -1,12 +1,10 @@
 ﻿using Autabee.Utility;
-using System.Collections.ObjectModel;
-using System.Security.Cryptography;
 
 namespace Open.PackML
 {
     public static class PmlTransitionCheck
     {
-       
+
         public static ValidationResult CheckTransition(PmlCommand PmlCommand, PmlState currentState, PmlMode currentMode)
         {
             return PmlCommand switch
@@ -49,13 +47,13 @@ namespace Open.PackML
                 case PmlState.Completing:
                     return new ValidationResult(true);
                 default:
-                     return new ValidationResult(false, "Unkown current state");
+                    return new ValidationResult(false, "Unkown current state");
             }
         }
 
         public static ValidationResult Abort(PmlState currentPackMLState, PmlMode packMLMode = PmlMode.Production)
         {
-            if (currentPackMLState == PmlState.Aborted 
+            if (currentPackMLState == PmlState.Aborted
                 || currentPackMLState == PmlState.Aborting)
             {
                 return new ValidationResult(false, "Already aborted or aborting");
@@ -112,7 +110,7 @@ namespace Open.PackML
         {
             if (packMLMode == PmlMode.Undefined) return new ValidationResult(false, "Current mode is undefined");
             return currentPackMLState == PmlState.Held
-                ? new ValidationResult() 
+                ? new ValidationResult()
                 : new ValidationResult(false, "Current PackML state not in held.");
         }
 

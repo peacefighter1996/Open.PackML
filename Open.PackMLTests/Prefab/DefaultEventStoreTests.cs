@@ -1,8 +1,8 @@
-﻿using System;
-using Xunit;
-using Open.PackML;
+﻿using Open.PackML;
 using Open.PackML.Prefab;
 using Open.PackMLTests.TestObjects;
+using System;
+using Xunit;
 
 namespace Open.PackMLTests.Prefab
 {
@@ -12,7 +12,7 @@ namespace Open.PackMLTests.Prefab
 
         public DefaultEventStoreTests()
         {
-            this.eventStore = new PmlEventStore();
+            eventStore = new PmlEventStore();
             eventStore.Add(new PmlEventReaction(EventHanderEnum1.id1, PmlState.Idle));
             eventStore.Add(new PmlEventReaction(EventHanderEnum1.id2, PmlState.Aborted));
             eventStore.Add(new PmlEventReaction(EventHanderEnum2.id1, PmlState.Clearing));
@@ -26,7 +26,7 @@ namespace Open.PackMLTests.Prefab
         [InlineData(EventHanderEnum2.id2, PmlState.Held)]
         public void ProcessEventTest(Enum arg, PmlState expectation)
         {
-            var newState = eventStore.ProcessEvent(arg);
+            var newState = eventStore.GetMachineEvent(arg);
             Assert.Equal(expectation, newState.Object);
         }
 
@@ -35,7 +35,7 @@ namespace Open.PackMLTests.Prefab
         [InlineData(EventHanderEnum2.id3)]
         public void FailProcessEventTest(Enum arg)
         {
-            Assert.Equal(null, eventStore.GetMachineEvent(arg));
+            Assert.False(eventStore.GetMachineEvent(arg).Success) ;
         }
     }
 }

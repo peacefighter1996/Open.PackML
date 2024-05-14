@@ -1,19 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\Deploy\OpenPackMLPrefab.props" />
-  <PropertyGroup>
-	  <TargetFrameworks>net6.0;net48</TargetFrameworks>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\Common.props" />
+    <PropertyGroup>
+        <Authors>Ian Arbouw</Authors>
+        <Description>Default Implementations for the TR 88.00.02 and End user Minimum</Description>
+        <PackageTags>packml;industrial-automation;ISA;ISA88;88;tags</PackageTags>
+        <Version>0.4.2</Version>
+    </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net48;netstandard2.0;net6.0;net8</TargetFrameworks>
+    </PropertyGroup>
 
-  <ItemGroup>
-		<None Include="readme.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
+    <ItemGroup>
+        <None Include="readme.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Open.PackML.Tags\Open.PackML.Tags.csproj" />
-    <ProjectReference Include="..\Open.PackML\Open.PackML.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Open.PackML.Tags\Open.PackML.Tags.csproj" />
+        <ProjectReference Include="..\Open.PackML\Open.PackML.csproj" />
+    </ItemGroup>
 
 </Project>

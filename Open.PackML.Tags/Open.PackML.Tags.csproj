@@ -1,7 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\Deploy\OpenPackMLTags.props" />
+	<Import Project="..\Common.props" />
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net48</TargetFrameworks>
+		<Authors>Ian Arbouw</Authors>
+		<Description>Base package for Open Packml implementation of the tag system</Description>
+		<PackageTags>packml;industrial-automation;ISA;ISA88;88;tags</PackageTags>
+		<Version>0.4.2</Version>
+	</PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net48;netstandard2.0;net6.0;net8</TargetFrameworks>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 	</PropertyGroup>
 	<ItemGroup>
@@ -11,11 +17,8 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
+	  <PackageReference Include="Autabee.Utility.IEC61131StringTypeConversion" Version="1.0.0" />
+	  <PackageReference Include="Autabee.Utility.Messaging.Validation" Version="1.0.0" />
 	  <PackageReference Include="System.Linq" Version="4.3.0" />
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <ProjectReference Include="..\Autabee.Utility.IEC61131TypeConversion\Autabee.Utility.IEC61131TypeConversion.csproj" />
-	  <ProjectReference Include="..\Autabee.Utility\Autabee.Utility.csproj" />
 	</ItemGroup>
 </Project>

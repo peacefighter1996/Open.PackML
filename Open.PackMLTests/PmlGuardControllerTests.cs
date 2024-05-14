@@ -1,16 +1,13 @@
-﻿using Xunit;
+﻿using Autabee.Utility;
+using Moq;
+using Open.PackML;
+using Open.PackML.EventArguments;
 using Open.PackML.Prefab;
+using Open.PackMLTests.TestObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Open.PackML.Interfaces;
-using Open.PackML.EventArguments;
-using Autabee.Utility;
-using Moq;
-using Open.PackML;
-using Open.PackMLTests.TestObjects;
+using Xunit;
 
 namespace Open.PackMLTests
 {
@@ -169,11 +166,11 @@ namespace Open.PackMLTests
             controller.UpdateCurrentState += Controller_UpdateCurrentState;
 
             //var result = controller.SendPmlCommand(PmlCommand.Abort);
-            //Assert.True(result.Success, result.FailString());
+            //Assert.True(result.Success, result.ToString());
             //controller.UpdatePmlMode(PmlMode.Production);
             var result = controller.SendPmlCommand(PmlCommand.Clear);
 
-            Assert.True(result.Success, result.FailString());
+            Assert.True(result.Success, result.ToString());
             Assert.Equal(PmlState.Clearing, catchStates[0]);
             Assert.Equal(PmlState.Stopped, catchStates[1]);
         }
@@ -186,11 +183,11 @@ namespace Open.PackMLTests
             testController.CurrentMode = PmlMode.Manual;
             var eventStore = new PmlEventStore();
             eventStore.Add(EventHanderEnum1.id1, new PmlEventReaction(EventHanderEnum1.id1, PmlState.Stopping));
-           
+
             var controller = new PmlGuardController(testController, eventStore);
             testController.InvokeEvent(EventHanderEnum1.id1);
             //var result = controller.SendPmlCommand(PmlCommand.Abort);
-            //Assert.True(result.Success, result.FailString());
+            //Assert.True(result.Success, result.ToString());
             //controller.UpdatePmlMode(PmlMode.Production);
 
             Assert.Equal(PmlState.Stopping, controller.CurrentPmlState());
