@@ -7,7 +7,7 @@
 		<Version>0.4.2-Beta</Version>
 	</PropertyGroup>
 	<PropertyGroup>
-		<TargetFrameworks>net48;netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net48;netstandard2.0;net6.0;net8</TargetFrameworks>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 	</PropertyGroup>
 	<ItemGroup>
