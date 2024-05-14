@@ -1,18 +1,13 @@
-﻿using Open.PackML.Tags;
-using Xunit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit.Abstractions;
-using Open.PackML.Tags.Builders;
-using Open.PackML.Tags.Attributes;
-using Moq;
-using Open.PackML.Interfaces;
+﻿using Moq;
 using Open.PackML;
 using Open.PackML.Prefab;
+using Open.PackML.Tags;
+using Open.PackML.Tags.Builders;
 using Open.PackMLTests.TestObjects;
+using System;
+using System.Linq;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Open.PackMLTests.Prefab
 {
@@ -26,7 +21,7 @@ namespace Open.PackMLTests.Prefab
         [Fact]
         public void GetTreeTest()
         {
-            var temp = TagTreeBuilder.GetTree("", new TestObject1());
+            var temp = TagTreeBuilder.GetTree(string.Empty, new TestObject1());
             var table = temp.BuildTable();
             logger.WriteLine(table.GetTagTablePrint());
         }
@@ -34,7 +29,7 @@ namespace Open.PackMLTests.Prefab
         [Fact]
         public void GetTreeIecTest()
         {
-            var temp = TagTreeBuilder.GetTree("", new TestObject1(), Iec: true);
+            var temp = TagTreeBuilder.GetTree(string.Empty, new TestObject1(), Iec: true);
             var table = temp.BuildTable();
             logger.WriteLine(table.GetTagTablePrint());
         }
@@ -49,20 +44,22 @@ namespace Open.PackMLTests.Prefab
 
         }
 
+
         [Fact]
         public void GetTreeTestTr88()
         {
             var moqController = new Mock<IPmlController>();
             var eventStore = new PmlEventStore();
-            var temp = TagTreeBuilder.GetTree("", new PmlTr88Controller(moqController.Object, eventStore, new PmlOemTransitionCheck()));
+            var temp = TagTreeBuilder.GetTree(string.Empty, new PmlTr88Controller(moqController.Object, eventStore, new PmlOemTransitionCheck()));
             logger.WriteLine(temp.BuildTable().GetTagTablePrint());
         }
+
         [Fact]
         public void GetTreeTestTr88Filtered()
         {
             var moqController = new Mock<IPmlController>();
             var eventStore = new PmlEventStore();
-            var temp = TagTreeBuilder.GetTree("", new PmlTr88Controller(moqController.Object, eventStore, new PmlOemTransitionCheck()));
+            var temp = TagTreeBuilder.GetTree(string.Empty, new PmlTr88Controller(moqController.Object, eventStore, new PmlOemTransitionCheck()));
             logger.WriteLine(temp.BuildTable().GetTagTablePrint(true));
         }
 
@@ -71,7 +68,7 @@ namespace Open.PackMLTests.Prefab
         {
             var moqController = new Mock<IPmlController>();
             var eventStore = new PmlEventStore();
-            var temp = TagTreeBuilder.GetTree("", new PmlEumController(moqController.Object, eventStore, new PmlOemTransitionCheck()));
+            var temp = TagTreeBuilder.GetTree(string.Empty, new PmlEumController(moqController.Object, eventStore, new PmlOemTransitionCheck()));
             logger.WriteLine(temp.BuildTable().GetTagTablePrint(true));
         }
 

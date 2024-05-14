@@ -1,12 +1,13 @@
-﻿using Autabee.Utility;
+﻿using Autabee.Utility.Messaging.Validation;
 using Open.PackML.Tags;
-using System.Collections.Generic;
 
 namespace Open.PackML.Interfaces
 {
     public interface ITagStore
     {
-        ValidationResult<TagConfig[]> Browse(string Orgin);
-        ValidationResult<TagConfig[]> Browse(string Orgin, int Depth = 1);
+        ValidationResult<TagConfig[]> BrowseRoot();
+        ValidationResult<TagConfig[]> BrowseAll();
+        ValidationResult<TagConfig[]> Browse(string baseTagName);
+        ValidationResult<TagConfig[]> Browse(string baseTagName, uint Depth);
     }
 }

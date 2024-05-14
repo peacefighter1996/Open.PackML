@@ -1,5 +1,4 @@
-﻿using Open.PackML.Interfaces;
-using Open.PackML.Tags;
+﻿using Open.PackML.Tags;
 using Open.PackML.Tags.Attributes;
 using System;
 using System.Collections.Generic;

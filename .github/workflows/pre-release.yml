@@ -1,4 +1,4 @@
-name: .NET
+name: pre-release check
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
       with:
           PROJECT_FILE_PATH: Open.PackML/Open.PackML.csproj
           NUGET_KEY: ${{secrets.NUGET_KEY}}
-          VERSION_FILE_PATH: OpenPackML.props
+          VERSION_FILE_PATH: Deploy/OpenPackML.props
           INCLUDE_SYMBOLS: true
           NO_BUILD: true
     - name: Publish Open PackML Tags to NuGet
@@ -36,7 +36,7 @@ jobs:
       with:
           PROJECT_FILE_PATH: Open.PackML.Tags/Open.PackML.Tags.csproj
           NUGET_KEY: ${{secrets.NUGET_KEY}}
-          VERSION_FILE_PATH: OpenPackMLTags.props
+          VERSION_FILE_PATH: Deploy/OpenPackMLTags.props
           INCLUDE_SYMBOLS: true
           NO_BUILD: true
     - name: Publish Open PackML PRefabs to NuGet
@@ -46,6 +46,6 @@ jobs:
       with:
           PROJECT_FILE_PATH: Open.PackML.Prefab/Open.PackML.Prefab.csproj
           NUGET_KEY: ${{secrets.NUGET_KEY}}
-          VERSION_FILE_PATH: OpenPackMLPrefab.props
+          VERSION_FILE_PATH: Deploy/OpenPackMLPrefab.props
           INCLUDE_SYMBOLS: true
           NO_BUILD: true

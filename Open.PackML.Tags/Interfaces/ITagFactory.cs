@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Open.PackML.Interfaces
 {
@@ -14,6 +12,6 @@ namespace Open.PackML.Interfaces
     //{
     //    TagConfig GenerateTagConfig<T>(Tag<object> tagConfig);
     //    IEnumerable<TagConfig> GenerateTagConfig<T>(IEnumerable<Tag<object>> tagConfig);
-        
+
     //}
 }

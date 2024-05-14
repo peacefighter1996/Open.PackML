@@ -1,12 +1,6 @@
-﻿using Autabee.Utility;
-using Open.PackML.EventArguments;
-using Open.PackML.Interfaces;
-using Open.PackML.Tags;
+﻿using Open.PackML.Tags;
 using Open.PackML.Tags.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Open.PackML.Prefab
 {
@@ -16,15 +10,15 @@ namespace Open.PackML.Prefab
         {
 
         }
-
-
+        
+        
         [TagEndUserTerm("State")]
         [TagType(TagType.Status)]
         public int StateCurrent { get => (int)currentState; }
 
         [TagEndUserTerm("Mode")]
         [TagType(TagType.Status)]
-        public int UnitModeCurrent { get => (int)currentMode; }
+        public int UnitModeCurrent { get => currentMode; }
 
 
         [TagEndUserTerm("Nominal Speed")]
@@ -46,7 +40,7 @@ namespace Open.PackML.Prefab
         public PmlStopReason StopReason { get; protected set; } = new PmlStopReason();
 
         [TagType(TagType.Status)]
-        public PmlEquipmentInterlock EquipmentInterlock { get; }
+        public PmlEquipmentInterlock EquipmentInterlock { get; protected set; } = new PmlEquipmentInterlock();
 
         [TagType(TagType.Command)]
         [TagEndUserTerm("Command")]
@@ -69,7 +63,7 @@ namespace Open.PackML.Prefab
         [TagEndUserTerm("Change command")]
         public bool CmdChangeRequest
         {
-            get => false; 
+            get => false;
             set
             {
                 if (Enum.IsDefined(typeof(PmlCommand), CntrlCmd))
@@ -77,13 +71,5 @@ namespace Open.PackML.Prefab
             }
         }
 
-    }
-    public class PmlEquipmentInterlock
-    {
-        [TagEndUserTerm("Blockage")]
-        public bool Blocker { get; set; }
-
-        [TagEndUserTerm("Starvation")]
-        public bool Starve { get; set; }
     }
 }

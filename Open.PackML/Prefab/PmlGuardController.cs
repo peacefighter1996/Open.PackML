@@ -1,15 +1,14 @@
 ﻿using Autabee.Utility;
 using Open.PackML.EventArguments;
-using Open.PackML;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Open.PackML.Prefab
 {
-    public class PmlGuardController : IPmlController 
+    public class PmlGuardController : IPmlController
     {
 
         protected PmlState currentState = PmlState.Undefined;
@@ -22,6 +21,12 @@ namespace Open.PackML.Prefab
         public event EventHandler<PmlStateChangeEventArg> UpdateCurrentState;
         public event EventHandler<PmlMachineEventArgs> MachineEvent;
 
+        /// <summary>
+        /// Creates a new instance of the PmlGuardController
+        /// </summary>
+        /// <param name="controller">Internal machine</param>
+        /// <param name="eventStore">Events connected with this machine</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public PmlGuardController(IPmlController controller, IPmlEventStore eventStore)
         {
             //Guard Check null
@@ -67,12 +72,15 @@ namespace Open.PackML.Prefab
             if (temp.Success) temp.AddResult(controller.UpdatePmlMode(packMLMode));
             return temp;
         }
-        public async Task<ValidationResult> UpdatePackMLModeAsync(PmlMode packMLMode)
+        public async Task<ValidationResult> UpdatePmlModeAsync(PmlMode packMLMode, CancellationToken cancellationToken)
         {
             var temp = PmlTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
-            if (temp.Success) temp.AddResult(await controller.UpdatePackMLModeAsync(packMLMode).ConfigureAwait(true));
+            if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
+            if (temp.Success) return await controller.UpdatePmlModeAsync(packMLMode, cancellationToken).ConfigureAwait(true);
             return temp;
         }
+
+
 
         public virtual ValidationResult SendPmlCommand(PmlCommand command)
         {
@@ -81,17 +89,18 @@ namespace Open.PackML.Prefab
             return temp;
         }
 
-        public virtual async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand command)
+        public virtual async Task<ValidationResult> SendPmlCommandAsync(PmlCommand command, CancellationToken cancellationToken)
         {
             var temp = PmlTransitionCheck.CheckTransition(command, currentState, currentMode);
-            if (temp.Success) temp.AddResult(await controller.SendPackMLCommandAsync(command).ConfigureAwait(true));
+            if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
+            if (temp.Success) return await controller.SendPmlCommandAsync(command, cancellationToken).ConfigureAwait(true);
             return temp;
         }
 
         private void Controller_MachineEvent(object sender, PmlMachineEventArgs e)
         {
             //Prcesses the event 
-            var result = eventStore.ProcessEvent(e.@enum);
+            var result = eventStore.GetMachineEvent(e.@enum);
 
             if (result.Success && (lastTransition < e.DateTime))
             {
@@ -112,25 +121,25 @@ namespace Open.PackML.Prefab
 
         public PmlState CurrentPmlState() => currentState;
         public PmlMode CurrentPmlMode() => currentMode;
-        public PmlState RetrieveCurrentPackMLState()
+        public PmlState RetrieveCurrentPmlState()
         {
-            currentState = controller.RetrieveCurrentPackMLState();
+            currentState = controller.RetrieveCurrentPmlState();
             return currentState;
         }
-        public PmlMode RetrieveCurrentPackMLMode()
+        public PmlMode RetrieveCurrentPmlMode()
         {
-            currentMode = controller.RetrieveCurrentPackMLMode();
+            currentMode = controller.RetrieveCurrentPmlMode();
             return currentMode;
         }
-        public async Task<PmlState> RetrieveCurrentPackMLStateAsync()
+        public async Task<PmlState> RetrieveCurrentPmlStateAsync(CancellationToken cancellationToken)
         {
-            currentState = await controller.RetrieveCurrentPackMLStateAsync().ConfigureAwait(true);
+            currentState = await controller.RetrieveCurrentPmlStateAsync(cancellationToken).ConfigureAwait(true);
             return currentState;
         }
 
-        public async Task<PmlMode> RetrieveCurrentPackMLModeAsync()
+        public async Task<PmlMode> RetrieveCurrentPmlModeAsync(CancellationToken cancellationToken)
         {
-            currentMode = await controller.RetrieveCurrentPackMLModeAsync().ConfigureAwait(true);
+            currentMode = await controller.RetrieveCurrentPmlModeAsync(cancellationToken).ConfigureAwait(true);
             return currentMode;
         }
 
@@ -146,60 +155,17 @@ namespace Open.PackML.Prefab
             }
         }
 
-        public virtual async Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode)
+        public virtual async Task<ValidationResult> UpdatePmlModeAsync(int packMLMode, CancellationToken cancellationToken)
         {
             if (Enum.IsDefined(typeof(PmlMode), packMLMode))
             {
-                return await UpdatePackMLModeAsync((PmlMode)packMLMode);
+                if (cancellationToken.IsCancellationRequested) return new ValidationResult(false, "Operation cancelled");
+                return await UpdatePmlModeAsync((PmlMode)packMLMode, cancellationToken).ConfigureAwait(true);
             }
             else
             {
                 return new ValidationResult(false, $"Invalid {nameof(PmlMode)} value: {packMLMode}");
             }
         }
-    }
-
-    public class PmlOemGuardController : PmlGuardController
-    {
-
-        protected new int currentMode = 0;
-        private IPmlOemTransitionCheck oemTransitionCheck;
-
-        public PmlOemGuardController(IPmlController controller, IPmlEventStore eventStore, IPmlOemTransitionCheck pmlOemTransitionCheck) : base(controller, eventStore)
-        {
-            oemTransitionCheck = pmlOemTransitionCheck ?? throw new ArgumentNullException(nameof(pmlOemTransitionCheck));
-        }
-
-        public new ValidationResult UpdatePmlMode(int packMLMode)
-        {
-            var temp = oemTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
-            if (temp.Success) temp.AddResult(controller.UpdatePmlMode(packMLMode));
-
-            return temp;
-        }
-        public new async Task<ValidationResult> UpdatePackMLModeAsync(int packMLMode)
-        {
-            var temp = oemTransitionCheck.CheckModeUpdate(currentMode, packMLMode, currentState);
-            if (temp.Success) temp.AddResult(await controller.UpdatePackMLModeAsync(packMLMode).ConfigureAwait(true));
-
-            return temp;
-        }
-
-        public new ValidationResult SendPmlCommand(PmlCommand command)
-        {
-            var temp = oemTransitionCheck.CheckTransition(command, currentState, currentMode);
-            if (temp.Success) temp.AddResult(controller.SendPmlCommand(command));
-
-            return temp;
-        }
-
-        public new async Task<ValidationResult> SendPackMLCommandAsync(PmlCommand command)
-        {
-            var temp = oemTransitionCheck.CheckTransition(command, currentState, currentMode);
-            if (temp.Success) temp.AddResult(await controller.SendPackMLCommandAsync(command).ConfigureAwait(true));
-
-            return temp;
-        }
-
     }
 }

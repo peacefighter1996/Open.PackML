@@ -4,9 +4,9 @@ using System.Linq;
 namespace Open.PackML.Tags.Attributes
 {
     [AttributeUsage(
-        AttributeTargets.Property
-        | AttributeTargets.Method)
-]
+          AttributeTargets.Method
+        | AttributeTargets.Property)
+    ]
     public class TagTypeAttribute : Attribute
     {
         public TagType TagType { get; }
